@@ -1,42 +1,41 @@
 package appinfo;
 
-/**
- * Created by Ye on 2017/2/13.
- * Modified by YE on 2017/3/20.
- */
+
 public class Application {
 
     // private String JobID;
-    private String ApplicationID;
-    private String Name;
-    private String Duration;
-    private String JobUrl;
-    private String StageUrl;
+    private String appId;
+    private String name;
+    private String startTime;
+    private String endTime;
+    private String lastUpdated;
+    private long duration; // ms
+    private String completed;
 
-    public void setApplicationID(String applicationID) {
-        ApplicationID = applicationID;
+    private long startTimeEpoch;
+    private long lastUpdatedEpoch;
+    private long endTimeEpoch;
+
+    /*
+    {
+        "id" : "app-20170623115533-0014",
+            "name" : "RDDJoin-G1-4-28G-0.5",
+            "attempts" : [ {
+                "startTime" : "2017-06-23T03:55:32.099GMT",
+                "endTime" : "2017-06-23T07:55:21.408GMT",
+                "lastUpdated" : "2017-06-23T07:55:21.459GMT",
+                "duration" : 14389309,
+                "sparkUser" : "root",
+                "completed" : true,
+                "startTimeEpoch" : 1498190132099,
+                "lastUpdatedEpoch" : 1498204521459,
+                "endTimeEpoch" : 1498204521408
+    } ]
     }
+    */
 
-    public String getApplicationID() {
-        return ApplicationID;
-    }
 
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    public String getDuration() {
-        return Duration;
-    }
-
-    public void setDuration(String duration) {
-        Duration = duration;
-    }
-
+    /*
     public String getStageUrl() {
         return StageUrl;
     }
@@ -52,9 +51,5 @@ public class Application {
     public String getJobUrl() {
         return JobUrl;
     }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
+    */
 }

@@ -74,6 +74,7 @@ public class SingleJobJsonParser {
                 array = el.getAsJsonArray();
             }
 
+            /*
             for (int i = 0; i < array.size(); i++) {
                 //   System.out.println("---------------");
                 JsonObject subObject = array.get(i).getAsJsonObject();
@@ -117,6 +118,7 @@ public class SingleJobJsonParser {
                 System.out.println("duration=" + jobsList.get(i).getDuration());
 
             }
+            */
         } catch (JsonIOException e) {
             e.printStackTrace();
         } catch (JsonSyntaxException e) {

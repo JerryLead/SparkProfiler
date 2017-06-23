@@ -2,135 +2,89 @@ package parser;
 
 import appinfo.Job;
 import com.google.gson.*;
+import util.HtmlFetcher;
+import util.HtmlJsonWriter;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by YE Xingtong on 2017/2/17.
- * Modified by YE Xingtong on 2017/3/21.
- */
 
 public class JobJsonParser {
 
+    private String appId;
+    private String outputDir;
+    private String jobUrl;
     private List<Job> jobsList = new ArrayList<Job>();
 
-    private String jobUrl;
 
-    public void setJobUrl(String masterIP, String jobUrl) {
-        this.jobUrl = "http://" + masterIP + ":18080/api/v1/applications/" + jobUrl + "/jobs";
-    }
-
-    public String getJobUrl() {
-        return jobUrl;
+    public JobJsonParser(String masterIP, String appId, String outputDir) {
+        this.appId = appId;
+        this.jobUrl = "http://" + masterIP + ":18080/api/v1/applications/" + appId + "/jobs";
+        this.outputDir = outputDir;
     }
 
     public List<Job> getJobList() {
         return jobsList;
     }
 
-    public void jobwsu() throws IOException {
+    public void parseJobInfo() {
+
         try {
+            System.out.println("jobUrl = " + jobUrl);
+            String html = HtmlFetcher.fetch(jobUrl);
 
-            URL url = new URL(getJobUrl());
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            //  connection.setConnectTimeout(8000);
-            //  connection.setReadTimeout(8000);
-            String line = null;
-            String b = "";
-            StringBuilder response = new StringBuilder();
-            try {
-                InputStream in = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-                // StringBuilder response = new StringBuilder();
-                while ((line = reader.readLine()) != null) {
-                    // b+=line;
-                    //   System.out.println(line);
-                    response.append(line).append("\r\n");
-                    // System.out.println(b);
-                    continue;
-                }
-                reader.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            }
-
-            String s = response.toString();
-            //   System.out.println(s);
-
+            String jobListInfoFile = outputDir + File.separatorChar + appId + File.separatorChar + "jobs.txt";
+            HtmlJsonWriter.write(jobListInfoFile, html);
 
             JsonParser parser = new JsonParser();
-            JsonElement el = parser.parse(s);
-            JsonArray array = null;
-            if (el.isJsonArray()) {
-                array = el.getAsJsonArray();
+            JsonElement el = parser.parse(html);
+            JsonArray jobJsonArray = null;
+
+            if (el.isJsonArray())
+                jobJsonArray = el.getAsJsonArray();
+            else {
+                System.err.println("Error in parsing the job's json elements!");
+                System.exit(1);
             }
 
-            for (int i = 0; i < array.size(); i++) {
-                //   System.out.println("---------------");
-                JsonObject subObject = array.get(i).getAsJsonObject();
-                JsonArray subArray = subObject.get("stageIds").getAsJsonArray();
 
-                int size = subArray.size();
-                for (int j = 0; j < size; j++) {
-                    Job job = new Job();
-                    job.setJobID(subObject.get("jobId").getAsString());
-                    job.setName(subObject.get("name").getAsString());
-                    job.setSubmitTime(subObject.get("submissionTime").getAsString());
-                    job.setCompleteTime(subObject.get("completionTime").getAsString());
+            for (JsonElement jobElem : jobJsonArray) {
 
-
-                    double sh;
-                    double sm;
-                    double ss;
-                    double sd;
-                    double ch;
-                    double cm;
-                    double cs;
-                    double cd;
-                    sh = Integer.parseInt(job.getSubmitTime().substring(11, 13));
-                    sm = Integer.parseInt(job.getSubmitTime().substring(14, 16));
-                    ss = Integer.parseInt(job.getSubmitTime().substring(17, 19));
-                    sd = Integer.parseInt(job.getSubmitTime().substring(20, 23));
-                    ch = Integer.parseInt(job.getCompleteTime().substring(11, 13));
-                    cm = Integer.parseInt(job.getCompleteTime().substring(14, 16));
-                    cs = Integer.parseInt(job.getCompleteTime().substring(17, 19));
-                    cd = Integer.parseInt(job.getCompleteTime().substring(20, 23));
-
-                    double duration = (ch - sh) * 3600 + (cm - sm) * 60 + (cs - ss) + (cd - sd) / 1000;
-                    System.out.println(ch);
-                    System.out.println(sh);
-                    job.setDuration(String.valueOf(duration));
-                    job.setStageID(subArray.get(j).getAsString());
-                    jobsList.add(job);
+                /*
+                jobObject represents
+                {
+                  "jobId" : 16,
+                  "name" : "aggregate at AreaUnderCurve.scala:45",
+                  "submissionTime" : "2017-05-30T16:25:43.699GMT",
+                  "completionTime" : "2017-05-30T16:25:44.455GMT",
+                  "stageIds" : [ 33, 31, 32 ],
+                  "status" : "SUCCEEDED",
+                  "numTasks" : 160,
+                  "numActiveTasks" : 0,
+                  "numCompletedTasks" : 33,
+                  "numSkippedTasks" : 127,
+                  "numFailedTasks" : 0,
+                  "numActiveStages" : 0,
+                  "numCompletedStages" : 1,
+                  "numSkippedStages" : 2,
+                  "numFailedStages" : 0
                 }
-            }
-            for (int i = 0; i < jobsList.size(); i++) {
-                System.out.println("---------------");
-                System.out.println("id=" + jobsList.get(i).getJobID());
-                // System.out.println("time=" + app.getDuration());
-                System.out.println("stageid=" + jobsList.get(i).getStageID());
-                System.out.println("name=" + jobsList.get(i).getName());
-                System.out.println("sub=" + jobsList.get(i).getSubmitTime());
-                System.out.println("com=" + jobsList.get(i).getCompleteTime());
-                System.out.println("duration=" + jobsList.get(i).getDuration());
+                */
+
+                JsonObject jobObject = jobElem.getAsJsonObject();
+
+                Job job = new Job(jobObject);
+
+                jobsList.add(job);
 
             }
+
         } catch (JsonIOException e) {
             e.printStackTrace();
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
-    }
 
+    }
 }

@@ -1,13 +1,12 @@
 package profiler;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import appinfo.Job;
 import appinfo.Stage;
@@ -19,45 +18,52 @@ import parser.StageJsonParser;
 import parser.TaskJsonParser;
 import util.JxlUtil;
 
-/**
- * Created by Ye on 2017/2/14.
- * Modified by YE on 2017/3/20.
- */
-
 public class SparkAppProfiler {
 
-    public static void main(String args[]) throws IOException, WriteException {
+    private String masterIP = "";
 
-        String masterIP = "";
-        String appIdsFile = ""; // put the appIds to be profiled
-        String outputDir = "";
+    // e.g.,
+    // app-20170622150508-0330
+    // app-20170622143730-0331
+    private List<String> appIdList = new ArrayList<String>();
 
-        List<String> appIdList = new ArrayList<String>();
+
+    public SparkAppProfiler(String masterIP) {
+        this.masterIP = masterIP;
+    }
+
+    public void parseAppIdList(String appIdsFile) {
         BufferedReader br;
 
         try {
             br = new BufferedReader(new FileReader(appIdsFile));
 
-            String appIdStr;
-            int m = 0;
+            String appId;
 
-            while ((appIdStr = br.readLine()) != null) {
-                if (appIdStr != "\r") {
-                    appIdList.add(appIdStr.trim());
-                    m++;
-                }
+            while ((appId = br.readLine()) != null) {
+                if (appId.startsWith("app"))
+                    appIdList.add(appId.trim());
+            }
+
+            if(appIdList.size() == 0) {
+                System.err.println("None apps to be profile, exit!");
+                System.exit(0);
             }
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    public void profileApp(String outputDir) {
 
         for (String appid : appIdList) {
 
-            String jobPath = "E:\\ali\\" + appid + "Job.xls";//声明需要的存放的数据位置
-            String stagePath = "E:\\ali\\" + appid + "Stage.xls";
-            String taskPath = "E:\\ali\\" + appid + "Task.xls";
-            String jobnotstagePath = "E:\\ali\\" + appid + "JobNotStage.xls";
+            /*
+            String jobPath = outputDir + File.separatorChar + appid + "Job.xls";
+            String stagePath = outputDir + File.separatorChar + appid + "Stage.xls";
+            String taskPath = outputDir + File.separatorChar + appid + "Task.xls";
+            String jobnotstagePath = outputDir + File.separatorChar + appid + "JobNotStage.xls";
 
             JxlUtil ju1 = new JxlUtil();
             ju1.setPath(jobPath);
@@ -70,11 +76,13 @@ public class SparkAppProfiler {
 
             JxlUtil ju4 = new JxlUtil();
             ju4.setPath(jobnotstagePath);
+            */
 
 
-            JobJsonParser jobParser = new JobJsonParser();
-            jobParser.setJobUrl(masterIP, appid);
-            jobParser.jobwsu();
+            JobJsonParser jobParser = new JobJsonParser(masterIP, appid, outputDir);
+            //jobParser.parseJobInfo();
+
+            /*
             List<Job> job = jobParser.getJobList();
 
             Map<String, List<List<String>>> listListMap1 = new HashMap<String, List<List<String>>>();
@@ -209,6 +217,31 @@ public class SparkAppProfiler {
             listListMap4.put("Job History", listList4);
             ju4.write(listListMap4);
 
+            */
+
         }
+    }
+
+    public static void main(String args[]) {
+
+/*
+        String masterIP = "47.92.71.43";
+
+        // put the appIds to be profiled
+        String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
+
+        SparkAppProfiler profiler = new SparkAppProfiler(masterIP);
+
+        profiler.parseAppIdList(appIdsFile);
+        profiler.profileApp(outputDir);
+
+*/
+        String s = "[ 33, 31, 32 ]";
+        String stageIdsString = s.replaceAll("\\[|\\]", " ");
+        for(String id : stageIdsString.trim().split(",")) {
+            System.out.println(Integer.parseInt(id.trim()));
+        }
+
     }
 }

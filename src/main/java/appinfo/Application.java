@@ -1,20 +1,21 @@
 package appinfo;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Application {
 
     // private String JobID;
     private String appId;
     private String name;
-    private String startTime;
-    private String endTime;
-    private String lastUpdated;
-    private long duration; // ms
-    private String completed;
+    private List<AppAttempt> attemptList = new ArrayList<AppAttempt>();
 
-    private long startTimeEpoch;
-    private long lastUpdatedEpoch;
-    private long endTimeEpoch;
+    private List<Job> jobList = new ArrayList<Job>();
 
     /*
     {
@@ -34,22 +35,66 @@ public class Application {
     }
     */
 
+    public Application(String json) {
+        JsonParser parser = new JsonParser();
+        JsonElement el = parser.parse(json);
 
-    /*
-    public String getStageUrl() {
-        return StageUrl;
+        if (el.isJsonObject())
+            parse(el.getAsJsonObject());
+        else {
+            System.err.println("Error in parsing the app json html!");
+            System.exit(1);
+        }
     }
 
-    public void setStageUrl(String stageUrl) {
-        StageUrl = "47.92.71.43:18080/api/v1/applications/" + stageUrl + "/stages";
+    private void parse(JsonObject appObject) {
+        appId = appObject.get("id").getAsString();
+        name = appObject.get("name").getAsString();
+        JsonArray attempts = appObject.get("attempts").getAsJsonArray();
+
+        for (JsonElement attemptElem : attempts) {
+            AppAttempt attempt = new AppAttempt(attemptElem.getAsJsonObject());
+            attemptList.add(attempt);
+        }
     }
 
-    public void setJobUrl(String jobUrl) {
-        JobUrl = "47.92.71.43:18080/api/v1/applications/" + jobUrl + "/jobs";
+    public String getAppId() {
+        return appId;
     }
 
-    public String getJobUrl() {
-        return JobUrl;
+    public String getName() {
+        return name;
     }
-    */
+
+    public void addJob(Job job) {
+        jobList.add(job);
+    }
+
+    public List<Job> getJobList() {
+        return jobList;
+    }
+}
+
+class AppAttempt {
+    private String startTime;
+    private String endTime;
+    private String lastUpdated;
+    private long duration; // ms
+    private String completed;
+
+    private long startTimeEpoch;
+    private long lastUpdatedEpoch;
+    private long endTimeEpoch;
+
+
+    public AppAttempt(JsonObject attemptObj) {
+        startTime = attemptObj.getAsJsonObject().get("startTime").getAsString();
+        endTime = attemptObj.getAsJsonObject().get("endTime").getAsString();
+        lastUpdated = attemptObj.getAsJsonObject().get("lastUpdated").getAsString();
+        duration = attemptObj.getAsJsonObject().get("duration").getAsLong();
+        completed = attemptObj.getAsJsonObject().get("completed").getAsString();
+        startTimeEpoch = attemptObj.getAsJsonObject().get("startTimeEpoch").getAsLong();
+        lastUpdatedEpoch = attemptObj.getAsJsonObject().get("lastUpdatedEpoch").getAsLong();
+        endTimeEpoch = attemptObj.getAsJsonObject().get("endTimeEpoch").getAsLong();
+    }
 }

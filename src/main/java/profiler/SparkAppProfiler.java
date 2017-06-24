@@ -1,22 +1,11 @@
 package profiler;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-import appinfo.Job;
-import appinfo.Stage;
-import appinfo.Task;
-import jxl.write.WriteException;
-import parser.JobJsonParser;
-import parser.SingleJobJsonParser;
-import parser.StageJsonParser;
-import parser.TaskJsonParser;
-import util.JxlUtil;
+import parser.*;
 
 public class SparkAppProfiler {
 
@@ -27,9 +16,12 @@ public class SparkAppProfiler {
     // app-20170622143730-0331
     private List<String> appIdList = new ArrayList<String>();
 
+    private String prefix;
+
 
     public SparkAppProfiler(String masterIP) {
         this.masterIP = masterIP;
+        prefix = "http://" + masterIP + ":18080/api/v1";
     }
 
     public void parseAppIdList(String appIdsFile) {
@@ -53,6 +45,16 @@ public class SparkAppProfiler {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    public void saveAppJsonInfo(String outputDir) {
+
+        for (String appId : appIdList) {
+            AppJsonParser appJsonParser = new AppJsonParser(masterIP, appId);
+            appJsonParser.saveAppJson(outputDir);
+        }
+
+
     }
 
     public void profileApp(String outputDir) {
@@ -79,7 +81,7 @@ public class SparkAppProfiler {
             */
 
 
-            JobJsonParser jobParser = new JobJsonParser(masterIP, appid, outputDir);
+            JobsJsonParser jobParser = new JobsJsonParser(masterIP, appid, outputDir);
             //jobParser.parseJobInfo();
 
             /*
@@ -224,24 +226,24 @@ public class SparkAppProfiler {
 
     public static void main(String args[]) {
 
-/*
+
         String masterIP = "47.92.71.43";
 
-        // put the appIds to be profiled
+        // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
         String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
 
         SparkAppProfiler profiler = new SparkAppProfiler(masterIP);
 
+        // Obtain the appIds from the file (a list of appIds)
         profiler.parseAppIdList(appIdsFile);
+
+        // Save the app's json info into the outputDir
+        profiler.saveAppJsonInfo(outputDir);
+
+        // Profile the app based on the saved json and output the profiles
         profiler.profileApp(outputDir);
-
-*/
-        String s = "[ 33, 31, 32 ]";
-        String stageIdsString = s.replaceAll("\\[|\\]", " ");
-        for(String id : stageIdsString.trim().split(",")) {
-            System.out.println(Integer.parseInt(id.trim()));
-        }
-
     }
+
+
 }

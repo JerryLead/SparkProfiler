@@ -62,7 +62,8 @@ public class Job {
         jobId = jobObject.get("jobId").getAsInt();
         name = jobObject.get("name").getAsString();
         submissionTime = jobObject.get("submissionTime").getAsString();
-        completionTime = jobObject.get("completionTime").getAsString();
+        if (jobObject.get("completionTime") != null)
+            completionTime = jobObject.get("completionTime").getAsString();
         status = jobObject.get("status").getAsString();
         numTasks = jobObject.get("numTasks").getAsInt();
         numActiveTasks = jobObject.get("numActiveTasks").getAsInt();
@@ -74,7 +75,8 @@ public class Job {
         numSkippedStages = jobObject.get("numSkippedStages").getAsInt();
         numFailedStages = jobObject.get("numFailedStages").getAsInt();
 
-        durationMS = DateParser.durationMS(submissionTime, completionTime);
+        if (jobObject.get("completionTime") != null)
+            durationMS = DateParser.durationMS(submissionTime, completionTime);
 
 
         JsonArray stageIdsArray = jobObject.get("stageIds").getAsJsonArray();
@@ -89,5 +91,13 @@ public class Job {
         for (JsonElement stageIdElem : stageIdsArray) {
             stageIds.add(stageIdElem.getAsInt());
         }
+    }
+
+    public int getJobId() {
+        return jobId;
+    }
+
+    public List<Integer> getStageIds() {
+        return stageIds;
     }
 }

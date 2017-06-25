@@ -7,6 +7,8 @@ import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Application {
 
@@ -15,7 +17,8 @@ public class Application {
     private String name;
     private List<AppAttempt> attemptList = new ArrayList<AppAttempt>();
 
-    private List<Job> jobList = new ArrayList<Job>();
+    private Map<Integer, Job> jobMap = new TreeMap<Integer, Job>();
+    private Map<Integer, Stage> stageMap = new TreeMap<Integer, Stage>();
 
     /*
     {
@@ -55,6 +58,9 @@ public class Application {
         for (JsonElement attemptElem : attempts) {
             AppAttempt attempt = new AppAttempt(attemptElem.getAsJsonObject());
             attemptList.add(attempt);
+            if (attemptList.size() > 1) {
+                System.err.println("WARNING: This application has more than one application attempts!!!");
+            }
         }
     }
 
@@ -67,11 +73,33 @@ public class Application {
     }
 
     public void addJob(Job job) {
-        jobList.add(job);
+        int jobId = job.getJobId();
+        jobMap.put(jobId, job);
     }
 
-    public List<Job> getJobList() {
-        return jobList;
+    public void addStage(JsonObject stageObject) {
+        int stageId = stageObject.get("stageId").getAsInt();
+
+        if (stageMap.containsKey(stageId)) {
+            Stage stage = stageMap.get(stageId);
+            stage.addStageAttempt(stageObject);
+        } else {
+            Stage stage = new Stage(stageId);
+            stage.addStageAttempt(stageObject);
+            stageMap.put(stageId, stage);
+        }
+    }
+
+    public Map<Integer, Job> getJobMap() {
+        return jobMap;
+    }
+
+    public Map<Integer, Stage> getStageMap() {
+        return stageMap;
+    }
+
+    public Stage getStage(int stageId) {
+        return stageMap.get(stageId);
     }
 }
 

@@ -47,6 +47,15 @@ public class SparkAppProfiler {
         }
     }
 
+    /**
+     * The following pages will be saved:
+     * /applications/[app-id], including the application information.
+     * /applications/[app-id]/jobs, including the information of each job.
+     * /applications/[app-id]/stages, including the information of each stage.
+     * /applications/[app-id]/stages/[stage-id]/[stage-attempt-id], parsing the tasks and executorSummary.
+     * /applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary, parsing the taskSummary.
+    **/
+
     public void saveAppJsonInfo(String outputDir) {
 
         for (String appId : appIdList) {
@@ -81,7 +90,7 @@ public class SparkAppProfiler {
             */
 
 
-            JobsJsonParser jobParser = new JobsJsonParser(masterIP, appid, outputDir);
+            // JobsJsonParser jobParser = new JobsJsonParser(masterIP, appid, outputDir);
             //jobParser.parseJobInfo();
 
             /*
@@ -112,7 +121,7 @@ public class SparkAppProfiler {
             listListMap1.put("Job History", listList1);
             ju1.write(listListMap1);
 
-            StageJsonParser read2 = new StageJsonParser();
+
             read2.setStageUrl(appid);
             read2.stagewsu();
             List<Stage> stage = read2.getStageList();
@@ -227,7 +236,7 @@ public class SparkAppProfiler {
     public static void main(String args[]) {
 
 
-        String masterIP = "47.92.71.43";
+        String masterIP = "";
 
         // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";

@@ -2,24 +2,24 @@ package parser;
 
 import appinfo.Application;
 import appinfo.Job;
+
 import com.google.gson.*;
 import util.HtmlFetcher;
 import util.HtmlJsonWriter;
 
-import java.io.*;
+
+import java.io.File;
+import java.util.List;
 
 
 public class JobsJsonParser {
 
     private Application app;
 
-    private String jobsURL;
     private String appDir;
     private String appURL;
 
     public JobsJsonParser(String appURL, String appDir, Application app) {
-        // http://masterIP:18080/api/v1/applications/app-20170618202557-0295/jobs
-        this.jobsURL = appURL + "/jobs";
         this.appDir = appDir;
         this.app = app;
         this.appURL = appURL;
@@ -29,7 +29,7 @@ public class JobsJsonParser {
 
     }
 
-    public void parseJobsInfo(String jobsJson) {
+    public void parseJobsJson(String jobsJson) {
 
         try {
             JsonParser parser = new JsonParser();
@@ -83,31 +83,21 @@ public class JobsJsonParser {
         // "profiles/WordCount-CMS-4-28_app-20170618202557-0295/jobs.json"
         String jobsJsonFile = appDir + File.separatorChar + "jobs.json";
 
-        String jobsJson = HtmlFetcher.fetch(jobsURL);
+        String jobsJson = HtmlFetcher.fetch(appURL + "/jobs");
         HtmlJsonWriter.write(jobsJsonFile, jobsJson);
 
-        parseJobsInfo(jobsJson);
-
-        saveStagesJson();
-
-        for (Job job : app.getJobList()) {
-            saveStagesJsonPerJob(job);
-        }
+        parseJobsJson(jobsJson);
     }
 
-    private void saveStagesJson() {
-        // http://masterIP:18080/api/v1/applications/app-20170618202557-0295/stages
-        String stagesURL = appURL + "/stages";
-
-        // "profiles/WordCount-CMS-4-28_app-20170618202557-0295/stages.json"
-        String stagesJsonFile = appDir + File.separatorChar + "stages.json";
-
-        String stagesJson = HtmlFetcher.fetch(stagesURL);
-        HtmlJsonWriter.write(stagesJsonFile, stagesJson);
-    }
 
     // "profiles/WordCount-CMS-4-28_app-20170618202557-0295/jobId/stageId/"
     private void saveStagesJsonPerJob(Job job) {
+        List<Integer> stageIds = job.getStageIds();
+        for (Integer stageId : stageIds) {
+
+            String stageURL = appURL + "/stages/" + stageId + "/";
+        }
+
 
     }
 }

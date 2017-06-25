@@ -62,6 +62,7 @@ public class SparkAppJsonSaver {
         for (String appId : appIdList) {
             AppJsonParser appJsonParser = new AppJsonParser(masterIP, appId);
             appJsonParser.saveAppJson(outputDir);
+            System.out.println("[Done] The json information of " + appId + " has been saved into " + outputDir);
         }
     }
 

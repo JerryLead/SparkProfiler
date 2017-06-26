@@ -14,22 +14,18 @@ import java.util.List;
 
 public class JobsJsonParser {
 
-    private Application app;
 
     private String appDir;
     private String appURL;
 
-    public JobsJsonParser(String appURL, String appDir, Application app) {
+    public JobsJsonParser(String appURL, String appDir) {
         this.appDir = appDir;
-        this.app = app;
         this.appURL = appURL;
     }
 
-    public JobsJsonParser(String jobsJson, Application app) {
+    public JobsJsonParser() {}
 
-    }
-
-    public void parseJobsJson(String jobsJson) {
+    public void parseJobsJson(String jobsJson, Application app) {
 
         try {
             JsonParser parser = new JsonParser();
@@ -79,14 +75,14 @@ public class JobsJsonParser {
 
     }
 
-    public void saveJobsJson() {
+    public void saveJobsJson(Application app) {
         // "profiles/WordCount-CMS-4-28_app-20170618202557-0295/jobs.json"
         String jobsJsonFile = appDir + File.separatorChar + "jobs.json";
 
         String jobsJson = HtmlFetcher.fetch(appURL + "/jobs");
         HtmlJsonWriter.write(jobsJsonFile, jobsJson);
 
-        parseJobsJson(jobsJson);
+        parseJobsJson(jobsJson, app);
     }
 
 

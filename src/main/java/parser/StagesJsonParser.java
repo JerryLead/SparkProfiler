@@ -16,15 +16,16 @@ public class StagesJsonParser {
 
     private String appURL;
     private String appDir;
-    private Application app;
 
-    public StagesJsonParser(String appURL, String appDir, Application app) {
+
+    public StagesJsonParser() {}
+
+    public StagesJsonParser(String appURL, String appDir) {
         this.appURL = appURL;
         this.appDir = appDir;
-        this.app = app;
     }
 
-    public void saveStagesJson() {
+    public void saveStagesJson(Application app) {
         // http://masterIP:18080/api/v1/applications/app-20170618202557-0295/stages
         String stagesURL = appURL + "/stages";
 
@@ -34,10 +35,10 @@ public class StagesJsonParser {
         String stagesJson = HtmlFetcher.fetch(stagesURL);
         HtmlJsonWriter.write(stagesJsonFile, stagesJson);
 
-        parseStagesJson(stagesJson);
+        parseStagesJson(stagesJson, app);
     }
 
-    private void parseStagesJson(String stagesJson) {
+    public void parseStagesJson(String stagesJson, Application app) {
 
         try {
             JsonParser parser = new JsonParser();
@@ -64,4 +65,5 @@ public class StagesJsonParser {
             e.printStackTrace();
         }
     }
+
 }

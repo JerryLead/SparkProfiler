@@ -1,5 +1,12 @@
 package profiler;
 
+import appinfo.Application;
+import parser.AppJsonParser;
+import parser.JobsJsonParser;
+import parser.StageTasksJsonParser;
+import parser.StagesJsonParser;
+import util.JsonFileReader;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -54,22 +61,76 @@ public class SparkAppProfiler {
 
     public void profileApps() {
 
+        List<Application> applications = new ArrayList<Application>();
+
+        // appDir = profiles/appName_appId/
         File appDir = new File(appJsonDir);
 
         for (File appJsonFile : appDir.listFiles()) {
             if (appJsonFile.isDirectory() && appJsonFile.getName().contains("app")) {
+
+                // RDDJoin-CMS-4-28G-0.5_app-20170623114155-0011
+                String fileName = appJsonFile.getName();
+                String appId = fileName.substring(fileName.lastIndexOf("app"));
+
                 if (useAppList) {
-                    if (appIdSet.contains(appJsonFile.getName()))
-                        profileApp(appJsonFile);
+                    if (appIdSet.contains(appId))
+                        applications.add(profileApp(appJsonFile));
                 } else {
-                    profileApp(appJsonFile);
+                    applications.add(profileApp(appJsonFile));
                 }
             }
-
         }
     }
 
-    private void profileApp(File appJsonFile) {
+    // appJsonFile = profiles/appName_appId/
+    private Application profileApp(File appJsonFile) {
+
+        String dir = appJsonFile.getAbsolutePath();
+
+        // parse application.json
+        String applicationJson = dir + File.separatorChar + "application.json";
+        AppJsonParser appJsonParser = new AppJsonParser();
+        Application app = appJsonParser.parseApplication(applicationJson);
+
+        // parse jobs.json
+        String jobsJsonFile = dir + File.separatorChar + "jobs.json";
+        JobsJsonParser jobsJsonParser = new JobsJsonParser();
+        String jobsJson = JsonFileReader.readFile(jobsJsonFile);
+        // add jobs into the app
+        jobsJsonParser.parseJobsJson(jobsJson, app);
+
+        // parse stages.json
+        String stagesJsonFile = dir + File.separatorChar + "stages.json";
+        StagesJsonParser stagesJsonParser = new StagesJsonParser();
+        String stagesJson = JsonFileReader.readFile(stagesJsonFile);
+        // add stages into the app
+        stagesJsonParser.parseStagesJson(stagesJson, app);
+
+        // parse tasks info in jobId/stageId/attemptId.json and taskSummary.json
+        for (File jobDir : appJsonFile.listFiles()) {
+
+            String jobName = jobDir.getName();
+            if (jobDir.isDirectory() && jobName.startsWith("job")) {
+                int jobId = Integer.parseInt(jobName.substring(jobName.lastIndexOf('-') + 1));
+
+                for (File stageDir : jobDir.listFiles()) {
+                    String stageName = stageDir.getName();
+
+                    if (stageDir.isDirectory() && stageName.startsWith("stage")) {
+                        int stageId = Integer.parseInt(stageName.substring(stageName.lastIndexOf('-') + 1));
+
+                        StageTasksJsonParser stageTasksJsonParser = new StageTasksJsonParser();
+                        stageTasksJsonParser.parseStageTasksJson(stageDir, jobId, stageId, app);
+                    }
+                }
+            }
+        }
+
+
+
+
+        return app;
     }
 
 
@@ -82,7 +143,6 @@ public class SparkAppProfiler {
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
 
         String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
-
 
 
         SparkAppProfiler profiler = new SparkAppProfiler(useAppList, appJsonDir);

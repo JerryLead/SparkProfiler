@@ -5,6 +5,7 @@ import appinfo.Job;
 import appinfo.Stage;
 import util.HtmlFetcher;
 import util.HtmlJsonWriter;
+import util.JsonFileReader;
 
 import java.io.File;
 
@@ -13,8 +14,9 @@ public class AppJsonParser {
     private String appId;
     private String appURL;
 
-    private Application app;
     private String appDir;
+
+    public AppJsonParser() {}
 
     public AppJsonParser(String masterIP, String appId) {
         this.appId = appId;
@@ -22,11 +24,17 @@ public class AppJsonParser {
         appURL = "http://" + masterIP + ":18080/api/v1/applications/" + appId;
     }
 
+    // application.json
+    public Application parseApplication(String appJsonFile) {
+        String appJson = JsonFileReader.readFile(appJsonFile);
+        return new Application(appJson);
+    }
+
     public void saveAppJson(String outputDir) {
         String appJson = HtmlFetcher.fetch(appURL);
 
         // in order to get the app name
-        app = new Application(appJson);
+        Application app = new Application(appJson);
 
         /**
          * The following app pages will be saved:
@@ -46,18 +54,18 @@ public class AppJsonParser {
         HtmlJsonWriter.write(appJsonFile, appJson);
 
         // Save the jobs json "/applications/[app-id]/jobs" into "outputDir/appName_appId/jobs.json"
-        JobsJsonParser jobsJsonParser = new JobsJsonParser(appURL, appDir, app);
-        jobsJsonParser.saveJobsJson();
+        JobsJsonParser jobsJsonParser = new JobsJsonParser(appURL, appDir);
+        jobsJsonParser.saveJobsJson(app);
 
         // Save the stages json "/applications/[app-id]/stages" into "outputDir/appName_appId/stages.json"
-        StagesJsonParser stagesJsonParser = new StagesJsonParser(appURL, appDir, app);
-        stagesJsonParser.saveStagesJson();
+        StagesJsonParser stagesJsonParser = new StagesJsonParser(appURL, appDir);
+        stagesJsonParser.saveStagesJson(app);
 
 
         // To save the tasks json "/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]" and
         // "/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary" into
         // "outputDir/appName_appId/jobId/stageId/"
-        saveStageAttemptJson();
+        saveStageAttemptJson(app);
 
 
         // To save the executor json "/applications/[app-id]/executors" and
@@ -71,7 +79,7 @@ public class AppJsonParser {
 
     }
 
-    private void saveStageAttemptJson() {
+    private void saveStageAttemptJson(Application app) {
         for (Job job : app.getJobMap().values()) {
             int jobId = job.getJobId();
 
@@ -102,7 +110,6 @@ public class AppJsonParser {
 
                 }
             }
-
         }
     }
 

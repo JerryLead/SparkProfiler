@@ -55,6 +55,10 @@ public class SparkAppJsonSaver {
      * /applications/[app-id]/stages, including the information of each stage.
      * /applications/[app-id]/stages/[stage-id]/[stage-attempt-id], including the tasks and executorSummary.
      * /applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary, including the taskSummary.
+     *
+     * /applications/[app-id]/executors, A list of all active executors for the given application.
+     * /applications/[app-id]/allexecutors, A list of all(active and dead) executors for the given application.
+     * /applications/[app-id]/storage/rdd, A list of stored RDDs for the given application.
      **/
 
     public void saveAppJsonInfo(String outputDir) {

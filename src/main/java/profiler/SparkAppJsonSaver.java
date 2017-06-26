@@ -54,7 +54,7 @@ public class SparkAppJsonSaver {
      * /applications/[app-id]/jobs, including the information of each job.
      * /applications/[app-id]/stages, including the information of each stage.
      * /applications/[app-id]/stages/[stage-id]/[stage-attempt-id], including the tasks and executorSummary.
-     * /applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary, including the taskSummary.
+     * /applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary?quantiles=0,0.25,0.5,0.75,1, including the taskSummary.
      *
      * /applications/[app-id]/executors, A list of all active executors for the given application.
      * /applications/[app-id]/allexecutors, A list of all(active and dead) executors for the given application.

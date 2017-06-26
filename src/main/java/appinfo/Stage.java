@@ -86,6 +86,7 @@ import java.util.TreeMap;
   } ]
 },
  */
+
 public class Stage {
 
     private int stageId;
@@ -109,10 +110,20 @@ public class Stage {
     public String getStageAttemptStatus(int stageAttemptId) {
         return stageAttemptMap.get(stageAttemptId).getStatus();
     }
+
+
+    public void addTask(int stageAttemptId, JsonObject taskObject) {
+        StageAttempt stageAttempt = stageAttemptMap.get(stageAttemptId);
+        stageAttempt.addTask(taskObject);
+    }
+
+    public void addTaskSummary(int stageAttemptId, JsonObject taskSummaryJsonObject) {
+        StageAttempt stageAttempt = stageAttemptMap.get(stageAttemptId);
+        stageAttempt.addTaskSummary(taskSummaryJsonObject);
+    }
 }
 
 class StageAttempt {
-
 
     private String status;
     private int attemptId;
@@ -148,6 +159,10 @@ class StageAttempt {
     private long metrics_jvmGCTime;
     private long metrics_shuffle_write_writeTime;
     private long metrics_executorDeserializeCpuTime;
+
+
+    private Map<Integer, Task> taskMap = new TreeMap<Integer, Task>();
+    private TaskSummary taskSummary;
 
     public StageAttempt(JsonObject stageAttemptObject) {
         parseStageAttempt(stageAttemptObject);
@@ -212,11 +227,29 @@ class StageAttempt {
         }
     }
 
+    public void addTask(JsonObject taskObject) {
+        int taskId = taskObject.getAsJsonObject("taskId").getAsInt();
+
+        if (taskMap.containsKey(taskId)) {
+            Task task = taskMap.get(taskId);
+            task.addTaskAttempt(taskObject);
+        } else {
+            Task task = new Task(taskId);
+            task.addTaskAttempt(taskObject);
+            taskMap.put(taskId, task);
+        }
+    }
+
     public int getAttemptId() {
         return attemptId;
     }
 
     public String getStatus() {
         return status;
+    }
+
+    public void addTaskSummary(JsonObject taskSummaryJsonObject) {
+        this.taskSummary = new TaskSummary(taskSummaryJsonObject);
+
     }
 }

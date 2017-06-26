@@ -28,7 +28,6 @@ public class Job {
     private int numFailedStages;
 
     private long durationMS;
-    private List<Stage> stageList = new ArrayList<Stage>();
 
     // http://47.92.71.43:18080/api/v1/applications/app-20170618202557-0295/jobs/0
     private String jobURL;

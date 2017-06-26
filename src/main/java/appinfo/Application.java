@@ -78,7 +78,7 @@ public class Application {
     }
 
     public void addStage(JsonObject stageObject) {
-        int stageId = stageObject.get("stageId").getAsInt();
+        int stageId = stageObject.getAsJsonObject("stageId").getAsInt();
 
         if (stageMap.containsKey(stageId)) {
             Stage stage = stageMap.get(stageId);

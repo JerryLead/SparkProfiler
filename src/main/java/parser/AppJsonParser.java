@@ -42,7 +42,7 @@ public class AppJsonParser {
          * /applications/[app-id]/jobs, including the information of each job.
          * /applications/[app-id]/stages, including the information of each stage.
          * /applications/[app-id]/stages/[stage-id]/[stage-attempt-id], including the tasks and executorSummary.
-         * /applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary, including the taskSummary.
+         * /applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary?quantiles=0,0.25,0.5,0.75,1, including the taskSummary.
          * /applications/[app-id]/executors, A list of all active executors for the given application.
          * /applications/[app-id]/allexecutors, A list of all(active and dead) executors for the given application.
          * /applications/[app-id]/storage/rdd, A list of stored RDDs for the given application.
@@ -63,7 +63,7 @@ public class AppJsonParser {
 
 
         // To save the tasks json "/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]" and
-        // "/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary" into
+        // "/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary?quantiles=0,0.25,0.5,0.75,1" into
         // "outputDir/appName_appId/jobId/stageId/"
         saveStageAttemptJson(app);
 
@@ -99,7 +99,7 @@ public class AppJsonParser {
                     HtmlJsonWriter.write(stageAttemptJsonFile, stageAttemptJson);
 
                     if(stage.getStageAttemptStatus(stageAttemptId).equals("COMPLETE")) {
-                        String taskSummaryURL = stageAttemptURL + "/taskSummary";
+                        String taskSummaryURL = stageAttemptURL + "/taskSummary?quantiles=0,0.25,0.5,0.75,1";
                         // "outputDir/appName_appId/jobId/stageId/attempt-attemptId-taskSummary.json"
                         String taskSummaryJsonFile = appDir + File.separatorChar + "job-" + jobId +
                                 File.separatorChar + "stage-" + stageId + File.separatorChar + "attempt-" +

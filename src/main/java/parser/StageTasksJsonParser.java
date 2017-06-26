@@ -1,10 +1,13 @@
 package parser;
 
 import appinfo.Application;
+import appinfo.Stage;
+import appinfo.Task;
 import com.google.gson.*;
 import util.JsonFileReader;
 
 import java.io.File;
+import java.util.Map;
 
 
 public class StageTasksJsonParser {
@@ -19,45 +22,53 @@ public class StageTasksJsonParser {
      */
     public void parseStageTasksJson(File stageDir, int jobId, int stageId, Application app) {
 
+        Stage stage = app.getStage(stageId);
+
         for (File attemptFile : stageDir.listFiles()) {
+            String attemptFileName = attemptFile.getName();
+            int stageAttemptId = Integer.parseInt(attemptFileName.substring(attemptFileName.indexOf('-') + 1,
+                    attemptFileName.lastIndexOf("json") - 1));
+
             if (attemptFile.getName().contains("taskSummary")) {
-                parseTaskSummary(attemptFile);
+                parseTaskSummary(attemptFile, stage, stageAttemptId);
             } else {
-                parseTaskJson(attemptFile);
+                parseTasksJson(attemptFile, stage, stageAttemptId);
             }
         }
 
     }
 
-    private void parseTaskSummary(File attemptFile) {
+    private void parseTaskSummary(File attemptFile, Stage stage, int stageAttemptId) {
+        String taskSummaryJson = JsonFileReader.readFile(attemptFile.getAbsolutePath());
+
+        try {
+            JsonParser parser = new JsonParser();
+            JsonElement el = parser.parse(taskSummaryJson);
+            stage.addTaskSummary(stageAttemptId, el.getAsJsonObject());
+
+        } catch (JsonIOException e) {
+            e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * @param attemptFile attempt-0.json
      */
-    private void parseTaskJson(File attemptFile) {
+    private void parseTasksJson(File attemptFile, Stage stage, int stageAttemptId) {
+
         String stageTasksJson = JsonFileReader.readFile(attemptFile.getAbsolutePath());
 
-        /*
         try {
             JsonParser parser = new JsonParser();
             JsonElement el = parser.parse(stageTasksJson);
-            JsonElement tasksElem = el.getAsJsonObject().get("tasks");
+            JsonObject tasksObject = el.getAsJsonObject().get("tasks").getAsJsonObject();
 
-            JsonArray taskJsonArray = null;
-
-            if (tasksElem.isJsonArray())
-                taskJsonArray = tasksElem.getAsJsonArray();
-            else {
-                System.err.println("Error in parsing the " + attemptFile.getAbsolutePath());
-                System.exit(1);
-            }
-
-            for (JsonElement stageElem : taskJsonArray) {
-                JsonObject stageObject = stageElem.getAsJsonObject();
-                // stageId = 0, attemptId = 1
-                // stageId = 0, attemptId = 0
-                app.addStage(stageObject);
+            for (Map.Entry<String, JsonElement> taskEntry : tasksObject.entrySet()) {
+                JsonObject taskObject = taskEntry.getValue().getAsJsonObject();
+                stage.addTask(stageAttemptId, taskObject);
             }
 
         } catch (JsonIOException e) {
@@ -65,7 +76,8 @@ public class StageTasksJsonParser {
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
-        */
 
     }
+
+   
 }

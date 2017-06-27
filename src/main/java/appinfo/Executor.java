@@ -49,30 +49,24 @@ public class Executor {
     private long totalShuffleWrite;
     private long maxMemory;
 
-    private String executorLogs_stdout;
-    private String executorLogs_stderr;
-
     public Executor(JsonObject executorJson) {
-        id = executorJson.getAsJsonObject("id").getAsString();
-        hostPort = executorJson.getAsJsonObject("hostPort").getAsString();
-        rddBlocks = executorJson.getAsJsonObject("rddBlocks").getAsInt();
-        memoryUsed = executorJson.getAsJsonObject("memoryUsed").getAsLong();
-        diskUsed = executorJson.getAsJsonObject("diskUsed").getAsLong();
-        totalCores = executorJson.getAsJsonObject("totalCores").getAsInt();
-        maxTasks = executorJson.getAsJsonObject("maxTasks").getAsInt();
-        activeTasks = executorJson.getAsJsonObject("activeTasks").getAsInt();
-        failedTasks = executorJson.getAsJsonObject("failedTasks").getAsInt();
-        completedTasks = executorJson.getAsJsonObject("completedTasks").getAsInt();
-        totalTasks = executorJson.getAsJsonObject("totalTasks").getAsInt();
-        totalDuration = executorJson.getAsJsonObject("totalDuration").getAsLong();
-        totalGCTime = executorJson.getAsJsonObject("totalGCTime").getAsLong();
-        totalInputBytes = executorJson.getAsJsonObject("totalInputBytes").getAsLong();
-        totalShuffleRead = executorJson.getAsJsonObject("totalShuffleRead").getAsLong();
-        totalShuffleWrite = executorJson.getAsJsonObject("totalShuffleWrite").getAsLong();
-        maxMemory = executorJson.getAsJsonObject("maxMemory").getAsLong();
-
-        executorLogs_stdout = executorJson.getAsJsonObject("executorLogs").getAsJsonObject("stdout").getAsString();
-        executorLogs_stderr = executorJson.getAsJsonObject("executorLogs").getAsJsonObject("stderr").getAsString();
+        id = executorJson.get("id").getAsString();
+        hostPort = executorJson.get("hostPort").getAsString();
+        rddBlocks = executorJson.get("rddBlocks").getAsInt();
+        memoryUsed = executorJson.get("memoryUsed").getAsLong();
+        diskUsed = executorJson.get("diskUsed").getAsLong();
+        totalCores = executorJson.get("totalCores").getAsInt();
+        maxTasks = executorJson.get("maxTasks").getAsInt();
+        activeTasks = executorJson.get("activeTasks").getAsInt();
+        failedTasks = executorJson.get("failedTasks").getAsInt();
+        completedTasks = executorJson.get("completedTasks").getAsInt();
+        totalTasks = executorJson.get("totalTasks").getAsInt();
+        totalDuration = executorJson.get("totalDuration").getAsLong();
+        totalGCTime = executorJson.get("totalGCTime").getAsLong();
+        totalInputBytes = executorJson.get("totalInputBytes").getAsLong();
+        totalShuffleRead = executorJson.get("totalShuffleRead").getAsLong();
+        totalShuffleWrite = executorJson.get("totalShuffleWrite").getAsLong();
+        maxMemory = executorJson.get("maxMemory").getAsLong();
     }
 
 

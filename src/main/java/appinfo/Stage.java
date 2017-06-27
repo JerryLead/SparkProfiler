@@ -228,7 +228,7 @@ class StageAttempt {
     }
 
     public void addTask(JsonObject taskObject) {
-        int taskId = taskObject.getAsJsonObject("taskId").getAsInt();
+        int taskId = taskObject.get("taskId").getAsInt();
 
         if (taskMap.containsKey(taskId)) {
             Task task = taskMap.get(taskId);

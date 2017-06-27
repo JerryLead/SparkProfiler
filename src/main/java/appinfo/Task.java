@@ -119,49 +119,51 @@ class TaskAttempt {
     }
 
     public void parseTaskAttempt(JsonObject taskAttemptObject) {
-        this.index = taskAttemptObject.getAsJsonObject("index").getAsInt();
-        this.attempt = taskAttemptObject.getAsJsonObject("attempt").getAsInt();
-        this.launchTime = taskAttemptObject.getAsJsonObject("launchTime").getAsString();
-        this.executorId = taskAttemptObject.getAsJsonObject("executorId").getAsInt();
-        this.host = taskAttemptObject.getAsJsonObject("host").getAsString();
-        this.taskLocality = taskAttemptObject.getAsJsonObject("taskLocality").getAsString();
-        this.speculative = taskAttemptObject.getAsJsonObject("speculative").getAsBoolean();
+        this.index = taskAttemptObject.get("index").getAsInt();
+        this.attempt = taskAttemptObject.get("attempt").getAsInt();
+        this.launchTime = taskAttemptObject.get("launchTime").getAsString();
+        this.executorId = taskAttemptObject.get("executorId").getAsInt();
+        this.host = taskAttemptObject.get("host").getAsString();
+        this.taskLocality = taskAttemptObject.get("taskLocality").getAsString();
+        this.speculative = taskAttemptObject.get("speculative").getAsBoolean();
         // accumulatorUpdates
 
         JsonObject taskMetricsObj = taskAttemptObject.getAsJsonObject("taskMetrics");
 
-        this.taskMetrics_executorDeserializeTime = taskMetricsObj.getAsJsonObject("executorDeserializeTime").getAsLong();
-        this.taskMetrics_executorDeserializeCpuTime = taskMetricsObj.getAsJsonObject("executorDeserializeCpuTime").getAsLong();
-        this.taskMetrics_executorRunTime = taskMetricsObj.getAsJsonObject("executorRunTime").getAsLong();
-        this.taskMetrics_executorCpuTime = taskMetricsObj.getAsJsonObject("executorCpuTime").getAsLong();
-        this.taskMetrics_resultSize = taskMetricsObj.getAsJsonObject("resultSize").getAsLong();
-        this.taskMetrics_jvmGcTime = taskMetricsObj.getAsJsonObject("jvmGcTime").getAsLong();
-        this.taskMetrics_resultSerializationTime = taskMetricsObj.getAsJsonObject("resultSerializationTime").getAsLong();
-        this.taskMetrics_memoryBytesSpilled = taskMetricsObj.getAsJsonObject("memoryBytesSpilled").getAsLong();
-        this.taskMetrics_diskBytesSpilled = taskMetricsObj.getAsJsonObject("diskBytesSpilled").getAsLong();
+        this.taskMetrics_executorDeserializeTime = taskMetricsObj.get("executorDeserializeTime").getAsLong();
+        this.taskMetrics_executorDeserializeCpuTime = taskMetricsObj.get("executorDeserializeCpuTime").getAsLong();
+        this.taskMetrics_executorRunTime = taskMetricsObj.get("executorRunTime").getAsLong();
+        this.taskMetrics_executorCpuTime = taskMetricsObj.get("executorCpuTime").getAsLong();
+        this.taskMetrics_resultSize = taskMetricsObj.get("resultSize").getAsLong();
+        this.taskMetrics_jvmGcTime = taskMetricsObj.get("jvmGcTime").getAsLong();
+        this.taskMetrics_resultSerializationTime = taskMetricsObj.get("resultSerializationTime").getAsLong();
+        this.taskMetrics_memoryBytesSpilled = taskMetricsObj.get("memoryBytesSpilled").getAsLong();
+        this.taskMetrics_diskBytesSpilled = taskMetricsObj.get("diskBytesSpilled").getAsLong();
 
-        JsonObject inputMetricsObj = taskMetricsObj.getAsJsonObject("inptutMetrics");
-        this.taskMetrics_inputMetrics_bytesRead = inputMetricsObj.getAsJsonObject("bytesRead").getAsLong();
-        this.taskMetrics_inputMetrics_recordsRead = inputMetricsObj.getAsJsonObject("recordsRead").getAsLong();
+        JsonObject inputMetricsObj = taskMetricsObj.getAsJsonObject("inputMetrics");
+        this.taskMetrics_inputMetrics_bytesRead = inputMetricsObj.get("bytesRead").getAsLong();
+        this.taskMetrics_inputMetrics_recordsRead = inputMetricsObj.get("recordsRead").getAsLong();
 
 
-        JsonObject outputMetricsObj = taskMetricsObj.getAsJsonObject("outputMetricsObj");
+        JsonObject outputMetricsObj = taskMetricsObj.getAsJsonObject("outputMetrics");
 
-        this.taskMetrics_outputMetrics_bytesWritten = outputMetricsObj.getAsJsonObject("bytesWritten").getAsLong();
-        this.taskMetrics_outputMetrics_recordsWritten = outputMetricsObj.getAsJsonObject("recordsWritten").getAsLong();
+        this.taskMetrics_outputMetrics_bytesWritten = outputMetricsObj.get("bytesWritten").getAsLong();
+        this.taskMetrics_outputMetrics_recordsWritten = outputMetricsObj.get("recordsWritten").getAsLong();
 
 
         JsonObject shuffleReadMetricsObj = taskMetricsObj.getAsJsonObject("shuffleReadMetrics");
 
-        this.taskMetrics_shuffleReadMetrics_remoteBlocksFetched = shuffleReadMetricsObj.getAsJsonObject("remoteBlocksFetched").getAsLong();
-        this.taskMetrics_shuffleReadMetrics_localBlocksFetched = shuffleReadMetricsObj.getAsJsonObject("localBlocksFetched").getAsLong();
-        this.taskMetrics_shuffleReadMetrics_fetchWaitTime = shuffleReadMetricsObj.getAsJsonObject("fetchWaitTime").getAsLong();
-        this.taskMetrics_shuffleReadMetrics_remoteBytesRead = shuffleReadMetricsObj.getAsJsonObject("remoteBytesRead").getAsLong();
-        this.taskMetrics_shuffleReadMetrics_localBytesRead = shuffleReadMetricsObj.getAsJsonObject("localBytesRead").getAsLong();
-        this.taskMetrics_shuffleReadMetrics_recordsRead = shuffleReadMetricsObj.getAsJsonObject("recordsRead").getAsLong();
+        this.taskMetrics_shuffleReadMetrics_remoteBlocksFetched = shuffleReadMetricsObj.get("remoteBlocksFetched").getAsLong();
+        this.taskMetrics_shuffleReadMetrics_localBlocksFetched = shuffleReadMetricsObj.get("localBlocksFetched").getAsLong();
+        this.taskMetrics_shuffleReadMetrics_fetchWaitTime = shuffleReadMetricsObj.get("fetchWaitTime").getAsLong();
+        this.taskMetrics_shuffleReadMetrics_remoteBytesRead = shuffleReadMetricsObj.get("remoteBytesRead").getAsLong();
+        this.taskMetrics_shuffleReadMetrics_localBytesRead = shuffleReadMetricsObj.get("localBytesRead").getAsLong();
+        this.taskMetrics_shuffleReadMetrics_recordsRead = shuffleReadMetricsObj.get("recordsRead").getAsLong();
 
-        this.taskMetrics_shuffleWriteMetrics_bytesWritten = shuffleReadMetricsObj.getAsJsonObject("bytesWritten").getAsLong();
-        this.taskMetrics_shuffleWriteMetrics_writeTime = shuffleReadMetricsObj.getAsJsonObject("writeTime").getAsLong();
-        this.taskMetrics_shuffleWriteMetrics_recordsWritten = shuffleReadMetricsObj.getAsJsonObject("recordsWritten").getAsLong();
+        JsonObject shuffleWriteMetricsObj = taskMetricsObj.getAsJsonObject("shuffleWriteMetrics");
+
+        this.taskMetrics_shuffleWriteMetrics_bytesWritten = shuffleWriteMetricsObj.get("bytesWritten").getAsLong();
+        this.taskMetrics_shuffleWriteMetrics_writeTime = shuffleWriteMetricsObj.get("writeTime").getAsLong();
+        this.taskMetrics_shuffleWriteMetrics_recordsWritten = shuffleWriteMetricsObj.get("recordsWritten").getAsLong();
     }
 }

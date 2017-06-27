@@ -26,12 +26,16 @@ public class StageTasksJsonParser {
 
         for (File attemptFile : stageDir.listFiles()) {
             String attemptFileName = attemptFile.getName();
-            int stageAttemptId = Integer.parseInt(attemptFileName.substring(attemptFileName.indexOf('-') + 1,
-                    attemptFileName.lastIndexOf("json") - 1));
 
             if (attemptFile.getName().contains("taskSummary")) {
+                int stageAttemptId = Integer.parseInt(attemptFileName.substring(attemptFileName.indexOf('-') + 1,
+                        attemptFileName.lastIndexOf('-')));
+
                 parseTaskSummary(attemptFile, stage, stageAttemptId);
             } else {
+                int stageAttemptId = Integer.parseInt(attemptFileName.substring(attemptFileName.indexOf('-') + 1,
+                        attemptFileName.lastIndexOf("json") - 1));
+
                 parseTasksJson(attemptFile, stage, stageAttemptId);
             }
         }

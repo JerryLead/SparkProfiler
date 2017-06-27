@@ -1,12 +1,10 @@
 package profiler;
 
 import parser.AppJsonParser;
+import util.CommandRunner;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 
 public class SparkAppJsonSaver {
@@ -70,14 +68,57 @@ public class SparkAppJsonSaver {
         }
     }
 
+    /**
+     *
+     * @param slavesIP e.g., slave1
+     * @param executorLogFile /dataDisk/spark-2.1.4.19-bin-2.7.1/worker/
+     * @param outputDir /Users/xulijie/Documents/GCResearch/Experiments/profiles/
+     */
+    public void saveExecutorGCInfo(String userName, String[] slavesIP, String executorLogFile, String outputDir) {
+
+        // create executors directory in outputDir/appName_appId/
+        Map<String, String> appIdtoName = new HashMap<String, String>();
+        for (String appId : appIdList)
+            appIdtoName.put(appId, "");
+
+        for (File appDir : new File(outputDir).listFiles()) {
+            String appId = appDir.getName().substring(appDir.getName().indexOf('_') + 1);
+            if (appIdtoName.containsKey(appId)) {
+                File executorFile = new File(appDir, "executors");
+                executorFile.mkdir();
+                appIdtoName.put(appId, appDir.getName());
+            }
+        }
+
+        // rsync -av --exclude *.jar root@aliSlave2:/dataDisk/spark-2.1.4.19-bin-2.7.1/worker/app-20170616152828-0285/*
+        // /Users/xulijie/Documents/GCResearch/Experiments/profiles/*_app-20170623114155-0011/executors/
+        String rsync = "rsync -av --exclude *.jar " + userName + "@";
+
+        for (String slaveIP : slavesIP) {
+            for (String appId : appIdList) {
+                // /dataDisk/spark-2.1.4.19-bin-2.7.1/worker/appId/executorID/{stdout, stderr}
+                String logFile = executorLogFile + "/" + appId + "/*";
+                String outputFile = outputDir + File.separatorChar + appIdtoName.get(appId) + File.separatorChar + "executors";
+                String cmd = rsync + slaveIP + ":" + logFile + " " + outputFile;
+                CommandRunner.exec(cmd);
+            }
+        }
+    }
+
+
     public static void main(String args[]) {
 
 
-        String masterIP = "";
+        String masterIP = "aliMaster";
 
         // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
         String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
+
+        // The executor log files are stored on each slave node
+        String executorLogFile = "/dataDisk/spark-2.1.4.19-bin-2.7.1/worker";
+        String[] slavesIP = new String[]{"aliSlave1", "aliSlave2", "aliSlave3", "aliSlave4", "aliSlave5", "aliSlave6", "aliSlave7", "aliSlave8"};
+        String userName = "root";
 
         SparkAppJsonSaver saver = new SparkAppJsonSaver(masterIP);
 
@@ -86,6 +127,9 @@ public class SparkAppJsonSaver {
 
         // Save the app's jsons info into the outputDir
         saver.saveAppJsonInfo(outputDir);
+
+        saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
     }
+
 
 }

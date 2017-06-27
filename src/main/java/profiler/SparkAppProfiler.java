@@ -1,10 +1,7 @@
 package profiler;
 
 import appinfo.Application;
-import parser.AppJsonParser;
-import parser.JobsJsonParser;
-import parser.StageTasksJsonParser;
-import parser.StagesJsonParser;
+import parser.*;
 import util.JsonFileReader;
 
 import java.io.BufferedReader;
@@ -127,8 +124,12 @@ public class SparkAppProfiler {
             }
         }
 
-
-
+        // parse allexecutors info in jobId/stageId/allexecutors.json
+        String allexecutorsFile = dir + File.separatorChar + "allexecutors.json";
+        String allexecutorsJson = JsonFileReader.readFile(allexecutorsFile);
+        // add allexecutors info into the app
+        ExecutorsJsonParser executorsJsonParser = new ExecutorsJsonParser();
+        executorsJsonParser.parseExecutorsJson(allexecutorsJson, app);
 
         return app;
     }

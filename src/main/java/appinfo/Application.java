@@ -19,6 +19,7 @@ public class Application {
 
     private Map<Integer, Job> jobMap = new TreeMap<Integer, Job>();
     private Map<Integer, Stage> stageMap = new TreeMap<Integer, Stage>();
+    private List<Executor> executors = new ArrayList<Executor>();
 
     /*
     {
@@ -100,6 +101,10 @@ public class Application {
 
     public Stage getStage(int stageId) {
         return stageMap.get(stageId);
+    }
+
+    public void addExecutor(Executor executor) {
+        executors.add(executor);
     }
 }
 

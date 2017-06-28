@@ -1,6 +1,8 @@
 package profiler;
 
+import gc.ExecutorGCLogParser;
 import parser.AppJsonParser;
+import parser.ExecutorsJsonParser;
 import util.CommandRunner;
 
 import java.io.*;
@@ -105,6 +107,33 @@ public class SparkAppJsonSaver {
         }
     }
 
+    private void parseExecutorGCInfo(String outputDir) {
+
+        Map<String, String> appIdtoName = new HashMap<String, String>();
+        for (String appId : appIdList)
+            appIdtoName.put(appId, "");
+
+        for (File appDir : new File(outputDir).listFiles()) {
+            String appId = appDir.getName().substring(appDir.getName().indexOf('_') + 1);
+            if (appIdtoName.containsKey(appId)) {
+                File executorsFile = new File(appDir, "executors");
+
+                for(File executorDir : executorsFile.listFiles()) {
+                    // executors/0
+                    if (executorDir.isDirectory()) {
+                        String executorId = executorDir.getName();
+
+                        String gcLogFile = executorDir.getAbsolutePath() + File.separatorChar + "stdout";
+                        String exportCVSFile = executorDir.getAbsolutePath() + File.separatorChar + "gcMetrics-" + executorId + ".csv";
+                        String chartPNGFile = executorDir.getAbsolutePath() + File.separatorChar + "gcChart-" + executorId + ".png";
+
+                        ExecutorGCLogParser.parseExecutorGCLog(gcLogFile, exportCVSFile, chartPNGFile);
+                    }
+
+                }
+            }
+        }
+    }
 
     public static void main(String args[]) {
 
@@ -129,7 +158,11 @@ public class SparkAppJsonSaver {
         saver.saveAppJsonInfo(outputDir);
 
         saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
+
+        saver.parseExecutorGCInfo(outputDir);
     }
+
+
 
 
 }

@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 public class CommandRunner {
 
     public static void exec(String cmd) {
-
+        System.out.println(cmd);
         Runtime run = Runtime.getRuntime();
         try {
             Process p = run.exec(cmd);

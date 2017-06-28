@@ -106,6 +106,10 @@ public class Application {
     public void addExecutor(Executor executor) {
         executors.add(executor);
     }
+
+    public Executor getExecutor(int executorId) {
+        return executors.get(executorId);
+    }
 }
 
 class AppAttempt {

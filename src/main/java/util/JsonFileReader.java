@@ -3,6 +3,8 @@ package util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class JsonFileReader {
@@ -36,5 +38,36 @@ public class JsonFileReader {
         }
 
         return sb.toString();
+    }
+
+    public static List<String> readFileLines(String fileName) {
+        BufferedReader br = null;
+        FileReader fr = null;
+        List<String> lines = new ArrayList<String>();
+
+        try {
+            fr = new FileReader(fileName);
+            br = new BufferedReader(fr);
+            String sCurrentLine;
+
+            br = new BufferedReader(new FileReader(fileName));
+
+            while ((sCurrentLine = br.readLine()) != null) {
+                lines.add(sCurrentLine);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null)
+                    br.close();
+                if (fr != null)
+                    fr.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return lines;
     }
 }

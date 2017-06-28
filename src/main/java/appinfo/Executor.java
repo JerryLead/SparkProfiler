@@ -49,7 +49,7 @@ public class Executor {
     private long totalShuffleWrite;
     private long maxMemory;
 
-    private GCMetrics gcMetrics;
+    private GCMetrics gcMetrics = new GCMetrics();
 
     public Executor(JsonObject executorJson) {
         id = executorJson.get("id").getAsString();
@@ -77,6 +77,7 @@ public class Executor {
         String value = metrics[1];
         String unit = metrics[2];
 
+        gcMetrics.set(name, value);
     }
 }
 

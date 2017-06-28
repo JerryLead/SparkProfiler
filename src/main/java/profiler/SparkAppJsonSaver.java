@@ -2,7 +2,6 @@ package profiler;
 
 import gc.ExecutorGCLogParser;
 import parser.AppJsonParser;
-import parser.ExecutorsJsonParser;
 import util.CommandRunner;
 
 import java.io.*;

@@ -2,7 +2,6 @@ package parser;
 
 import appinfo.Application;
 import appinfo.Stage;
-import appinfo.Task;
 import com.google.gson.*;
 import util.JsonFileReader;
 

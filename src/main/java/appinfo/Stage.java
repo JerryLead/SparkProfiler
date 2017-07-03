@@ -121,135 +121,17 @@ public class Stage {
         StageAttempt stageAttempt = stageAttemptMap.get(stageAttemptId);
         stageAttempt.addTaskSummary(taskSummaryJsonObject);
     }
-}
 
-class StageAttempt {
-
-    private String status;
-    private int attemptId;
-    private int numActiveTasks;
-    private int numCompleteTasks;
-    private int numFailedTasks;
-    private long executorRunTime;
-    private long executorCpuTime;
-    private String submissionTime;
-    private String firstTaskLaunchedTime;
-    private String completionTime;
-    private long inputBytes;
-    private long inputRecords;
-    private long outputBytes;
-    private long outputRecords;
-    private long shuffleReadBytes;
-    private long shuffleReadRecords;
-    private long shuffleWriteBytes;
-    private long shuffleWriteRecords;
-    private long memoryBytesSpilled;
-    private long diskBytesSpilled;
-
-    // internal.metrics.*
-    private long metrics_resultSize;
-    private long metrics_input_recordsRead;
-    private long metrics_executorCpuTime;
-    private long metrics_resultSerializationTime;
-    private long metrics_shuffle_write_recordsWritten;
-    private long metrics_executorDeserializeTime;
-    private long metrics_shuffle_write_bytesWritten;
-    private long metrics_input_bytesRead;
-    private long metrics_executorRunTime;
-    private long metrics_jvmGCTime;
-    private long metrics_shuffle_write_writeTime;
-    private long metrics_executorDeserializeCpuTime;
-
-
-    private Map<Integer, Task> taskMap = new TreeMap<Integer, Task>();
-    private TaskSummary taskSummary;
-
-    public StageAttempt(JsonObject stageAttemptObject) {
-        parseStageAttempt(stageAttemptObject);
-    }
-
-    private void parseStageAttempt(JsonObject stageAttemptObject) {
-        status = stageAttemptObject.get("status").getAsString();
-        attemptId = stageAttemptObject.get("attemptId").getAsInt();
-
-        if (status.equals("COMPLETE")) {
-            submissionTime = stageAttemptObject.get("submissionTime").getAsString();
-            firstTaskLaunchedTime = stageAttemptObject.get("firstTaskLaunchedTime").getAsString();
-            completionTime = stageAttemptObject.get("completionTime").getAsString();
+    public StageAttempt getCompletedStage() {
+        for (StageAttempt stageAttempt : stageAttemptMap.values()) {
+            if (stageAttempt.getStatus().equals("COMPLETE"))
+                return stageAttempt;
         }
 
-        numActiveTasks = stageAttemptObject.get("numActiveTasks").getAsInt();
-        numCompleteTasks = stageAttemptObject.get("numCompleteTasks").getAsInt();
-        numFailedTasks = stageAttemptObject.get("numFailedTasks").getAsInt();
-        executorRunTime = stageAttemptObject.get("executorRunTime").getAsLong();
-        executorCpuTime = stageAttemptObject.get("executorCpuTime").getAsLong();
-
-        inputBytes = stageAttemptObject.get("inputBytes").getAsLong();
-        inputRecords = stageAttemptObject.get("inputRecords").getAsLong();
-        outputBytes = stageAttemptObject.get("outputBytes").getAsLong();
-        outputRecords = stageAttemptObject.get("outputRecords").getAsLong();
-        shuffleReadBytes = stageAttemptObject.get("shuffleReadBytes").getAsLong();
-        shuffleReadRecords = stageAttemptObject.get("shuffleReadRecords").getAsLong();
-        shuffleWriteBytes = stageAttemptObject.get("shuffleWriteBytes").getAsLong();
-        shuffleWriteRecords = stageAttemptObject.get("shuffleWriteRecords").getAsLong();
-        memoryBytesSpilled = stageAttemptObject.get("memoryBytesSpilled").getAsLong();
-        diskBytesSpilled = stageAttemptObject.get("diskBytesSpilled").getAsLong();
-
-
-        JsonArray accumulatorUpdatesArray = stageAttemptObject.get("accumulatorUpdates").getAsJsonArray();
-        for (JsonElement elem : accumulatorUpdatesArray) {
-            String metrics = elem.getAsJsonObject().get("name").getAsString();
-            long value = elem.getAsJsonObject().get("value").getAsLong();
-            if(metrics.endsWith("resultSize"))
-                metrics_resultSize = value;
-            else if(metrics.endsWith("recordsRead"))
-                metrics_input_recordsRead = value;
-            else if(metrics.endsWith("executorCpuTime"))
-                metrics_executorCpuTime = value;
-            else if(metrics.endsWith("resultSerializationTime"))
-                metrics_resultSerializationTime = value;
-            else if(metrics.endsWith("recordsWritten"))
-                metrics_shuffle_write_recordsWritten = value;
-            else if(metrics.endsWith("executorDeserializeTime"))
-                metrics_executorDeserializeTime = value;
-            else if(metrics.endsWith("bytesWritten"))
-                metrics_shuffle_write_bytesWritten = value;
-            else if(metrics.endsWith("bytesRead"))
-                metrics_input_bytesRead = value;
-            else if(metrics.endsWith("executorRunTime"))
-                metrics_executorRunTime = value;
-            else if(metrics.endsWith("jvmGCTime"))
-                metrics_jvmGCTime = value;
-            else if(metrics.endsWith("writeTime"))
-                metrics_shuffle_write_writeTime = value;
-            else if(metrics.endsWith("executorDeserializeCpuTime"))
-                metrics_executorDeserializeCpuTime = value;
-        }
+        return null;
     }
 
-    public void addTask(JsonObject taskObject) {
-        int taskId = taskObject.get("taskId").getAsInt();
-
-        if (taskMap.containsKey(taskId)) {
-            Task task = taskMap.get(taskId);
-            task.addTaskAttempt(taskObject);
-        } else {
-            Task task = new Task(taskId);
-            task.addTaskAttempt(taskObject);
-            taskMap.put(taskId, task);
-        }
-    }
-
-    public int getAttemptId() {
-        return attemptId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void addTaskSummary(JsonObject taskSummaryJsonObject) {
-        this.taskSummary = new TaskSummary(taskSummaryJsonObject);
-
+    public int getStageId() {
+        return stageId;
     }
 }

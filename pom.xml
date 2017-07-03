@@ -27,6 +27,13 @@
             <version>2.8.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+
         <dependency>
             <groupId>com.github</groupId>
             <artifactId>gcviewer</artifactId>
@@ -34,5 +41,6 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/gcviewer-1.35-SNAPSHOT.jar</systemPath>
         </dependency>
+
     </dependencies>
 </project>

@@ -56,7 +56,7 @@ public class SparkAppProfiler {
         return appIdSet;
     }
 
-    public void profileApps() {
+    public List<Application> profileApps() {
 
         List<Application> applications = new ArrayList<Application>();
 
@@ -80,6 +80,8 @@ public class SparkAppProfiler {
                 System.out.println("[Done] " + fileName + " has been profiled!");
             }
         }
+
+        return applications;
     }
 
     // appJsonFile = profiles/appName_appId/
@@ -152,7 +154,6 @@ public class SparkAppProfiler {
 
         String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
 
-
         SparkAppProfiler profiler = new SparkAppProfiler(useAppList, appJsonDir);
 
         if (useAppList) {
@@ -160,8 +161,7 @@ public class SparkAppProfiler {
             Set<String> appIdSet = profiler.parseAppIdList(appIdsFile);
             profiler.setAppSet(appIdSet);
         }
-
-
+        
         // Profile the app based on the saved json and output the profiles
         profiler.profileApps();
 

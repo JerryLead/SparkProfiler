@@ -68,102 +68,18 @@ public class Task {
         // Note that the attemptId may not be consistent with the array index.
         taskAttemptMap.put(taskAttempt.getTaskAttemptId(), taskAttempt);
     }
-}
 
+    public TaskAttempt getCompletedTask() {
+        for (TaskAttempt taskAttempt : taskAttemptMap.values()) {
+            if (taskAttempt.getErrorMessage() == null)
+                return taskAttempt;
+        }
 
-class TaskAttempt {
-
-    private int index;
-    private int attempt;
-    private String launchTime;
-    private int executorId;
-    private String host;
-    private String taskLocality;
-    private boolean speculative;
-    // accumulatorUpdates
-
-    private long taskMetrics_executorDeserializeTime;
-    private long taskMetrics_executorDeserializeCpuTime;
-    private long taskMetrics_executorRunTime;
-    private long taskMetrics_executorCpuTime;
-    private long taskMetrics_resultSize;
-    private long taskMetrics_jvmGcTime;
-    private long taskMetrics_resultSerializationTime;
-    private long taskMetrics_memoryBytesSpilled;
-    private long taskMetrics_diskBytesSpilled;
-
-    private long taskMetrics_inputMetrics_bytesRead;
-    private long taskMetrics_inputMetrics_recordsRead;
-
-    private long taskMetrics_outputMetrics_bytesWritten;
-    private long taskMetrics_outputMetrics_recordsWritten;
-
-    private long taskMetrics_shuffleReadMetrics_remoteBlocksFetched;
-    private long taskMetrics_shuffleReadMetrics_localBlocksFetched;
-    private long taskMetrics_shuffleReadMetrics_fetchWaitTime;
-    private long taskMetrics_shuffleReadMetrics_remoteBytesRead;
-    private long taskMetrics_shuffleReadMetrics_localBytesRead;
-    private long taskMetrics_shuffleReadMetrics_recordsRead;
-
-    private long taskMetrics_shuffleWriteMetrics_bytesWritten;
-    private long taskMetrics_shuffleWriteMetrics_writeTime;
-    private long taskMetrics_shuffleWriteMetrics_recordsWritten;
-
-
-    public TaskAttempt(JsonObject taskAttemptObject) {
-        parseTaskAttempt(taskAttemptObject);
+        return null;
     }
 
-    public int getTaskAttemptId() {
-        return attempt;
-    }
-
-    public void parseTaskAttempt(JsonObject taskAttemptObject) {
-        this.index = taskAttemptObject.get("index").getAsInt();
-        this.attempt = taskAttemptObject.get("attempt").getAsInt();
-        this.launchTime = taskAttemptObject.get("launchTime").getAsString();
-        this.executorId = taskAttemptObject.get("executorId").getAsInt();
-        this.host = taskAttemptObject.get("host").getAsString();
-        this.taskLocality = taskAttemptObject.get("taskLocality").getAsString();
-        this.speculative = taskAttemptObject.get("speculative").getAsBoolean();
-        // accumulatorUpdates
-
-        JsonObject taskMetricsObj = taskAttemptObject.getAsJsonObject("taskMetrics");
-
-        this.taskMetrics_executorDeserializeTime = taskMetricsObj.get("executorDeserializeTime").getAsLong();
-        this.taskMetrics_executorDeserializeCpuTime = taskMetricsObj.get("executorDeserializeCpuTime").getAsLong();
-        this.taskMetrics_executorRunTime = taskMetricsObj.get("executorRunTime").getAsLong();
-        this.taskMetrics_executorCpuTime = taskMetricsObj.get("executorCpuTime").getAsLong();
-        this.taskMetrics_resultSize = taskMetricsObj.get("resultSize").getAsLong();
-        this.taskMetrics_jvmGcTime = taskMetricsObj.get("jvmGcTime").getAsLong();
-        this.taskMetrics_resultSerializationTime = taskMetricsObj.get("resultSerializationTime").getAsLong();
-        this.taskMetrics_memoryBytesSpilled = taskMetricsObj.get("memoryBytesSpilled").getAsLong();
-        this.taskMetrics_diskBytesSpilled = taskMetricsObj.get("diskBytesSpilled").getAsLong();
-
-        JsonObject inputMetricsObj = taskMetricsObj.getAsJsonObject("inputMetrics");
-        this.taskMetrics_inputMetrics_bytesRead = inputMetricsObj.get("bytesRead").getAsLong();
-        this.taskMetrics_inputMetrics_recordsRead = inputMetricsObj.get("recordsRead").getAsLong();
-
-
-        JsonObject outputMetricsObj = taskMetricsObj.getAsJsonObject("outputMetrics");
-
-        this.taskMetrics_outputMetrics_bytesWritten = outputMetricsObj.get("bytesWritten").getAsLong();
-        this.taskMetrics_outputMetrics_recordsWritten = outputMetricsObj.get("recordsWritten").getAsLong();
-
-
-        JsonObject shuffleReadMetricsObj = taskMetricsObj.getAsJsonObject("shuffleReadMetrics");
-
-        this.taskMetrics_shuffleReadMetrics_remoteBlocksFetched = shuffleReadMetricsObj.get("remoteBlocksFetched").getAsLong();
-        this.taskMetrics_shuffleReadMetrics_localBlocksFetched = shuffleReadMetricsObj.get("localBlocksFetched").getAsLong();
-        this.taskMetrics_shuffleReadMetrics_fetchWaitTime = shuffleReadMetricsObj.get("fetchWaitTime").getAsLong();
-        this.taskMetrics_shuffleReadMetrics_remoteBytesRead = shuffleReadMetricsObj.get("remoteBytesRead").getAsLong();
-        this.taskMetrics_shuffleReadMetrics_localBytesRead = shuffleReadMetricsObj.get("localBytesRead").getAsLong();
-        this.taskMetrics_shuffleReadMetrics_recordsRead = shuffleReadMetricsObj.get("recordsRead").getAsLong();
-
-        JsonObject shuffleWriteMetricsObj = taskMetricsObj.getAsJsonObject("shuffleWriteMetrics");
-
-        this.taskMetrics_shuffleWriteMetrics_bytesWritten = shuffleWriteMetricsObj.get("bytesWritten").getAsLong();
-        this.taskMetrics_shuffleWriteMetrics_writeTime = shuffleWriteMetricsObj.get("writeTime").getAsLong();
-        this.taskMetrics_shuffleWriteMetrics_recordsWritten = shuffleWriteMetricsObj.get("recordsWritten").getAsLong();
+    public int getTaskId() {
+        return taskId;
     }
 }
+

@@ -140,8 +140,11 @@ public class SparkAppJsonSaver {
         String masterIP = "aliMaster";
 
         // Users need to specify the appIds to be profiled
+        // e.g., app-20170623113634-0010
+        //       app-20170623113111-0009
+        //       app-20170623112547-0008
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/RDDJoin/";
 
         // The executor log files are stored on each slave node
         String executorLogFile = "/dataDisk/spark-2.1.4.19-bin-2.7.1/worker";
@@ -160,8 +163,5 @@ public class SparkAppJsonSaver {
 
         saver.parseExecutorGCInfo(outputDir);
     }
-
-
-
 
 }

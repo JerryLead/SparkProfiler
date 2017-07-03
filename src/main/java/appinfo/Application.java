@@ -110,6 +110,14 @@ public class Application {
     public Executor getExecutor(int executorId) {
         return executors.get(executorId);
     }
+
+    public long getDuartion() {
+        AppAttempt appAttempt = attemptList.get(0);
+        if (appAttempt.getCompleted())
+            return attemptList.get(0).getDuration();
+        else
+            return 0;
+    }
 }
 
 class AppAttempt {
@@ -117,8 +125,7 @@ class AppAttempt {
     private String endTime;
     private String lastUpdated;
     private long duration; // ms
-    private String completed;
-
+    private boolean completed;
     private long startTimeEpoch;
     private long lastUpdatedEpoch;
     private long endTimeEpoch;
@@ -129,9 +136,18 @@ class AppAttempt {
         endTime = attemptObj.getAsJsonObject().get("endTime").getAsString();
         lastUpdated = attemptObj.getAsJsonObject().get("lastUpdated").getAsString();
         duration = attemptObj.getAsJsonObject().get("duration").getAsLong();
-        completed = attemptObj.getAsJsonObject().get("completed").getAsString();
+        completed = attemptObj.getAsJsonObject().get("completed").getAsBoolean();
         startTimeEpoch = attemptObj.getAsJsonObject().get("startTimeEpoch").getAsLong();
         lastUpdatedEpoch = attemptObj.getAsJsonObject().get("lastUpdatedEpoch").getAsLong();
         endTimeEpoch = attemptObj.getAsJsonObject().get("endTimeEpoch").getAsLong();
     }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public boolean getCompleted() {
+        return completed;
+    }
+
 }

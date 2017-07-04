@@ -39,6 +39,8 @@ public class StageStatistics {
     private Statistics executorDeserializeCpuTime;
 
 
+    private TaskStatistics taskStatistics;
+
     // In general, we run each application 5 times, so the length of stageWithSameId is 5
     public StageStatistics(List<Stage> stagesWithSameId) {
         List<StageAttempt> stageAttempts = new ArrayList<StageAttempt>();
@@ -53,6 +55,7 @@ public class StageStatistics {
         }
 
         computeStatistics(stageAttempts);
+        // computeTaskStatistics(stageAttempts);
     }
 
     private void computeStatistics(List<StageAttempt> stageAttempts) {

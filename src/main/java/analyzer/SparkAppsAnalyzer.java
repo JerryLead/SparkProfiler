@@ -1,6 +1,7 @@
 package analyzer;
 
 import appinfo.Application;
+import statstics.ApplicationStatistics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,25 +13,29 @@ public class SparkAppsAnalyzer {
 
     // Key: AppName, Value: the same app that runs multiple times
     // Key = RDDJoin-CMS-1-7G-0.5, Value = [app-20170630121954-0025, app-20170630122434-0026, ...]
-    public Map<String, List<Application>> appMap = new HashMap<String, List<Application>>();
+    private Map<String, List<Application>> appNameToIdsMap = new HashMap<String, List<Application>>();
+    private Map<String, ApplicationStatistics> appStatisticsMap = new HashMap<String, ApplicationStatistics>();
 
-    public void init(List<Application> profiledApps) {
+    // profiledApps = [apps with different names in the appList]
+    public void aggregateApps(List<Application> profiledApps) {
         for (Application app : profiledApps) {
             String appName = app.getName();
 
-            if (!appMap.containsKey(appName)) {
+            if (!appNameToIdsMap.containsKey(appName)) {
                 List<Application> appList = new ArrayList<Application>();
                 appList.add(app);
-                appMap.put(appName, appList);
+                appNameToIdsMap.put(appName, appList);
             } else {
-                List<Application> appList = appMap.get(appName);
+                List<Application> appList = appNameToIdsMap.get(appName);
                 appList.add(app);
             }
         }
     }
 
-    public void analyzeExecutionTime() {
-        ExecutionTimeAnalyzer executionTimeAnalyzer = new ExecutionTimeAnalyzer(appMap);
-        executionTimeAnalyzer.analyzeAppDuration();
+    public void analyzeAppStatistics() {
+        for (Map.Entry<String, List<Application>> app : appNameToIdsMap.entrySet()) {
+            ApplicationStatistics appStatistics = new ApplicationStatistics(app.getValue());
+            appStatisticsMap.put(app.getKey(), appStatistics);
+        }
     }
 }

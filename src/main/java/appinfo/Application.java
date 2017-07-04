@@ -12,14 +12,22 @@ import java.util.TreeMap;
 
 public class Application {
 
-    // private String JobID;
     private String appId;
     private String name;
-    private List<AppAttempt> attemptList = new ArrayList<AppAttempt>();
 
     private Map<Integer, Job> jobMap = new TreeMap<Integer, Job>();
     private Map<Integer, Stage> stageMap = new TreeMap<Integer, Stage>();
     private List<Executor> executors = new ArrayList<Executor>();
+
+
+    private String startTime;
+    private String endTime;
+    private String lastUpdated;
+    private long duration; // ms
+    private boolean completed = false;
+    private long startTimeEpoch;
+    private long lastUpdatedEpoch;
+    private long endTimeEpoch;
 
     /*
     {
@@ -57,12 +65,21 @@ public class Application {
         JsonArray attempts = appObject.get("attempts").getAsJsonArray();
 
         for (JsonElement attemptElem : attempts) {
-            AppAttempt attempt = new AppAttempt(attemptElem.getAsJsonObject());
-            attemptList.add(attempt);
-            if (attemptList.size() > 1) {
-                System.err.println("WARNING: This application has more than one application attempts!!!");
+            if (completed = false) {
+                initAppAttempt(attemptElem.getAsJsonObject());
             }
         }
+    }
+
+    public void initAppAttempt(JsonObject attemptObj) {
+        startTime = attemptObj.getAsJsonObject().get("startTime").getAsString();
+        endTime = attemptObj.getAsJsonObject().get("endTime").getAsString();
+        lastUpdated = attemptObj.getAsJsonObject().get("lastUpdated").getAsString();
+        duration = attemptObj.getAsJsonObject().get("duration").getAsLong();
+        completed = attemptObj.getAsJsonObject().get("completed").getAsBoolean();
+        startTimeEpoch = attemptObj.getAsJsonObject().get("startTimeEpoch").getAsLong();
+        lastUpdatedEpoch = attemptObj.getAsJsonObject().get("lastUpdatedEpoch").getAsLong();
+        endTimeEpoch = attemptObj.getAsJsonObject().get("endTimeEpoch").getAsLong();
     }
 
     public String getAppId() {
@@ -100,7 +117,12 @@ public class Application {
     }
 
     public Stage getStage(int stageId) {
-        return stageMap.get(stageId);
+        if (stageMap.containsKey(stageId))
+            return stageMap.get(stageId);
+        else {
+            System.err.println("[Error] " + appId + " does not have stage " + stageId);
+            return null;
+        }
     }
 
     public void addExecutor(Executor executor) {
@@ -111,19 +133,18 @@ public class Application {
         return executors.get(executorId);
     }
 
-    public long getDuartion() {
-        AppAttempt appAttempt = attemptList.get(0);
-        if (appAttempt.getCompleted())
-            return attemptList.get(0).getDuration();
+    public long getDuration() {
+        if (completed)
+            return duration;
         else
             return 0;
     }
 
-    public AppAttempt getCompletedApp() {
-        for (AppAttempt appAttempt : attemptList) {
-            if (appAttempt.getCompleted())
-                return appAttempt;
-        }
-        return null;
+    public List<Executor> getExecutors() {
+        return executors;
+    }
+
+    public boolean isCompleted() {
+        return completed;
     }
 }

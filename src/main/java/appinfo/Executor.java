@@ -54,6 +54,7 @@ public class Executor {
     public Executor(JsonObject executorJson) {
         id = executorJson.get("id").getAsString();
         hostPort = executorJson.get("hostPort").getAsString();
+        isActive = executorJson.get("isActive").getAsBoolean();
         rddBlocks = executorJson.get("rddBlocks").getAsInt();
         memoryUsed = executorJson.get("memoryUsed").getAsLong();
         diskUsed = executorJson.get("diskUsed").getAsLong();
@@ -78,6 +79,82 @@ public class Executor {
         String unit = metrics[2];
 
         gcMetrics.set(name, value);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getHostPort() {
+        return hostPort;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public int getRddBlocks() {
+        return rddBlocks;
+    }
+
+    public long getMemoryUsed() {
+        return memoryUsed;
+    }
+
+    public long getDiskUsed() {
+        return diskUsed;
+    }
+
+    public int getTotalCores() {
+        return totalCores;
+    }
+
+    public int getMaxTasks() {
+        return maxTasks;
+    }
+
+    public int getActiveTasks() {
+        return activeTasks;
+    }
+
+    public int getFailedTasks() {
+        return failedTasks;
+    }
+
+    public int getCompletedTasks() {
+        return completedTasks;
+    }
+
+    public int getTotalTasks() {
+        return totalTasks;
+    }
+
+    public long getTotalDuration() {
+        return totalDuration;
+    }
+
+    public long getTotalGCTime() {
+        return totalGCTime;
+    }
+
+    public long getTotalInputBytes() {
+        return totalInputBytes;
+    }
+
+    public long getTotalShuffleRead() {
+        return totalShuffleRead;
+    }
+
+    public long getTotalShuffleWrite() {
+        return totalShuffleWrite;
+    }
+
+    public long getMaxMemory() {
+        return maxMemory;
+    }
+
+    public GCMetrics getGcMetrics() {
+        return gcMetrics;
     }
 }
 
@@ -244,8 +321,146 @@ class GCMetrics {
             freedMemoryPerMin = Double.parseDouble(value);
         else if (name.equals("freedMemoryPerMin"))
             freedMemoryPerMin = Double.parseDouble(value);
+        else if (name.equals("gcPerformance"))
+            gcPerformance = Double.parseDouble(value);
         else if (name.equals("fullGCPerformance"))
             fullGCPerformance = Double.parseDouble(value);
 
+    }
+
+    public int getFootprint() {
+        return footprint;
+    }
+
+    public double getAvgfootprintAfterFullGC() {
+        return avgfootprintAfterFullGC;
+    }
+
+    public double getFreedMemoryByFullGC() {
+        return freedMemoryByFullGC;
+    }
+
+    public float getFreedMemoryByFullGCpc() {
+        return freedMemoryByFullGCpc;
+    }
+
+    public double getAvgFreedMemoryByFullGC() {
+        return avgFreedMemoryByFullGC;
+    }
+
+    public double getSlopeAfterFullGC() {
+        return slopeAfterFullGC;
+    }
+
+    public double getAvgRelativePostFullGCInc() {
+        return avgRelativePostFullGCInc;
+    }
+
+    public double getAvgfootprintAfterGC() {
+        return avgfootprintAfterGC;
+    }
+
+    public double getSlopeAfterGC() {
+        return slopeAfterGC;
+    }
+
+    public double getAvgRelativePostGCInc() {
+        return avgRelativePostGCInc;
+    }
+
+    public double getFreedMemoryByGC() {
+        return freedMemoryByGC;
+    }
+
+    public float getFreedMemoryByGCpc() {
+        return freedMemoryByGCpc;
+    }
+
+    public double getAvgFreedMemoryByGC() {
+        return avgFreedMemoryByGC;
+    }
+
+    public double getAvgPause() {
+        return avgPause;
+    }
+
+    public double getAvgPauseσ() {
+        return avgPauseσ;
+    }
+
+    public double getMinPause() {
+        return minPause;
+    }
+
+    public double getMaxPause() {
+        return maxPause;
+    }
+
+    public double getAvgGCPause() {
+        return avgGCPause;
+    }
+
+    public double getAvgGCPauseσ() {
+        return avgGCPauseσ;
+    }
+
+    public double getAvgFullGCPause() {
+        return avgFullGCPause;
+    }
+
+    public double getAvgFullGCPauseσ() {
+        return avgFullGCPauseσ;
+    }
+
+    public double getMinFullGCPause() {
+        return minFullGCPause;
+    }
+
+    public double getMaxFullGCPause() {
+        return maxFullGCPause;
+    }
+
+    public double getAccumPause() {
+        return accumPause;
+    }
+
+    public double getFullGCPause() {
+        return fullGCPause;
+    }
+
+    public double getFullGCPausePc() {
+        return fullGCPausePc;
+    }
+
+    public double getGcPause() {
+        return gcPause;
+    }
+
+    public double getGcPausePc() {
+        return gcPausePc;
+    }
+
+    public double getFreedMemory() {
+        return freedMemory;
+    }
+
+    public float getThroughput() {
+        return throughput;
+    }
+
+    public long getTotalTime() {
+        return totalTime;
+    }
+
+    public double getFreedMemoryPerMin() {
+        return freedMemoryPerMin;
+    }
+
+    public double getGcPerformance() {
+        return gcPerformance;
+    }
+
+    public double getFullGCPerformance() {
+        return fullGCPerformance;
     }
 }

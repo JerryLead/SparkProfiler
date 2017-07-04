@@ -118,36 +118,12 @@ public class Application {
         else
             return 0;
     }
-}
 
-class AppAttempt {
-    private String startTime;
-    private String endTime;
-    private String lastUpdated;
-    private long duration; // ms
-    private boolean completed;
-    private long startTimeEpoch;
-    private long lastUpdatedEpoch;
-    private long endTimeEpoch;
-
-
-    public AppAttempt(JsonObject attemptObj) {
-        startTime = attemptObj.getAsJsonObject().get("startTime").getAsString();
-        endTime = attemptObj.getAsJsonObject().get("endTime").getAsString();
-        lastUpdated = attemptObj.getAsJsonObject().get("lastUpdated").getAsString();
-        duration = attemptObj.getAsJsonObject().get("duration").getAsLong();
-        completed = attemptObj.getAsJsonObject().get("completed").getAsBoolean();
-        startTimeEpoch = attemptObj.getAsJsonObject().get("startTimeEpoch").getAsLong();
-        lastUpdatedEpoch = attemptObj.getAsJsonObject().get("lastUpdatedEpoch").getAsLong();
-        endTimeEpoch = attemptObj.getAsJsonObject().get("endTimeEpoch").getAsLong();
+    public AppAttempt getCompletedApp() {
+        for (AppAttempt appAttempt : attemptList) {
+            if (appAttempt.getCompleted())
+                return appAttempt;
+        }
+        return null;
     }
-
-    public long getDuration() {
-        return duration;
-    }
-
-    public boolean getCompleted() {
-        return completed;
-    }
-
 }

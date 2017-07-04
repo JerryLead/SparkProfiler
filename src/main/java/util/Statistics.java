@@ -55,6 +55,36 @@ public class Statistics {
         max = stats.getMax();
     }
 
+    public Statistics(Object[] objects, String methodName1, String methodName2) {
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+
+        for (Object obj : objects) {
+            Class clazz1 = obj.getClass();
+            double value = 0;
+            try {
+                Method method1 = clazz1.getDeclaredMethod(methodName1);
+                Class clazz2 = method1.invoke(obj).getClass();
+                Method method2 = clazz2.getDeclaredMethod(methodName2);
+                value = Double.parseDouble(method2.toString());
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            stats.addValue(value);
+        }
+        mean = stats.getMean();
+        stdVar = stats.getStandardDeviation();
+
+        min = stats.getMin();
+        quantile25 = stats.getPercentile(25);
+        median = stats.getPercentile(50);
+        quantile75 = stats.getPercentile(75);
+        max = stats.getMax();
+    }
+
     public double getMean() {
         return mean;
     }

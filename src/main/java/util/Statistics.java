@@ -63,9 +63,10 @@ public class Statistics {
             double value = 0;
             try {
                 Method method1 = clazz1.getDeclaredMethod(methodName1);
-                Class clazz2 = method1.invoke(obj).getClass();
+                Object object1 = method1.invoke(obj);
+                Class clazz2 = object1.getClass();
                 Method method2 = clazz2.getDeclaredMethod(methodName2);
-                value = Double.parseDouble(method2.toString());
+                value = Double.parseDouble(method2.invoke(object1).toString());
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {

@@ -41,6 +41,10 @@ public class SparkAppsAnalyzer {
 
 
     public void display() {
+        for (Map.Entry<String, ApplicationStatistics> appEntry : appStatisticsMap.entrySet()) {
+            String appName = appEntry.getKey();
+            ApplicationStatistics appStatistics = appEntry.getValue();
 
+        }
     }
 }

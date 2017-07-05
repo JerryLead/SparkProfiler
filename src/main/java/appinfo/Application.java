@@ -65,7 +65,7 @@ public class Application {
         JsonArray attempts = appObject.get("attempts").getAsJsonArray();
 
         for (JsonElement attemptElem : attempts) {
-            if (completed = false) {
+            if (completed == false) {
                 initAppAttempt(attemptElem.getAsJsonObject());
             }
         }

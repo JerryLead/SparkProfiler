@@ -2,7 +2,9 @@ package analyzer;
 
 import appinfo.Application;
 import statstics.ApplicationStatistics;
+import util.FileTextWriter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,14 +41,17 @@ public class SparkAppsAnalyzer {
         }
     }
 
-
-    public void display() {
+    public void outputStatistics(String statisticsDir) {
         for (Map.Entry<String, ApplicationStatistics> appEntry : appStatisticsMap.entrySet()) {
             String appName = appEntry.getKey();
             ApplicationStatistics appStatistics = appEntry.getValue();
             appStatistics.setAppName(appName);
 
-            appStatistics.display();
+            String appStatisticsFile = statisticsDir + File.separatorChar + appName + "-stat.txt";
+            FileTextWriter.write(appStatisticsFile, appStatistics.toString());
+
+            System.out.println("[Done] The statistics of " + appName + " has been computed!");
         }
+
     }
 }

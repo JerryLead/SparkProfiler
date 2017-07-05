@@ -5,9 +5,9 @@ import java.io.*;
 /**
  * Created by xulijie on 17-6-23.
  */
-public class HtmlJsonWriter {
+public class FileTextWriter {
 
-    public static void write(String file, String html) {
+    public static void write(String file, String text) {
         File outputFile = new File(file);
         if (!outputFile.getParentFile().exists())
             outputFile.getParentFile().mkdirs();
@@ -15,7 +15,7 @@ public class HtmlJsonWriter {
         try {
 
             PrintWriter writer = new PrintWriter(new FileWriter(outputFile));
-            writer.print(html);
+            writer.print(text);
             writer.close();
 
         } catch (FileNotFoundException e) {

@@ -4,6 +4,7 @@ import appinfo.Application;
 
 import appinfo.Executor;
 import appinfo.Stage;
+import util.FileTextWriter;
 import util.Statistics;
 
 import java.util.ArrayList;
@@ -91,28 +92,33 @@ public class ApplicationStatistics {
         this.appName = appName;
     }
 
-    public void display() {
-        System.out.println();
-        System.out.println("===============================================================" + appName
-                + "===============================================================");
-        System.out.println("[app.duration] " + duration);
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\n");
+        sb.append("===============================================================" + appName
+                + "===============================================================\n");
+        sb.append("[app.duration] " + duration + "\n");
 
         for (Map.Entry<Integer, StageStatistics> stageStatisticsEntry : stageStatisticsMap.entrySet()) {
             int stageId = stageStatisticsEntry.getKey();
             StageStatistics stageStatistics = stageStatisticsEntry.getValue();
 
-            System.out.println("-------------------------------------------------------------------[Stage "
-                    + stageId + "]-------------------------------------------------------------------");
-            stageStatistics.display();
+            sb.append("-------------------------------------------------------------------[Stage "
+                    + stageId
+                    + "]-------------------------------------------------------------------\n");
+            sb.append(stageStatistics);
         }
 
-        System.out.println("-------------------------------------------------------------------------"
-                + "[Executor Statistics]-------------------------------------------------------------------------");
-        executorStatistics.display();
+        sb.append("-------------------------------------------------------------------------"
+                + "[Executor Statistics]-------------------------------------------------------------------------\n");
+        sb.append(executorStatistics);
 
-        System.out.println("=========================================================================="
-                + "===============================================================");
+        sb.append("=========================================================================="
+                + "===============================================================\n");
+
+        return sb.toString();
     }
-
 }
 

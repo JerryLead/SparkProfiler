@@ -1,4 +1,5 @@
 import com.google.gson.*;
+import util.FileTextWriter;
 import util.JsonFileReader;
 
 import java.io.File;
@@ -33,6 +34,6 @@ public class StageTasksJsonParserTest {
     public static void main (String[] args) {
         String attemptFile = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/RDDJoin-CMS-4-28G-0.5_app-20170623114155-0011/job-0/stage-0/attempt-0.json";
 
-        parseTaskJson(new File(attemptFile));
+        // parseTaskJson(new File(attemptFile));
     }
 }

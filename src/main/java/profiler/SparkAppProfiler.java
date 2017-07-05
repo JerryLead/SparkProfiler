@@ -152,7 +152,6 @@ public class SparkAppProfiler {
         boolean useAppList = true;
         // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-
         String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/RDDjoin";
 
         SparkAppProfiler profiler = new SparkAppProfiler(useAppList, appJsonDir);
@@ -166,9 +165,10 @@ public class SparkAppProfiler {
         // Profile the app based on the saved json and output the profiles
         List<Application> apps = profiler.profileApps();
 
+
         SparkAppsAnalyzer analyzer = new SparkAppsAnalyzer(apps);
         analyzer.analyzeAppStatistics();
-        analyzer.display();
+        analyzer.outputStatistics(appJsonDir + File.separatorChar + "Statistics");
 
     }
 

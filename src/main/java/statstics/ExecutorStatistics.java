@@ -135,58 +135,63 @@ public class ExecutorStatistics {
     }
 
 
-    public void display() {
+    @Override
+    public String toString() {
 
-        System.out.println("[executor.rddBlocks] " + rddBlocks);
-        System.out.println("[executor.memoryUsed] " + memoryUsed);
-        System.out.println("[executor.diskUsed] " + diskUsed);
-        System.out.println("[executor.totalCores] " + totalCores);
-        System.out.println("[executor.maxTasks] " + maxTasks);
-        System.out.println("[executor.activeTasks] " + activeTasks);
-        System.out.println("[executor.failedTasks] " + failedTasks);
-        System.out.println("[executor.completedTasks] " + completedTasks);
-        System.out.println("[executor.totalTasks] " + totalTasks);
-        System.out.println("[executor.totalDuration] " + totalDuration);
-        System.out.println("[executor.totalGCTime] " + totalGCTime);
-        System.out.println("[executor.totalInputBytes] " + totalInputBytes);
-        System.out.println("[executor.totalShuffleRead] " + totalShuffleRead);
-        System.out.println("[executor.totalShuffleWrite] " + totalShuffleWrite);
-        System.out.println("[executor.maxMemory] " + maxMemory);
+        StringBuilder sb = new StringBuilder();
 
-        System.out.println("");
-        System.out.println("[executor.gc.footprint] " + footprint);
-        System.out.println("[executor.gc.avgfootprintAfterFullGC] " + avgfootprintAfterFullGC);
-        System.out.println("[executor.gc.freedMemoryByFullGC] " + freedMemoryByFullGC);
-        System.out.println("[executor.gc.freedMemoryByFullGCpc] " + freedMemoryByFullGCpc);
-        System.out.println("[executor.gc.avgFreedMemoryByFullGC] " + avgFreedMemoryByFullGC);
-        System.out.println("[executor.gc.slopeAfterFullGC] " + slopeAfterFullGC);
-        System.out.println("[executor.gc.avgRelativePostFullGCInc] " + avgRelativePostFullGCInc);
-        System.out.println("[executor.gc.avgfootprintAfterGC] " + avgfootprintAfterGC);
-        System.out.println("[executor.gc.slopeAfterGC] " + slopeAfterGC);
-        System.out.println("[executor.gc.avgRelativePostGCInc] " + avgRelativePostGCInc);
-        System.out.println("[executor.gc.freedMemoryByGC] " + freedMemoryByGC);
-        System.out.println("[executor.gc.freedMemoryByGCpc] " + freedMemoryByGCpc);
-        System.out.println("[executor.gc.avgFreedMemoryByGC] " + avgFreedMemoryByGC);
-        System.out.println("[executor.gc.avgPause] " + avgPause);
-        System.out.println("[executor.gc.avgPauseσ] " + avgPauseσ);
-        System.out.println("[executor.gc.minPause] " + minPause);
-        System.out.println("[executor.gc.maxPause] " + maxPause);
-        System.out.println("[executor.gc.avgGCPause] " + avgGCPause);
-        System.out.println("[executor.gc.avgGCPauseσ] " + avgGCPauseσ);
-        System.out.println("[executor.gc.avgFullGCPause] " + avgFullGCPause);
-        System.out.println("[executor.gc.avgFullGCPauseσ] " + avgFullGCPauseσ);
-        System.out.println("[executor.gc.minFullGCPause] " + minFullGCPause);
-        System.out.println("[executor.gc.maxFullGCPause] " + maxFullGCPause);
-        System.out.println("[executor.gc.accumPause] " + accumPause);
-        System.out.println("[executor.gc.fullGCPause] " + fullGCPause);
-        System.out.println("[executor.gc.fullGCPausePc] " + fullGCPausePc);
-        System.out.println("[executor.gc.gcPause] " + gcPause);
-        System.out.println("[executor.gc.gcPausePc] " + gcPausePc);
-        System.out.println("[executor.gc.freedMemory] " + freedMemory);
-        System.out.println("[executor.gc.throughput] " + throughput);
-        System.out.println("[executor.gc.totalTime] " + totalTime);
-        System.out.println("[executor.gc.freedMemoryPerMin] " + freedMemoryPerMin);
-        System.out.println("[executor.gc.gcPerformance] " + gcPerformance);
-        System.out.println("[executor.gc.fullGCPerformance] " + fullGCPerformance);
+        sb.append("[executor.rddBlocks] " + rddBlocks + "\n");
+        sb.append("[executor.memoryUsed] " + memoryUsed + "\n");
+        sb.append("[executor.diskUsed] " + diskUsed + "\n");
+        sb.append("[executor.totalCores] " + totalCores + "\n");
+        sb.append("[executor.maxTasks] " + maxTasks + "\n");
+        sb.append("[executor.activeTasks] " + activeTasks + "\n");
+        sb.append("[executor.failedTasks] " + failedTasks + "\n");
+        sb.append("[executor.completedTasks] " + completedTasks + "\n");
+        sb.append("[executor.totalTasks] " + totalTasks + "\n");
+        sb.append("[executor.totalDuration] " + totalDuration + "\n");
+        sb.append("[executor.totalGCTime] " + totalGCTime + "\n");
+        sb.append("[executor.totalInputBytes] " + totalInputBytes + "\n");
+        sb.append("[executor.totalShuffleRead] " + totalShuffleRead + "\n");
+        sb.append("[executor.totalShuffleWrite] " + totalShuffleWrite + "\n");
+        sb.append("[executor.maxMemory] " + maxMemory + "\n");
+
+        sb.append("\n");
+        sb.append("[executor.gc.footprint] " + footprint + "\n");
+        sb.append("[executor.gc.avgfootprintAfterFullGC] " + avgfootprintAfterFullGC + "\n");
+        sb.append("[executor.gc.freedMemoryByFullGC] " + freedMemoryByFullGC + "\n");
+        sb.append("[executor.gc.freedMemoryByFullGCpc] " + freedMemoryByFullGCpc + "\n");
+        sb.append("[executor.gc.avgFreedMemoryByFullGC] " + avgFreedMemoryByFullGC + "\n");
+        sb.append("[executor.gc.slopeAfterFullGC] " + slopeAfterFullGC + "\n");
+        sb.append("[executor.gc.avgRelativePostFullGCInc] " + avgRelativePostFullGCInc + "\n");
+        sb.append("[executor.gc.avgfootprintAfterGC] " + avgfootprintAfterGC + "\n");
+        sb.append("[executor.gc.slopeAfterGC] " + slopeAfterGC + "\n");
+        sb.append("[executor.gc.avgRelativePostGCInc] " + avgRelativePostGCInc + "\n");
+        sb.append("[executor.gc.freedMemoryByGC] " + freedMemoryByGC + "\n");
+        sb.append("[executor.gc.freedMemoryByGCpc] " + freedMemoryByGCpc + "\n");
+        sb.append("[executor.gc.avgFreedMemoryByGC] " + avgFreedMemoryByGC + "\n");
+        sb.append("[executor.gc.avgPause] " + avgPause + "\n");
+        sb.append("[executor.gc.avgPauseσ] " + avgPauseσ + "\n");
+        sb.append("[executor.gc.minPause] " + minPause + "\n");
+        sb.append("[executor.gc.maxPause] " + maxPause + "\n");
+        sb.append("[executor.gc.avgGCPause] " + avgGCPause + "\n");
+        sb.append("[executor.gc.avgGCPauseσ] " + avgGCPauseσ + "\n");
+        sb.append("[executor.gc.avgFullGCPause] " + avgFullGCPause + "\n");
+        sb.append("[executor.gc.avgFullGCPauseσ] " + avgFullGCPauseσ + "\n");
+        sb.append("[executor.gc.minFullGCPause] " + minFullGCPause + "\n");
+        sb.append("[executor.gc.maxFullGCPause] " + maxFullGCPause + "\n");
+        sb.append("[executor.gc.accumPause] " + accumPause + "\n");
+        sb.append("[executor.gc.fullGCPause] " + fullGCPause + "\n");
+        sb.append("[executor.gc.fullGCPausePc] " + fullGCPausePc + "\n");
+        sb.append("[executor.gc.gcPause] " + gcPause + "\n");
+        sb.append("[executor.gc.gcPausePc] " + gcPausePc + "\n");
+        sb.append("[executor.gc.freedMemory] " + freedMemory + "\n");
+        sb.append("[executor.gc.throughput] " + throughput + "\n");
+        sb.append("[executor.gc.totalTime] " + totalTime + "\n");
+        sb.append("[executor.gc.freedMemoryPerMin] " + freedMemoryPerMin + "\n");
+        sb.append("[executor.gc.gcPerformance] " + gcPerformance + "\n");
+        sb.append("[executor.gc.fullGCPerformance] " + fullGCPerformance + "\n");
+
+        return sb.toString();
     }
 }

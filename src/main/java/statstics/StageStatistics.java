@@ -98,26 +98,31 @@ public class StageStatistics {
         executorDeserializeCpuTime = new Statistics(stageAttemptObjs, "getMetrics_executorDeserializeCpuTime");
     }
 
-    public void display() {
-        System.out.println("[stage.duration] " + duration);
-        System.out.println("[stage.inputBytes] " + inputBytes);
-        System.out.println("[stage.inputRecords] " + inputRecords);
-        System.out.println("[stage.outputBytes] " + outputBytes);
-        System.out.println("[stage.outputRecords] " + outputRecords);
-        System.out.println("[stage.shuffleReadBytes] " + shuffleReadBytes);
-        System.out.println("[stage.shuffleReadRecords] " + shuffleReadRecords);
-        System.out.println("[stage.shuffleWriteBytes] " + shuffleWriteBytes);
-        System.out.println("[stage.shuffleWriteRecords] " + shuffleWriteRecords);
-        System.out.println("[stage.memoryBytesSpilled] " + memoryBytesSpilled);
-        System.out.println("[stage.diskBytesSpilled] " + diskBytesSpilled);
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
 
-        System.out.println("[stage.resultSize] " + resultSize);
-        System.out.println("[stage.resultSerializationTime] " + resultSerializationTime);
-        System.out.println("[stage.executorDeserializeTime] " + executorDeserializeTime);
-        System.out.println("[stage.jvmGCTime] " + jvmGCTime);
-        System.out.println("[stage.shuffle_write_writeTime] " + shuffle_write_writeTime);
-        System.out.println("[stage.executorDeserializeCpuTime] " + executorDeserializeCpuTime);
+        sb.append("[stage.duration] " + duration + "\n");
+        sb.append("[stage.inputBytes] " + inputBytes + "\n");
+        sb.append("[stage.inputRecords] " + inputRecords + "\n");
+        sb.append("[stage.outputBytes] " + outputBytes + "\n");
+        sb.append("[stage.outputRecords] " + outputRecords + "\n");
+        sb.append("[stage.shuffleReadBytes] " + shuffleReadBytes + "\n");
+        sb.append("[stage.shuffleReadRecords] " + shuffleReadRecords + "\n");
+        sb.append("[stage.shuffleWriteBytes] " + shuffleWriteBytes + "\n");
+        sb.append("[stage.shuffleWriteRecords] " + shuffleWriteRecords + "\n");
+        sb.append("[stage.memoryBytesSpilled] " + memoryBytesSpilled + "\n");
+        sb.append("[stage.diskBytesSpilled] " + diskBytesSpilled + "\n");
 
-        taskStatistics.display();
+        sb.append("[stage.resultSize] " + resultSize + "\n");
+        sb.append("[stage.resultSerializationTime] " + resultSerializationTime + "\n");
+        sb.append("[stage.executorDeserializeTime] " + executorDeserializeTime + "\n");
+        sb.append("[stage.jvmGCTime] " + jvmGCTime + "\n");
+        sb.append("[stage.shuffle_write_writeTime] " + shuffle_write_writeTime + "\n");
+        sb.append("[stage.executorDeserializeCpuTime] " + executorDeserializeCpuTime + "\n");
+
+        sb.append(taskStatistics);
+
+        return sb.toString();
     }
 }

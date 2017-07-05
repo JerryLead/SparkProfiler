@@ -1,16 +1,11 @@
 package parser;
 
 import appinfo.Application;
-import appinfo.Stage;
 import com.google.gson.*;
 import util.HtmlFetcher;
-import util.HtmlJsonWriter;
+import util.FileTextWriter;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class StagesJsonParser {
 
@@ -33,7 +28,7 @@ public class StagesJsonParser {
         String stagesJsonFile = appDir + File.separatorChar + "stages.json";
 
         String stagesJson = HtmlFetcher.fetch(stagesURL);
-        HtmlJsonWriter.write(stagesJsonFile, stagesJson);
+        FileTextWriter.write(stagesJsonFile, stagesJson);
 
         parseStagesJson(stagesJson, app);
     }

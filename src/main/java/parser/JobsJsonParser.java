@@ -5,7 +5,7 @@ import appinfo.Job;
 
 import com.google.gson.*;
 import util.HtmlFetcher;
-import util.HtmlJsonWriter;
+import util.FileTextWriter;
 
 
 import java.io.File;
@@ -80,7 +80,7 @@ public class JobsJsonParser {
         String jobsJsonFile = appDir + File.separatorChar + "jobs.json";
 
         String jobsJson = HtmlFetcher.fetch(appURL + "/jobs");
-        HtmlJsonWriter.write(jobsJsonFile, jobsJson);
+        FileTextWriter.write(jobsJsonFile, jobsJson);
 
         parseJobsJson(jobsJson, app);
     }

@@ -4,7 +4,7 @@ import appinfo.Application;
 import appinfo.Job;
 import appinfo.Stage;
 import util.HtmlFetcher;
-import util.HtmlJsonWriter;
+import util.FileTextWriter;
 import util.JsonFileReader;
 
 import java.io.File;
@@ -51,7 +51,7 @@ public class AppJsonParser {
         // Save the app json "/applications/[app-id]" into "outputDir/appName_appId/application.json"
         appDir = outputDir + File.separatorChar + app.getName() + "_" + appId;
         String appJsonFile = appDir + File.separatorChar + "application.json";
-        HtmlJsonWriter.write(appJsonFile, appJson);
+        FileTextWriter.write(appJsonFile, appJson);
 
         // Save the jobs json "/applications/[app-id]/jobs" into "outputDir/appName_appId/jobs.json"
         JobsJsonParser jobsJsonParser = new JobsJsonParser(appURL, appDir);
@@ -96,7 +96,7 @@ public class AppJsonParser {
                     String stageAttemptJsonFile = appDir + File.separatorChar + "job-" + jobId +
                             File.separatorChar + "stage-" + stageId + File.separatorChar + "attempt-" + stageAttemptId + ".json";
                     String stageAttemptJson = HtmlFetcher.fetch(stageAttemptURL);
-                    HtmlJsonWriter.write(stageAttemptJsonFile, stageAttemptJson);
+                    FileTextWriter.write(stageAttemptJsonFile, stageAttemptJson);
 
                     if(stage.getStageAttemptStatus(stageAttemptId).equals("COMPLETE")) {
                         String taskSummaryURL = stageAttemptURL + "/taskSummary?quantiles=0,0.25,0.5,0.75,1";
@@ -105,7 +105,7 @@ public class AppJsonParser {
                                 File.separatorChar + "stage-" + stageId + File.separatorChar + "attempt-" +
                                 stageAttemptId + "-taskSummary.json";
                         String taskSummaryJson = HtmlFetcher.fetch(taskSummaryURL);
-                        HtmlJsonWriter.write(taskSummaryJsonFile, taskSummaryJson);
+                        FileTextWriter.write(taskSummaryJsonFile, taskSummaryJson);
                     }
 
                 }
@@ -118,13 +118,13 @@ public class AppJsonParser {
         // "outputDir/appName_appId/executors.json"
         String executorJsonFile = appDir + File.separatorChar + "executors.json";
         String executorJson = HtmlFetcher.fetch(executorURL);
-        HtmlJsonWriter.write(executorJsonFile, executorJson);
+        FileTextWriter.write(executorJsonFile, executorJson);
 
         String allexecutorURL = appURL + "/allexecutors";
         // "outputDir/appName_appId/allexecutors.json"
         String allexecutorJsonFile = appDir + File.separatorChar + "allexecutors.json";
         String allexecutorJson = HtmlFetcher.fetch(allexecutorURL);
-        HtmlJsonWriter.write(allexecutorJsonFile, allexecutorJson);
+        FileTextWriter.write(allexecutorJsonFile, allexecutorJson);
     }
 
 
@@ -133,7 +133,7 @@ public class AppJsonParser {
         // "outputDir/appName_appId/storageRDD.json"
         String storageRDDJsonFile = appDir + File.separatorChar + "storageRDD.json";
         String storageRDDJson = HtmlFetcher.fetch(storageRDDURL);
-        HtmlJsonWriter.write(storageRDDJsonFile, storageRDDJson);
+        FileTextWriter.write(storageRDDJsonFile, storageRDDJson);
     }
 
 }

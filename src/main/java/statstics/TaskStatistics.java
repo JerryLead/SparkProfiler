@@ -95,30 +95,35 @@ public class TaskStatistics {
         shuffleWriteMetrics_recordsWritten = new Statistics(taskAttemptObjs, "getShuffleWriteMetrics_recordsWritten");
     }
 
-    public void display() {
-        System.out.println();
-        System.out.println("[task.duration] " + duration);
-        System.out.println("[task.executorDeserializeTime] " + executorDeserializeTime);
-        System.out.println("[task.executorDeserializeCpuTime] " + executorDeserializeCpuTime);
-        System.out.println("[task.executorRunTime] " + executorRunTime);
-        System.out.println("[task.executorCpuTime] " + executorCpuTime);
-        System.out.println("[task.resultSize] " + resultSize);
-        System.out.println("[task.jvmGcTime] " + jvmGcTime);
-        System.out.println("[task.resultSerializationTime] " + resultSerializationTime);
-        System.out.println("[task.memoryBytesSpilled] " + memoryBytesSpilled);
-        System.out.println("[task.diskBytesSpilled] " + diskBytesSpilled);
-        System.out.println("[task.inputMetrics.bytesRead] " + inputMetrics_bytesRead);
-        System.out.println("[task.inputMetrics.recordsRead] " + inputMetrics_recordsRead);
-        System.out.println("[task.outputMetrics.bytesWritten] " + outputMetrics_bytesWritten);
-        System.out.println("[task.outputMetrics.recordsWritten] " + outputMetrics_recordsWritten);
-        System.out.println("[task.shuffleReadMetrics.remoteBlocksFetched] " + shuffleReadMetrics_remoteBlocksFetched);
-        System.out.println("[task.shuffleReadMetrics.localBlocksFetched] " + shuffleReadMetrics_localBlocksFetched);
-        System.out.println("[task.shuffleReadMetrics.fetchWaitTime] " + shuffleReadMetrics_fetchWaitTime);
-        System.out.println("[task.shuffleReadMetrics.remoteBytesRead] " + shuffleReadMetrics_remoteBytesRead);
-        System.out.println("[task.shuffleReadMetrics.localBytesRead] " + shuffleReadMetrics_localBytesRead);
-        System.out.println("[task.shuffleReadMetrics.recordsRead] " + shuffleReadMetrics_recordsRead);
-        System.out.println("[task.shuffleWriteMetrics.bytesWritten] " + shuffleWriteMetrics_bytesWritten);
-        System.out.println("[task.shuffleWriteMetrics.writeTime] " + shuffleWriteMetrics_writeTime);
-        System.out.println("[task.shuffleWriteMetrics.recordsWritten] " + shuffleWriteMetrics_recordsWritten);
+    @Override
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n");
+        sb.append("[task.duration] " + duration + "\n");
+        sb.append("[task.executorDeserializeTime] " + executorDeserializeTime + "\n");
+        sb.append("[task.executorDeserializeCpuTime] " + executorDeserializeCpuTime + "\n");
+        sb.append("[task.executorRunTime] " + executorRunTime + "\n");
+        sb.append("[task.executorCpuTime] " + executorCpuTime + "\n");
+        sb.append("[task.resultSize] " + resultSize + "\n");
+        sb.append("[task.jvmGcTime] " + jvmGcTime + "\n");
+        sb.append("[task.resultSerializationTime] " + resultSerializationTime + "\n");
+        sb.append("[task.memoryBytesSpilled] " + memoryBytesSpilled + "\n");
+        sb.append("[task.diskBytesSpilled] " + diskBytesSpilled + "\n");
+        sb.append("[task.inputMetrics.bytesRead] " + inputMetrics_bytesRead + "\n");
+        sb.append("[task.inputMetrics.recordsRead] " + inputMetrics_recordsRead + "\n");
+        sb.append("[task.outputMetrics.bytesWritten] " + outputMetrics_bytesWritten + "\n");
+        sb.append("[task.outputMetrics.recordsWritten] " + outputMetrics_recordsWritten + "\n");
+        sb.append("[task.shuffleReadMetrics.remoteBlocksFetched] " + shuffleReadMetrics_remoteBlocksFetched + "\n");
+        sb.append("[task.shuffleReadMetrics.localBlocksFetched] " + shuffleReadMetrics_localBlocksFetched + "\n");
+        sb.append("[task.shuffleReadMetrics.fetchWaitTime] " + shuffleReadMetrics_fetchWaitTime + "\n");
+        sb.append("[task.shuffleReadMetrics.remoteBytesRead] " + shuffleReadMetrics_remoteBytesRead + "\n");
+        sb.append("[task.shuffleReadMetrics.localBytesRead] " + shuffleReadMetrics_localBytesRead + "\n");
+        sb.append("[task.shuffleReadMetrics.recordsRead] " + shuffleReadMetrics_recordsRead + "\n");
+        sb.append("[task.shuffleWriteMetrics.bytesWritten] " + shuffleWriteMetrics_bytesWritten + "\n");
+        sb.append("[task.shuffleWriteMetrics.writeTime] " + shuffleWriteMetrics_writeTime + "\n");
+        sb.append("[task.shuffleWriteMetrics.recordsWritten] " + shuffleWriteMetrics_recordsWritten + "\n");
+
+        return sb.toString();
     }
 }

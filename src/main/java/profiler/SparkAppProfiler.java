@@ -1,5 +1,6 @@
 package profiler;
 
+import analyzer.SparkAppsAnalyzer;
 import appinfo.Application;
 import parser.*;
 import util.JsonFileReader;
@@ -163,7 +164,11 @@ public class SparkAppProfiler {
         }
         
         // Profile the app based on the saved json and output the profiles
-        profiler.profileApps();
+        List<Application> apps = profiler.profileApps();
+
+        SparkAppsAnalyzer analyzer = new SparkAppsAnalyzer(apps);
+        analyzer.analyzeAppStatistics();
+        analyzer.display();
 
     }
 

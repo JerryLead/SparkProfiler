@@ -64,7 +64,7 @@ public class TaskStatistics {
     }
 
     private void computeStatistics(List<TaskAttempt> taskAttempts) {
-        Object[] taskAttemptObjs = taskAttempts.toArray(new Object[0]);
+        Object[] taskAttemptObjs = taskAttempts.toArray();
 
         duration = new Statistics(taskAttemptObjs, "getDuration");
         executorDeserializeTime = new Statistics(taskAttemptObjs, "getExecutorDeserializeTime");

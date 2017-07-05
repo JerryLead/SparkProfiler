@@ -17,7 +17,7 @@ public class SparkAppsAnalyzer {
     private Map<String, ApplicationStatistics> appStatisticsMap = new HashMap<String, ApplicationStatistics>();
 
     // profiledApps = [apps with different names in the appList]
-    public void aggregateApps(List<Application> profiledApps) {
+    public SparkAppsAnalyzer(List<Application> profiledApps) {
         for (Application app : profiledApps) {
             String appName = app.getName();
 
@@ -37,5 +37,10 @@ public class SparkAppsAnalyzer {
             ApplicationStatistics appStatistics = new ApplicationStatistics(app.getValue());
             appStatisticsMap.put(app.getKey(), appStatistics);
         }
+    }
+
+
+    public void display() {
+
     }
 }

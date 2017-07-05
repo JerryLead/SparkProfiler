@@ -2,6 +2,7 @@ package statstics;
 
 import appinfo.Stage;
 import appinfo.StageAttempt;
+import appinfo.Task;
 import util.Statistics;
 
 import java.util.ArrayList;
@@ -55,12 +56,22 @@ public class StageStatistics {
         }
 
         computeStatistics(stageAttempts);
-        // computeTaskStatistics(stageAttempts);
+        computeTaskStatistics(stageAttempts);
+    }
+
+    // tasks in stage x from app1, tasks in stage x from app2, tasks in stage x from app3
+    private void computeTaskStatistics(List<StageAttempt> stageAttempts) {
+        List<Task> tasksInSameStage = new ArrayList<Task>();
+
+        for(StageAttempt stageAttempt : stageAttempts)
+            tasksInSameStage.addAll(stageAttempt.getTaskMap().values());
+
+        taskStatistics = new TaskStatistics(tasksInSameStage);
     }
 
     private void computeStatistics(List<StageAttempt> stageAttempts) {
 
-        Object[] stageAttemptObjs = stageAttempts.toArray(new Object[0]);
+        Object[] stageAttemptObjs = stageAttempts.toArray();
 
         duration = new Statistics(stageAttemptObjs, "getDuration");
 

@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import util.DateParser;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -142,6 +143,10 @@ public class StageAttempt {
     public void addTaskSummary(JsonObject taskSummaryJsonObject) {
         this.taskSummary = new TaskSummary(taskSummaryJsonObject);
 
+    }
+
+    public Map<Integer, Task> getTaskMap() {
+        return taskMap;
     }
 
     public long getDuration() {

@@ -78,7 +78,7 @@ public class ExecutorStatistics {
 
     private void computeStatistics(List<Executor> executorList) {
 
-        Object[] executorObjs = executorList.toArray(new Object[0]);
+        Object[] executorObjs = executorList.toArray();
 
         rddBlocks = new Statistics(executorObjs,"getRddBlocks");
         memoryUsed = new Statistics(executorObjs,"getMemoryUsed");

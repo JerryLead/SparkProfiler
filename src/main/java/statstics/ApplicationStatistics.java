@@ -42,7 +42,7 @@ public class ApplicationStatistics {
     }
 
     private void computeAppStatistics() {
-        Object[] appObjs = completedApps.toArray(new Object[0]);
+        Object[] appObjs = completedApps.toArray();
         duration = new Statistics(appObjs, "getDuration");
     }
 

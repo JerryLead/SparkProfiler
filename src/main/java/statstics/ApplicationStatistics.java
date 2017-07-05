@@ -16,6 +16,8 @@ import java.util.TreeMap;
  */
 
 public class ApplicationStatistics {
+
+    private String appName;
     private Statistics duration;
 
     // each stage has its stage statistics
@@ -81,6 +83,36 @@ public class ApplicationStatistics {
         executorStatistics = new ExecutorStatistics(executorsMultipleApps);
     }
 
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public void display() {
+        System.out.println();
+        System.out.println("===============================================================" + appName
+                + "===============================================================");
+        System.out.println("[app.duration] " + duration);
+
+        for (Map.Entry<Integer, StageStatistics> stageStatisticsEntry : stageStatisticsMap.entrySet()) {
+            int stageId = stageStatisticsEntry.getKey();
+            StageStatistics stageStatistics = stageStatisticsEntry.getValue();
+
+            System.out.println("-------------------------------------------------------------------[Stage "
+                    + stageId + "]-------------------------------------------------------------------");
+            stageStatistics.display();
+        }
+
+        System.out.println("-------------------------------------------------------------------------"
+                + "[Executor Statistics]-------------------------------------------------------------------------");
+        executorStatistics.display();
+
+        System.out.println("=========================================================================="
+                + "===============================================================");
+    }
 
 }
 

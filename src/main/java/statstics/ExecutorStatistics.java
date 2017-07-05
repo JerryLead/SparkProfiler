@@ -135,4 +135,58 @@ public class ExecutorStatistics {
     }
 
 
+    public void display() {
+
+        System.out.println("[executor.rddBlocks] " + rddBlocks);
+        System.out.println("[executor.memoryUsed] " + memoryUsed);
+        System.out.println("[executor.diskUsed] " + diskUsed);
+        System.out.println("[executor.totalCores] " + totalCores);
+        System.out.println("[executor.maxTasks] " + maxTasks);
+        System.out.println("[executor.activeTasks] " + activeTasks);
+        System.out.println("[executor.failedTasks] " + failedTasks);
+        System.out.println("[executor.completedTasks] " + completedTasks);
+        System.out.println("[executor.totalTasks] " + totalTasks);
+        System.out.println("[executor.totalDuration] " + totalDuration);
+        System.out.println("[executor.totalGCTime] " + totalGCTime);
+        System.out.println("[executor.totalInputBytes] " + totalInputBytes);
+        System.out.println("[executor.totalShuffleRead] " + totalShuffleRead);
+        System.out.println("[executor.totalShuffleWrite] " + totalShuffleWrite);
+        System.out.println("[executor.maxMemory] " + maxMemory);
+
+        System.out.println("");
+        System.out.println("[executor.gc.footprint] " + footprint);
+        System.out.println("[executor.gc.avgfootprintAfterFullGC] " + avgfootprintAfterFullGC);
+        System.out.println("[executor.gc.freedMemoryByFullGC] " + freedMemoryByFullGC);
+        System.out.println("[executor.gc.freedMemoryByFullGCpc] " + freedMemoryByFullGCpc);
+        System.out.println("[executor.gc.avgFreedMemoryByFullGC] " + avgFreedMemoryByFullGC);
+        System.out.println("[executor.gc.slopeAfterFullGC] " + slopeAfterFullGC);
+        System.out.println("[executor.gc.avgRelativePostFullGCInc] " + avgRelativePostFullGCInc);
+        System.out.println("[executor.gc.avgfootprintAfterGC] " + avgfootprintAfterGC);
+        System.out.println("[executor.gc.slopeAfterGC] " + slopeAfterGC);
+        System.out.println("[executor.gc.avgRelativePostGCInc] " + avgRelativePostGCInc);
+        System.out.println("[executor.gc.freedMemoryByGC] " + freedMemoryByGC);
+        System.out.println("[executor.gc.freedMemoryByGCpc] " + freedMemoryByGCpc);
+        System.out.println("[executor.gc.avgFreedMemoryByGC] " + avgFreedMemoryByGC);
+        System.out.println("[executor.gc.avgPause] " + avgPause);
+        System.out.println("[executor.gc.avgPauseσ] " + avgPauseσ);
+        System.out.println("[executor.gc.minPause] " + minPause);
+        System.out.println("[executor.gc.maxPause] " + maxPause);
+        System.out.println("[executor.gc.avgGCPause] " + avgGCPause);
+        System.out.println("[executor.gc.avgGCPauseσ] " + avgGCPauseσ);
+        System.out.println("[executor.gc.avgFullGCPause] " + avgFullGCPause);
+        System.out.println("[executor.gc.avgFullGCPauseσ] " + avgFullGCPauseσ);
+        System.out.println("[executor.gc.minFullGCPause] " + minFullGCPause);
+        System.out.println("[executor.gc.maxFullGCPause] " + maxFullGCPause);
+        System.out.println("[executor.gc.accumPause] " + accumPause);
+        System.out.println("[executor.gc.fullGCPause] " + fullGCPause);
+        System.out.println("[executor.gc.fullGCPausePc] " + fullGCPausePc);
+        System.out.println("[executor.gc.gcPause] " + gcPause);
+        System.out.println("[executor.gc.gcPausePc] " + gcPausePc);
+        System.out.println("[executor.gc.freedMemory] " + freedMemory);
+        System.out.println("[executor.gc.throughput] " + throughput);
+        System.out.println("[executor.gc.totalTime] " + totalTime);
+        System.out.println("[executor.gc.freedMemoryPerMin] " + freedMemoryPerMin);
+        System.out.println("[executor.gc.gcPerformance] " + gcPerformance);
+        System.out.println("[executor.gc.fullGCPerformance] " + fullGCPerformance);
+    }
 }

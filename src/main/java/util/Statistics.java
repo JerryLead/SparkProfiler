@@ -113,4 +113,20 @@ public class Statistics {
     public double getMax() {
         return max;
     }
+
+    @Override
+    public String toString() {
+        return "mean = " + format(mean)
+                + ", stdVar = " + format(stdVar)
+                + ", median = " + format(median)
+                + ", min = " + format(min)
+                + ", quantile25 = " + format(quantile25)
+                + ", quantile75 = " + format(quantile75)
+                + ", max = " + format(max);
+    }
+
+    public String format(double value) {
+
+        return String.format("%.2f", value).toString();
+    }
 }

@@ -95,4 +95,30 @@ public class TaskStatistics {
         shuffleWriteMetrics_recordsWritten = new Statistics(taskAttemptObjs, "getShuffleWriteMetrics_recordsWritten");
     }
 
+    public void display() {
+        System.out.println();
+        System.out.println("[task.duration] " + duration);
+        System.out.println("[task.executorDeserializeTime] " + executorDeserializeTime);
+        System.out.println("[task.executorDeserializeCpuTime] " + executorDeserializeCpuTime);
+        System.out.println("[task.executorRunTime] " + executorRunTime);
+        System.out.println("[task.executorCpuTime] " + executorCpuTime);
+        System.out.println("[task.resultSize] " + resultSize);
+        System.out.println("[task.jvmGcTime] " + jvmGcTime);
+        System.out.println("[task.resultSerializationTime] " + resultSerializationTime);
+        System.out.println("[task.memoryBytesSpilled] " + memoryBytesSpilled);
+        System.out.println("[task.diskBytesSpilled] " + diskBytesSpilled);
+        System.out.println("[task.inputMetrics.bytesRead] " + inputMetrics_bytesRead);
+        System.out.println("[task.inputMetrics.recordsRead] " + inputMetrics_recordsRead);
+        System.out.println("[task.outputMetrics.bytesWritten] " + outputMetrics_bytesWritten);
+        System.out.println("[task.outputMetrics.recordsWritten] " + outputMetrics_recordsWritten);
+        System.out.println("[task.shuffleReadMetrics.remoteBlocksFetched] " + shuffleReadMetrics_remoteBlocksFetched);
+        System.out.println("[task.shuffleReadMetrics.localBlocksFetched] " + shuffleReadMetrics_localBlocksFetched);
+        System.out.println("[task.shuffleReadMetrics.fetchWaitTime] " + shuffleReadMetrics_fetchWaitTime);
+        System.out.println("[task.shuffleReadMetrics.remoteBytesRead] " + shuffleReadMetrics_remoteBytesRead);
+        System.out.println("[task.shuffleReadMetrics.localBytesRead] " + shuffleReadMetrics_localBytesRead);
+        System.out.println("[task.shuffleReadMetrics.recordsRead] " + shuffleReadMetrics_recordsRead);
+        System.out.println("[task.shuffleWriteMetrics.bytesWritten] " + shuffleWriteMetrics_bytesWritten);
+        System.out.println("[task.shuffleWriteMetrics.writeTime] " + shuffleWriteMetrics_writeTime);
+        System.out.println("[task.shuffleWriteMetrics.recordsWritten] " + shuffleWriteMetrics_recordsWritten);
+    }
 }

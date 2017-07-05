@@ -168,7 +168,7 @@ public class SparkAppProfiler {
 
         SparkAppsAnalyzer analyzer = new SparkAppsAnalyzer(apps);
         analyzer.analyzeAppStatistics();
-        // analyzer.display();
+        analyzer.display();
 
     }
 

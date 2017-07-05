@@ -98,4 +98,26 @@ public class StageStatistics {
         executorDeserializeCpuTime = new Statistics(stageAttemptObjs, "getMetrics_executorDeserializeCpuTime");
     }
 
+    public void display() {
+        System.out.println("[stage.duration] " + duration);
+        System.out.println("[stage.inputBytes] " + inputBytes);
+        System.out.println("[stage.inputRecords] " + inputRecords);
+        System.out.println("[stage.outputBytes] " + outputBytes);
+        System.out.println("[stage.outputRecords] " + outputRecords);
+        System.out.println("[stage.shuffleReadBytes] " + shuffleReadBytes);
+        System.out.println("[stage.shuffleReadRecords] " + shuffleReadRecords);
+        System.out.println("[stage.shuffleWriteBytes] " + shuffleWriteBytes);
+        System.out.println("[stage.shuffleWriteRecords] " + shuffleWriteRecords);
+        System.out.println("[stage.memoryBytesSpilled] " + memoryBytesSpilled);
+        System.out.println("[stage.diskBytesSpilled] " + diskBytesSpilled);
+
+        System.out.println("[stage.resultSize] " + resultSize);
+        System.out.println("[stage.resultSerializationTime] " + resultSerializationTime);
+        System.out.println("[stage.executorDeserializeTime] " + executorDeserializeTime);
+        System.out.println("[stage.jvmGCTime] " + jvmGCTime);
+        System.out.println("[stage.shuffle_write_writeTime] " + shuffle_write_writeTime);
+        System.out.println("[stage.executorDeserializeCpuTime] " + executorDeserializeCpuTime);
+
+        taskStatistics.display();
+    }
 }

@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class StageStatistics {
 
-    private int stageId;
+    private int stageId = -1;
 
     private Statistics duration;
 
@@ -53,6 +53,8 @@ public class StageStatistics {
             else
                 System.err.println("Stage " + stage.getStageId() + " does not have completed stage attempt");
 
+            if (stageId == -1)
+                stageId = stage.getStageId();
         }
 
         computeStatistics(stageAttempts);
@@ -66,7 +68,7 @@ public class StageStatistics {
         for(StageAttempt stageAttempt : stageAttempts)
             tasksInSameStage.addAll(stageAttempt.getTaskMap().values());
 
-        taskStatistics = new TaskStatistics(tasksInSameStage);
+        taskStatistics = new TaskStatistics(tasksInSameStage, stageId);
     }
 
     private void computeStatistics(List<StageAttempt> stageAttempts) {
@@ -102,24 +104,26 @@ public class StageStatistics {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("[stage.duration] " + duration + "\n");
-        sb.append("[stage.inputBytes] " + inputBytes + "\n");
-        sb.append("[stage.inputRecords] " + inputRecords + "\n");
-        sb.append("[stage.outputBytes] " + outputBytes + "\n");
-        sb.append("[stage.outputRecords] " + outputRecords + "\n");
-        sb.append("[stage.shuffleReadBytes] " + shuffleReadBytes + "\n");
-        sb.append("[stage.shuffleReadRecords] " + shuffleReadRecords + "\n");
-        sb.append("[stage.shuffleWriteBytes] " + shuffleWriteBytes + "\n");
-        sb.append("[stage.shuffleWriteRecords] " + shuffleWriteRecords + "\n");
-        sb.append("[stage.memoryBytesSpilled] " + memoryBytesSpilled + "\n");
-        sb.append("[stage.diskBytesSpilled] " + diskBytesSpilled + "\n");
+        String prefix = "stage" + stageId;
 
-        sb.append("[stage.resultSize] " + resultSize + "\n");
-        sb.append("[stage.resultSerializationTime] " + resultSerializationTime + "\n");
-        sb.append("[stage.executorDeserializeTime] " + executorDeserializeTime + "\n");
-        sb.append("[stage.jvmGCTime] " + jvmGCTime + "\n");
-        sb.append("[stage.shuffle_write_writeTime] " + shuffle_write_writeTime + "\n");
-        sb.append("[stage.executorDeserializeCpuTime] " + executorDeserializeCpuTime + "\n");
+        sb.append("[" + prefix + ".duration] " + duration + "\n");
+        sb.append("[" + prefix + ".inputBytes] " + inputBytes + "\n");
+        sb.append("[" + prefix + ".inputRecords] " + inputRecords + "\n");
+        sb.append("[" + prefix + ".outputBytes] " + outputBytes + "\n");
+        sb.append("[" + prefix + ".outputRecords] " + outputRecords + "\n");
+        sb.append("[" + prefix + ".shuffleReadBytes] " + shuffleReadBytes + "\n");
+        sb.append("[" + prefix + ".shuffleReadRecords] " + shuffleReadRecords + "\n");
+        sb.append("[" + prefix + ".shuffleWriteBytes] " + shuffleWriteBytes + "\n");
+        sb.append("[" + prefix + ".shuffleWriteRecords] " + shuffleWriteRecords + "\n");
+        sb.append("[" + prefix + ".memoryBytesSpilled] " + memoryBytesSpilled + "\n");
+        sb.append("[" + prefix + ".diskBytesSpilled] " + diskBytesSpilled + "\n");
+
+        sb.append("[" + prefix + ".resultSize] " + resultSize + "\n");
+        sb.append("[" + prefix + ".resultSerializationTime] " + resultSerializationTime + "\n");
+        sb.append("[" + prefix + ".executorDeserializeTime] " + executorDeserializeTime + "\n");
+        sb.append("[" + prefix + ".jvmGCTime] " + jvmGCTime + "\n");
+        sb.append("[" + prefix + ".shuffle_write_writeTime] " + shuffle_write_writeTime + "\n");
+        sb.append("[" + prefix + ".executorDeserializeCpuTime] " + executorDeserializeCpuTime + "\n");
 
         sb.append(taskStatistics);
 

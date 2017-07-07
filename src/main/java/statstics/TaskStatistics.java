@@ -13,6 +13,7 @@ import java.util.List;
 
 public class TaskStatistics {
 
+    private int stageId;
     private int taskId;
 
     private Statistics duration;
@@ -48,7 +49,7 @@ public class TaskStatistics {
     // In general, we run each application 5 times, and each stage has multiple tasks.
     // The length of tasksInSameStage depends on how many stages are calculated.
 
-    public TaskStatistics(List<Task> tasksInSameStage) {
+    public TaskStatistics(List<Task> tasksInSameStage, int stageId) {
         List<TaskAttempt> taskAttempts = new ArrayList<TaskAttempt>();
 
         for (Task task : tasksInSameStage) {
@@ -61,6 +62,7 @@ public class TaskStatistics {
         }
 
         computeStatistics(taskAttempts);
+        this.stageId = stageId;
     }
 
     private void computeStatistics(List<TaskAttempt> taskAttempts) {
@@ -98,31 +100,33 @@ public class TaskStatistics {
     @Override
     public String toString() {
 
+        String prefix = "stage" + stageId;
+
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
-        sb.append("[task.duration] " + duration + "\n");
-        sb.append("[task.executorDeserializeTime] " + executorDeserializeTime + "\n");
-        sb.append("[task.executorDeserializeCpuTime] " + executorDeserializeCpuTime + "\n");
-        sb.append("[task.executorRunTime] " + executorRunTime + "\n");
-        sb.append("[task.executorCpuTime] " + executorCpuTime + "\n");
-        sb.append("[task.resultSize] " + resultSize + "\n");
-        sb.append("[task.jvmGcTime] " + jvmGcTime + "\n");
-        sb.append("[task.resultSerializationTime] " + resultSerializationTime + "\n");
-        sb.append("[task.memoryBytesSpilled] " + memoryBytesSpilled + "\n");
-        sb.append("[task.diskBytesSpilled] " + diskBytesSpilled + "\n");
-        sb.append("[task.inputMetrics.bytesRead] " + inputMetrics_bytesRead + "\n");
-        sb.append("[task.inputMetrics.recordsRead] " + inputMetrics_recordsRead + "\n");
-        sb.append("[task.outputMetrics.bytesWritten] " + outputMetrics_bytesWritten + "\n");
-        sb.append("[task.outputMetrics.recordsWritten] " + outputMetrics_recordsWritten + "\n");
-        sb.append("[task.shuffleReadMetrics.remoteBlocksFetched] " + shuffleReadMetrics_remoteBlocksFetched + "\n");
-        sb.append("[task.shuffleReadMetrics.localBlocksFetched] " + shuffleReadMetrics_localBlocksFetched + "\n");
-        sb.append("[task.shuffleReadMetrics.fetchWaitTime] " + shuffleReadMetrics_fetchWaitTime + "\n");
-        sb.append("[task.shuffleReadMetrics.remoteBytesRead] " + shuffleReadMetrics_remoteBytesRead + "\n");
-        sb.append("[task.shuffleReadMetrics.localBytesRead] " + shuffleReadMetrics_localBytesRead + "\n");
-        sb.append("[task.shuffleReadMetrics.recordsRead] " + shuffleReadMetrics_recordsRead + "\n");
-        sb.append("[task.shuffleWriteMetrics.bytesWritten] " + shuffleWriteMetrics_bytesWritten + "\n");
-        sb.append("[task.shuffleWriteMetrics.writeTime] " + shuffleWriteMetrics_writeTime + "\n");
-        sb.append("[task.shuffleWriteMetrics.recordsWritten] " + shuffleWriteMetrics_recordsWritten + "\n");
+        sb.append("[" + prefix + ".task.duration] " + duration + "\n");
+        sb.append("[" + prefix + ".task.executorDeserializeTime] " + executorDeserializeTime + "\n");
+        sb.append("[" + prefix + ".task.executorDeserializeCpuTime] " + executorDeserializeCpuTime + "\n");
+        sb.append("[" + prefix + ".task.executorRunTime] " + executorRunTime + "\n");
+        sb.append("[" + prefix + ".task.executorCpuTime] " + executorCpuTime + "\n");
+        sb.append("[" + prefix + ".task.resultSize] " + resultSize + "\n");
+        sb.append("[" + prefix + ".task.jvmGcTime] " + jvmGcTime + "\n");
+        sb.append("[" + prefix + ".task.resultSerializationTime] " + resultSerializationTime + "\n");
+        sb.append("[" + prefix + ".task.memoryBytesSpilled] " + memoryBytesSpilled + "\n");
+        sb.append("[" + prefix + ".task.diskBytesSpilled] " + diskBytesSpilled + "\n");
+        sb.append("[" + prefix + ".task.inputMetrics.bytesRead] " + inputMetrics_bytesRead + "\n");
+        sb.append("[" + prefix + ".task.inputMetrics.recordsRead] " + inputMetrics_recordsRead + "\n");
+        sb.append("[" + prefix + ".task.outputMetrics.bytesWritten] " + outputMetrics_bytesWritten + "\n");
+        sb.append("[" + prefix + ".task.outputMetrics.recordsWritten] " + outputMetrics_recordsWritten + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.remoteBlocksFetched] " + shuffleReadMetrics_remoteBlocksFetched + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.localBlocksFetched] " + shuffleReadMetrics_localBlocksFetched + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.fetchWaitTime] " + shuffleReadMetrics_fetchWaitTime + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.remoteBytesRead] " + shuffleReadMetrics_remoteBytesRead + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.localBytesRead] " + shuffleReadMetrics_localBytesRead + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.recordsRead] " + shuffleReadMetrics_recordsRead + "\n");
+        sb.append("[" + prefix + ".task.shuffleWriteMetrics.bytesWritten] " + shuffleWriteMetrics_bytesWritten + "\n");
+        sb.append("[" + prefix + ".task.shuffleWriteMetrics.writeTime] " + shuffleWriteMetrics_writeTime + "\n");
+        sb.append("[" + prefix + ".task.shuffleWriteMetrics.recordsWritten] " + shuffleWriteMetrics_recordsWritten + "\n");
 
         return sb.toString();
     }

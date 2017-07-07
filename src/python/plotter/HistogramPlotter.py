@@ -38,6 +38,6 @@ class HistogramPlotter:
 
         # plt.ylim(0, 50)  # The ceil
         plt.legend()
-        plt.tight_layout()
-        plt.show()
+        # plt.tight_layout()
+        # plt.show()
         plt.savefig(file, dpi=150)

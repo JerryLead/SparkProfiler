@@ -40,7 +40,7 @@ class Statistics:
         self.name = line[line.find('[') + 1: line.find(']')]
         metrics = line[line.find(']') + 1:].replace(' ', '').split(',')
 
-        gcAlgo = ''
+        gcAlgo = ""
         if fileName.lower().find("parallel") != -1:
             gcAlgo = "Parallel"
         elif fileName.lower().find("cms") != -1:
@@ -53,7 +53,7 @@ class Statistics:
             index = 0
         elif fileName.lower().find("2-14g") != -1:
             index = 1
-        elif fileName.lower.find("4-28g") != -1:
+        elif fileName.lower().find("4-28g") != -1:
             index = 2
 
         for metric in metrics:

@@ -44,7 +44,7 @@ class AppMetricsAnalyzer:
 
         for metricName, statistics in self.metricsMap.items():
             file = os.path.join(outputDir, metricName + ".pdf")
-            hplt.HistogramPlotter.plotStatistics(statistics, 'Time', metricName, file)
+            hplt.HistogramPlotter.plotStatisticsByGCAlgo(statistics, metricName, 'Time (s)', file)
             print "[Done] The " + file + " has been generated!"
 
 
@@ -53,8 +53,26 @@ if __name__ == '__main__':
 
     appName = "RDDJoin"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + appName + "/Statistics"
-    outputDir = statisticsDir + "/figures"
-    metrics = ["app.duration", "stage2.duration", "stage2.jvmGCTime"]
+    outputDir = statisticsDir + "/figures-gc"
+    metrics = ["app.duration",
+               "stage2.duration",
+               "stage2.jvmGCTime",
+               "stage2.task.executorRunTime",
+               "stage2.task.jvmGcTime",
+               "stage2.task.memoryBytesSpilled",
+               "stage2.task.diskBytesSpilled",
+               "executor.memoryUsed",
+               "executor.totalDuration",
+               "executor.totalGCTime",
+               "executor.maxMemory",
+               "executor.gc.footprint",
+               "executor.gc.freedMemoryByGC",
+               "executor.gc.accumPause",
+               "executor.gc.gcPause",
+               "executor.gc.freedMemory",
+               "executor.gc.throughput",
+               "executor.gc.totalTime",
+               "executor.gc.gcPerformance"]
 
     appMetricsAnalyzer = AppMetricsAnalyzer(appName, statisticsDir)
 

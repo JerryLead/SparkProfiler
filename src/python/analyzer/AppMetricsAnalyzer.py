@@ -51,16 +51,25 @@ class AppMetricsAnalyzer:
 
 if __name__ == '__main__':
 
-    appName = "RDDJoin"
+    appName = "GroupByRDD-0.5"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + appName + "/Statistics"
-    outputDir = statisticsDir + "/figures-gc"
+    outputDir = statisticsDir + "/figures"
     metrics = ["app.duration",
-               "stage2.duration",
-               "stage2.jvmGCTime",
-               "stage2.task.executorRunTime",
-               "stage2.task.jvmGcTime",
-               "stage2.task.memoryBytesSpilled",
-               "stage2.task.diskBytesSpilled",
+
+               "stage0.duration",
+               "stage0.jvmGCTime",
+               "stage0.task.executorRunTime",
+               "stage0.task.jvmGcTime",
+               "stage0.task.memoryBytesSpilled",
+               "stage0.task.diskBytesSpilled",
+
+               "stage1.duration",
+               "stage1.jvmGCTime",
+               "stage1.task.executorRunTime",
+               "stage1.task.jvmGcTime",
+               "stage1.task.memoryBytesSpilled",
+               "stage1.task.diskBytesSpilled",
+
                "executor.memoryUsed",
                "executor.totalDuration",
                "executor.totalGCTime",

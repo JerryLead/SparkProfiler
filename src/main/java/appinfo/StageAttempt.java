@@ -64,10 +64,14 @@ public class StageAttempt {
         attemptId = stageAttemptObject.get("attemptId").getAsInt();
 
         if (status.equals("COMPLETE")) {
-            submissionTime = stageAttemptObject.get("submissionTime").getAsString();
-            firstTaskLaunchedTime = stageAttemptObject.get("firstTaskLaunchedTime").getAsString();
-            completionTime = stageAttemptObject.get("completionTime").getAsString();
-            duration = DateParser.durationMS(firstTaskLaunchedTime, completionTime);
+            if (stageAttemptObject.has("submissionTime"))
+                submissionTime = stageAttemptObject.get("submissionTime").getAsString();
+            if (stageAttemptObject.has("firstTaskLaunchedTime"))
+                firstTaskLaunchedTime = stageAttemptObject.get("firstTaskLaunchedTime").getAsString();
+            if (stageAttemptObject.has("completionTime"))
+                completionTime = stageAttemptObject.get("completionTime").getAsString();
+            if (stageAttemptObject.has("submissionTime") && stageAttemptObject.has("completionTime"))
+                duration = DateParser.durationMS(firstTaskLaunchedTime, completionTime);
         }
 
         numActiveTasks = stageAttemptObject.get("numActiveTasks").getAsInt();

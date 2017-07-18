@@ -1,11 +1,11 @@
 import os
-import statistics.Statistics as st
+import statistics.HistogramStatistics as st
 import plotter.HistogramPlotter as hplt
 
 from reader import FileReader
 
 
-class AppMetricsAnalyzer:
+class AppHistogramMetricsAnalyzer:
 
     def __init__(self, appName, statisticsDir):
         self.appName = appName
@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
     appName = "GroupByRDD-0.5"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + appName + "/Statistics"
-    outputDir = statisticsDir + "/figures"
+    outputDir = statisticsDir + "/figures-histo"
     metrics = ["app.duration",
 
                "stage0.duration",

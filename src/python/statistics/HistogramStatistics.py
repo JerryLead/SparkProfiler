@@ -1,4 +1,4 @@
-class Statistics:
+class HistogramStatistics:
 
     def __init__(self):
         self.name = ''
@@ -45,7 +45,7 @@ class Statistics:
                     self.g1_stderr[index] = metricValue
 
 
-    def addStatistics(self, line, fileName):
+    def addHistogramStatistics(self, line, fileName):
         self.name = line[line.find('[') + 1: line.find(']')]
         metrics = line[line.find(']') + 1:].replace(' ', '').split(',')
 

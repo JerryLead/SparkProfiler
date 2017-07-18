@@ -3,6 +3,7 @@ package profiler;
 import gc.ExecutorGCLogParser;
 import parser.AppJsonParser;
 import util.CommandRunner;
+import util.FIleChecker;
 
 import java.io.*;
 import java.util.*;
@@ -126,7 +127,8 @@ public class SparkAppJsonSaver {
                         String exportCVSFile = executorDir.getAbsolutePath() + File.separatorChar + "gcMetrics-" + executorId + ".csv";
                         String chartPNGFile = executorDir.getAbsolutePath() + File.separatorChar + "gcChart-" + executorId + ".png";
 
-                        ExecutorGCLogParser.parseExecutorGCLog(gcLogFile, exportCVSFile, chartPNGFile);
+                        if(FIleChecker.isGCFile(gcLogFile))
+                            ExecutorGCLogParser.parseExecutorGCLog(gcLogFile, exportCVSFile, chartPNGFile);
                     }
 
                 }
@@ -144,7 +146,7 @@ public class SparkAppJsonSaver {
         //       app-20170623113111-0009
         //       app-20170623112547-0008
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/RDDJoin/";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/GroupByRDD-0.5/";
 
         // The executor log files are stored on each slave node
         String executorLogFile = "/dataDisk/spark-2.1.4.19-bin-2.7.1/worker";
@@ -157,9 +159,9 @@ public class SparkAppJsonSaver {
         saver.parseAppIdList(appIdsFile);
 
         // Save the app's jsons info into the outputDir
-        saver.saveAppJsonInfo(outputDir);
+        // saver.saveAppJsonInfo(outputDir);
 
-        saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
+        // saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
 
         saver.parseExecutorGCInfo(outputDir);
     }

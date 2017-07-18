@@ -99,15 +99,15 @@ class Statistics:
         if(executorIndex == 0):
             if(metricName == "mean"):
                 self.exec_1_7G_means[gcAlgoIndex] = metricValue
-            elif(metricValue == "stdVar"):
+            elif(metricName == "stdVar"):
                 self.exec_1_7G_stderr[gcAlgoIndex] = metricValue
         elif(executorIndex == 1):
             if(metricName == "mean"):
                 self.exec_2_14G_means[gcAlgoIndex] = metricValue
-            elif(metricValue == "stdVar"):
+            elif(metricName == "stdVar"):
                 self.exec_2_14G_stderr[gcAlgoIndex] = metricValue
         elif(executorIndex == 2):
             if(metricName == "mean"):
                 self.exec_4_28G_means[gcAlgoIndex] = metricValue
-            elif(metricValue == "stdVar"):
+            elif(metricName == "stdVar"):
                 self.exec_4_28G_stderr[gcAlgoIndex] = metricValue

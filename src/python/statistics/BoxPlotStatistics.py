@@ -1,7 +1,9 @@
 class BoxPlotStatistics:
-    def __init__(self):
-        self.name = ''
-        self.unit = ''
+    # metric = ("app.duration", "Time (s)", 1000)
+    def __init__(self, metric):
+        self.name = metric[0]
+        self.ylabel = metric[1]
+        self.unit = metric[2]
 
         self.Parallel = {}
         self.Parallel['label'] = 'Parallel'
@@ -47,7 +49,7 @@ class BoxPlotStatistics:
 
         for metric in metrics:
             metricName = metric.split('=')[0]
-            metricValue = float(metric.split('=')[1])
+            metricValue = float(metric.split('=')[1]) / self.unit
 
             if(metricName == 'mean'):
                 stat[executorType]['mean'] = metricValue

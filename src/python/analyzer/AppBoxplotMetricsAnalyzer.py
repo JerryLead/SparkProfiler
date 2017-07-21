@@ -62,34 +62,35 @@ if __name__ == '__main__':
     appName = "GroupByRDD-0.5"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + appName + "/Statistics"
     outputDir = statisticsDir + "/figures-boxplot"
-    metrics = [("app.duration", "Time (s)", 1000),
 
-               ("stage0.duration", "Time (s)", 1000),
-               ("stage0.jvmGCTime", "Time (s)", 1000),
-               ("stage0.task.executorRunTime", "Time (s)", 1000),
-               ("stage0.task.jvmGcTime", "Time (s)", 1000),
-               ("stage0.task.memoryBytesSpilled", "MB", 1024 * 1024),
-               ("stage0.task.diskBytesSpilled", "MB", 1024 * 1024),
+    metrics = [("app.duration", "Time (s)", 1000, "App.duration"), # (metric, ylablel, unit, title)
 
-               ("stage1.duration", "Time (s)", 1000),
-               ("stage1.jvmGCTime", "Time (s)", 1000),
-               ("stage1.task.executorRunTime", "Time (s)", 1000),
-               ("stage1.task.jvmGcTime", "Time (s)", 1000),
-               ("stage1.task.memoryBytesSpilled", "MB", 1024 * 1024),
-               ("stage1.task.diskBytesSpilled", "MB", 1024 * 1024),
+               ("stage0.duration", "Time (s)", 1000, "Stage0.duration"),
+               ("stage0.jvmGCTime", "Time (s)", 1000, "Stage0.jvmGCTime"),
+               ("stage0.task.executorRunTime", "Time (s)", 1000, "Stage0.task.executorRunTime"),
+               ("stage0.task.jvmGcTime", "Time (s)", 1000, "Stage0.task.jvmGcTime"),
+               ("stage0.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage0.task.memoryBytesSpilled"),
+               ("stage0.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage0.task.diskBytesSpilled"),
+
+               ("stage1.duration", "Time (s)", 1000, "Stage1.duration"),
+               ("stage1.jvmGCTime", "Time (s)", 1000, "Stage1.jvmGCTime"),
+               ("stage1.task.executorRunTime", "Time (s)", 1000, "Stage1.task.executorRunTime"),
+               ("stage1.task.jvmGcTime", "Time (s)", 1000, "Stage1.task.jvmGcTime"),
+               ("stage1.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.memoryBytesSpilled"),
+               ("stage1.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.diskBytesSpilled"),
 
                # ("executor.memoryUsed", "GB", 1024 * 1024 * 1024),
                # ("executor.totalDuration", "Time (s)", 1000),
                # ("executor.totalGCTime", "Time (s)", 1000),
                # ("executor.maxMemory", "GB", 1024 * 1024 * 1024),
 
-               ("executor.gc.footprint", "Size (GB)", 1024), # Maximal amount of memory allocated
-               ("executor.gc.freedMemoryByGC", "Size (GB)", 1024), # Total amount of memory that has been freed
-               ("executor.gc.accumPause", "Time (s)", 1), # Sum of all pauses due to any kind of GC
-               ("executor.gc.gcPause", "Time (s)", 1), # This shows all stop-the-world pauses, that are not full gc pauses.
-               ("executor.gc.throughput", "Percentage (%)", 1), # Time percentage the application was NOT busy with GC
-               ("executor.gc.totalTime", "Time (s)", 1), # The duration of running executor
-               ("executor.gc.gcPerformance", "Speed (MB/s)", 1)] # Performance of minor collections
+               ("executor.gc.footprint", "Memory (GB)", 1024, "Executor.footprint"), # Maximal amount of memory allocated
+               ("executor.gc.freedMemoryByGC", "Memory (GB)", 1024, "Executor.freedMemoryByGC"), # Total amount of memory that has been freed
+               ("executor.gc.accumPause", "Time (s)", 1, "Executor.gc.pause"), # Sum of all pauses due to any kind of GC
+               ("executor.gc.gcPause", "Time (s)", 1, "Executor.minorGC.pause"), # This shows all stop-the-world pauses, that are not full gc pauses.
+               ("executor.gc.throughput", "Throughput (%)", 1, "Executor.gc.throughput"), # Time percentage the application was NOT busy with GC
+               ("executor.gc.totalTime", "Time (s)", 1, "Executor.duration"), # The duration of running executor
+               ("executor.gc.gcPerformance", "Speed (MB/s)", 1, "Executor.minorGC.Performance")] # Performance of minor collections
 
     appMetricsAnalyzer = AppBoxplotMetricsAnalyzer(appName, statisticsDir)
 

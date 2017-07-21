@@ -19,6 +19,6 @@ class BoxPlotter:
             ax.margins(0.05) # Optional
 
         axes[0].set_ylabel(statistics.ylabel)
-        fig.suptitle(statistics.name)
+        fig.suptitle(statistics.title)
 
         plt.savefig(file, dpi=150)

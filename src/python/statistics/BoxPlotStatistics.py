@@ -4,6 +4,7 @@ class BoxPlotStatistics:
         self.name = metric[0]
         self.ylabel = metric[1]
         self.unit = metric[2]
+        self.title = metric[3]
 
         self.Parallel = {}
         self.Parallel['label'] = 'Parallel'

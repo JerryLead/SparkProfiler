@@ -59,7 +59,7 @@ class AppBoxplotMetricsAnalyzer:
 
 if __name__ == '__main__':
 
-    appName = "GroupByRDD-0.5"
+    appName = "GroupByRDD-0.5-2"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + appName + "/Statistics"
     outputDir = statisticsDir + "/figures-boxplot"
 

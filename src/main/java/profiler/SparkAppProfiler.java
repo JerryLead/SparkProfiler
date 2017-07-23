@@ -152,10 +152,10 @@ public class SparkAppProfiler {
 
         // 1. Users can specify the appIds to be profiled using "useAppList = true" and "appList.txt".
         // 2. If useAppList, all the applications in the appJsonDir will be profiled.
-        boolean useAppList = true;
+        boolean useAppList = false;
         // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-        String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/GroupByRDD-0.5";
+        String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/GroupByRDD-0.5-2";
 
         SparkAppProfiler profiler = new SparkAppProfiler(useAppList, appJsonDir);
 

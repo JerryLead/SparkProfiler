@@ -51,7 +51,7 @@ class AppBoxplotMetricsAnalyzer:
             os.mkdir(outputDir)
 
         for metricName, statistics in self.metricsMap.items():
-            file = os.path.join(outputDir, metricName + ".pdf")
+            file = os.path.join(outputDir, metricName.replace(".", "-") + ".pdf")
             bplt.BoxPlotter.plotStatisticsByGCAlgo(statistics, file)
             print "[Done] The " + file + " has been generated!"
 

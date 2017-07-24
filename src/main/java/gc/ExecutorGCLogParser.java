@@ -25,6 +25,7 @@ public class ExecutorGCLogParser {
     public static void parseExecutorGCLog(String gcLogFile, String exportCVSFile, String chartPNGFile) {
 
         try {
+            System.out.println("[GCLogParsing] " + gcLogFile);
             gcViewerNoneGUI.doMain(new String[]{gcLogFile, exportCVSFile, chartPNGFile});
         } catch (InvocationTargetException e) {
             e.printStackTrace();

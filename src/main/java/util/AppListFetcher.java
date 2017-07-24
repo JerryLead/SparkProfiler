@@ -26,8 +26,27 @@ public class AppListFetcher {
         return appList;
     }
 
+    public static List<String> fetchLocalFile(String siteURL, int startId, int endId) {
+        List<String> appList = new ArrayList<String>();
+        List<String> lines = JsonFileReader.readFileLines(siteURL);
+
+        for (String line: lines) {
+            if (line.trim().contains("app?appId=")) {
+                int start = line.indexOf(">") + 1;
+                int end = line.lastIndexOf("<");
+                String appId = line.substring(start, end);
+                System.out.println(appId);
+            }
+        }
+
+
+        // <a href="app?appId=app-20170721181818-0089">app-20170721181818-0089</a>
+        return appList;
+    }
+
     public static void main(String[] args) {
         String url = "http://aliMaster:8080/";
-        fetch(url, 0, 0);
+        url = "/Users/xulijie/Documents/GCResearch/Experiments/MasterUI/RDDJoin-0.5-2/ISCAS Spark Master at spark___master_7077.htm";
+        fetchLocalFile(url, 0, 0);
     }
 }

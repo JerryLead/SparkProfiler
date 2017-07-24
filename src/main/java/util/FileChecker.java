@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by xulijie on 17-7-18.
  */
-public class FIleChecker {
+public class FileChecker {
 
     public static boolean isGCFile(String file) {
         List<String> lines = JsonFileReader.readFileLines(file);

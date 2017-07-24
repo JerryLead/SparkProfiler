@@ -2,8 +2,9 @@ package profiler;
 
 import gc.ExecutorGCLogParser;
 import parser.AppJsonParser;
+import parser.ExecutorsJsonParser;
 import util.CommandRunner;
-import util.FIleChecker;
+import util.FileChecker;
 
 import java.io.*;
 import java.util.*;
@@ -107,7 +108,7 @@ public class SparkAppJsonSaver {
         }
     }
 
-    private void parseExecutorGCInfo(String outputDir) {
+    private void parseExecutorGCInfo(String outputDir, boolean useAppList) {
 
         Map<String, String> appIdtoName = new HashMap<String, String>();
         for (String appId : appIdList)
@@ -115,20 +116,27 @@ public class SparkAppJsonSaver {
 
         for (File appDir : new File(outputDir).listFiles()) {
             String appId = appDir.getName().substring(appDir.getName().indexOf('_') + 1);
-            if (appIdtoName.containsKey(appId)) {
+            if (useAppList == false && appId.startsWith("app") || appIdtoName.containsKey(appId)) {
                 File executorsFile = new File(appDir, "executors");
+
+                Set<String> aliveExecutorIds = ExecutorsJsonParser.getAliveExecutors(appDir.getAbsolutePath()
+                        + File.separatorChar + "allexecutors.json");
 
                 for(File executorDir : executorsFile.listFiles()) {
                     // executors/0
                     if (executorDir.isDirectory()) {
                         String executorId = executorDir.getName();
 
-                        String gcLogFile = executorDir.getAbsolutePath() + File.separatorChar + "stdout";
-                        String exportCVSFile = executorDir.getAbsolutePath() + File.separatorChar + "gcMetrics-" + executorId + ".csv";
-                        String chartPNGFile = executorDir.getAbsolutePath() + File.separatorChar + "gcChart-" + executorId + ".png";
+                        if (aliveExecutorIds.contains(executorId)) {
 
-                        if(FIleChecker.isGCFile(gcLogFile))
-                            ExecutorGCLogParser.parseExecutorGCLog(gcLogFile, exportCVSFile, chartPNGFile);
+                            String gcLogFile = executorDir.getAbsolutePath() + File.separatorChar + "stdout";
+                            String exportCVSFile = executorDir.getAbsolutePath() + File.separatorChar + "gcMetrics-" + executorId + ".csv";
+                            String chartPNGFile = executorDir.getAbsolutePath() + File.separatorChar + "gcChart-" + executorId + ".png";
+
+                            if (FileChecker.isGCFile(gcLogFile))
+                                ExecutorGCLogParser.parseExecutorGCLog(gcLogFile, exportCVSFile, chartPNGFile);
+
+                        }
                     }
 
                 }
@@ -159,11 +167,11 @@ public class SparkAppJsonSaver {
         saver.parseAppIdList(appIdsFile);
 
         // Save the app's jsons info into the outputDir
-        saver.saveAppJsonInfo(outputDir);
+        // saver.saveAppJsonInfo(outputDir);
 
-        saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
+        // saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
 
-        saver.parseExecutorGCInfo(outputDir);
+        saver.parseExecutorGCInfo(outputDir, false);
     }
 
 }

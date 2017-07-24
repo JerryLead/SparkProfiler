@@ -17,7 +17,7 @@ public class Application {
 
     private Map<Integer, Job> jobMap = new TreeMap<Integer, Job>();
     private Map<Integer, Stage> stageMap = new TreeMap<Integer, Stage>();
-    private List<Executor> executors = new ArrayList<Executor>();
+    private Map<String, Executor> executorMap = new TreeMap<String, Executor>();
 
 
     private String startTime;
@@ -126,11 +126,11 @@ public class Application {
     }
 
     public void addExecutor(Executor executor) {
-        executors.add(executor);
+        executorMap.put(executor.getId(), executor);
     }
 
-    public Executor getExecutor(int executorId) {
-        return executors.get(executorId);
+    public Executor getExecutor(String executorId) {
+        return executorMap.get(executorId);
     }
 
     public long getDuration() {
@@ -141,7 +141,7 @@ public class Application {
     }
 
     public List<Executor> getExecutors() {
-        return executors;
+        return new ArrayList<Executor>(executorMap.values());
     }
 
     public boolean isCompleted() {

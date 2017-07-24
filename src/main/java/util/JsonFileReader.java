@@ -56,6 +56,7 @@ public class JsonFileReader {
                 lines.add(sCurrentLine);
             }
         } catch (IOException e) {
+            System.err.println("Error in reading file: " + fileName);
             e.printStackTrace();
         } finally {
             try {

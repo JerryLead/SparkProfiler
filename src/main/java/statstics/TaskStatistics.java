@@ -57,7 +57,7 @@ public class TaskStatistics {
             if (taskAttempt != null)
                 taskAttempts.add(taskAttempt);
             else
-                System.err.println("Stage " + task.getTaskId() + " does not have completed stage attempt");
+                System.err.println("Task " + task.getTaskId() + " does not have completed task attempt");
 
         }
 

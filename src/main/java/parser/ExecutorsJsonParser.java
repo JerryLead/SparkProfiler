@@ -9,7 +9,10 @@ import com.google.gson.JsonSyntaxException;
 import util.JsonFileReader;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class ExecutorsJsonParser {
@@ -32,19 +35,47 @@ public class ExecutorsJsonParser {
 
     public void parseExecutorGCSummary(String executorsDir, Application app) {
 
+        Set<String> aliveExecutorIds = new HashSet<String>();
+        for (Executor executor : app.getExecutors())
+            aliveExecutorIds.add(executor.getId());
+
         for (File executorDir : new File(executorsDir).listFiles()) {
             if (executorDir.isDirectory()) {
-                int executorId = Integer.parseInt(executorDir.getName());
-                String gcSummaryFile = executorDir.getAbsolutePath() + File.separatorChar
-                        + "gcMetrics-" + executorId + ".csv";
+                String executorId = executorDir.getName();
 
-                List<String> lines = JsonFileReader.readFileLines(gcSummaryFile);
-                for (String line : lines) {
-                    String[] metrics = line.split(";");
-                    app.getExecutor(executorId).addGCMetric(metrics);
+                if (aliveExecutorIds.contains(executorId)) {
+                    String gcSummaryFile = executorDir.getAbsolutePath() + File.separatorChar
+                            + "gcMetrics-" + executorId + ".csv";
+
+                    List<String> lines = JsonFileReader.readFileLines(gcSummaryFile);
+                    for (String line : lines) {
+                        String[] metrics = line.split(";");
+                        app.getExecutor(executorId).addGCMetric(metrics);
+                    }
                 }
             }
         }
 
+    }
+
+
+    public static Set<String> getAliveExecutors(String executorJsonFile) {
+
+        Set<String> executorIds = new HashSet<String>();
+
+        try {
+            JsonParser parser = new JsonParser();
+            JsonElement el = parser.parse(JsonFileReader.readFile(executorJsonFile));
+            for (JsonElement executorElem : el.getAsJsonArray()) {
+                Executor executor = new Executor(executorElem.getAsJsonObject());
+                executorIds.add(executor.getId());
+            }
+        } catch (JsonIOException e) {
+            e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return executorIds;
     }
 }

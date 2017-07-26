@@ -87,11 +87,17 @@ import java.util.TreeMap;
 
 public class Stage {
 
+    private String appId;
+    private String appName;
+
     private int stageId;
     private Map<Integer, StageAttempt> stageAttemptMap = new TreeMap<Integer, StageAttempt>();
+    private boolean successful = false;
 
-    public Stage(int stageId) {
+    public Stage(int stageId, String appId, String appName) {
         this.stageId = stageId;
+        this.appId = appId;
+        this.appName = appName;
     }
 
     public void addStageAttempt(JsonObject stageObject) {
@@ -99,6 +105,9 @@ public class Stage {
         StageAttempt stageAttempt = new StageAttempt(stageObject);
         // Note that the attemptId may not be consistent with the array index.
         stageAttemptMap.put(stageAttempt.getAttemptId(), stageAttempt);
+
+        if (stageAttempt.getAttemptId() == 0 && stageAttempt.getStatus().equals("COMPLETE"))
+            successful = true;
     }
 
     public Set<Integer> getStageAttemptIds() {
@@ -121,15 +130,32 @@ public class Stage {
     }
 
     public StageAttempt getCompletedStage() {
+
+        StageAttempt attempt0 = stageAttemptMap.get(0);
+
+        // only consider the stageAttempt with attemptId = 0
+        if (attempt0 != null && attempt0.getStatus().equals("COMPLETE"))
+            return attempt0;
+        else
+            return null;
+
+        /*
         for (StageAttempt stageAttempt : stageAttemptMap.values()) {
             if (stageAttempt.getStatus().equals("COMPLETE"))
                 return stageAttempt;
         }
-
-        return null;
+        */
     }
 
     public int getStageId() {
         return stageId;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public String getAppName() {
+        return appName;
     }
 }

@@ -11,14 +11,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Application {
-
     private String appId;
     private String name;
+
 
     private Map<Integer, Job> jobMap = new TreeMap<Integer, Job>();
     private Map<Integer, Stage> stageMap = new TreeMap<Integer, Stage>();
     private Map<String, Executor> executorMap = new TreeMap<String, Executor>();
-
 
     private String startTime;
     private String endTime;
@@ -28,6 +27,8 @@ public class Application {
     private long startTimeEpoch;
     private long lastUpdatedEpoch;
     private long endTimeEpoch;
+
+    private String status;
 
     /*
     {
@@ -93,6 +94,7 @@ public class Application {
     public void addJob(Job job) {
         int jobId = job.getJobId();
         jobMap.put(jobId, job);
+        status = job.getStatus();
     }
 
     public void addStage(JsonObject stageObject) {
@@ -102,7 +104,7 @@ public class Application {
             Stage stage = stageMap.get(stageId);
             stage.addStageAttempt(stageObject);
         } else {
-            Stage stage = new Stage(stageId);
+            Stage stage = new Stage(stageId, appId, name);
             stage.addStageAttempt(stageObject);
             stageMap.put(stageId, stage);
         }
@@ -146,5 +148,9 @@ public class Application {
 
     public boolean isCompleted() {
         return completed;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

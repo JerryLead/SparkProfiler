@@ -80,8 +80,6 @@ public class SparkAppProfiler {
                     applications.add(profileApp(appJsonFile));
                     System.out.println("[Done] " + fileName + " has been profiled!");
                 }
-
-
             }
         }
 
@@ -143,7 +141,6 @@ public class SparkAppProfiler {
         String executorsDir = dir + File.separatorChar + "executors";
         executorsJsonParser.parseExecutorGCSummary(executorsDir, app);
 
-
         return app;
     }
 
@@ -168,13 +165,9 @@ public class SparkAppProfiler {
         // Profile the app based on the saved json and output the profiles
         List<Application> apps = profiler.profileApps();
 
-
         SparkAppsAnalyzer analyzer = new SparkAppsAnalyzer(apps);
         analyzer.analyzeAppStatistics();
         analyzer.outputStatistics(appJsonDir + File.separatorChar + "Statistics");
 
     }
-
-
-
 }

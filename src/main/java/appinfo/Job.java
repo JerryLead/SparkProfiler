@@ -16,6 +16,11 @@ public class Job {
     private String submissionTime;
     private String completionTime;
     private List<Integer> stageIds = new ArrayList<Integer>();
+
+    // 1. SUCCEEDED (without any failed stages/tasks)
+    // 2. FINISHED (with failed stages/tasks but completed)
+    // 3. FAILED (does not finished with failed stages/tasks)
+
     private String status;
     private int numTasks;
     private int numActiveTasks;
@@ -75,12 +80,14 @@ public class Job {
         if (jobObject.get("completionTime") != null)
             durationMS = DateParser.durationMS(submissionTime, completionTime);
 
-
         JsonArray stageIdsArray = jobObject.get("stageIds").getAsJsonArray();
 
         for (JsonElement stageIdElem : stageIdsArray) {
             stageIds.add(stageIdElem.getAsInt());
         }
+
+        if (status.equals("SUCCEEDED") && numFailedTasks > 0)
+            status = "FINISHED";
     }
 
     public int getJobId() {
@@ -89,5 +96,9 @@ public class Job {
 
     public List<Integer> getStageIds() {
         return stageIds;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

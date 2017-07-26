@@ -51,7 +51,8 @@ public class StageStatistics {
             if (stageAttempt != null)
                 stageAttempts.add(stageAttempt);
             else
-                System.err.println("Stage " + stage.getStageId() + " does not have completed stage attempt");
+                System.err.println("[WARN] Stage " + stage.getStageId() + " in "
+                        + stage.getAppName() + "-" + stage.getAppId() + " is not completed!");
 
             if (stageId == -1)
                 stageId = stage.getStageId();

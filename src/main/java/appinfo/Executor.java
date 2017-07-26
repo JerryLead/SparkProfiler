@@ -49,6 +49,8 @@ public class Executor {
     private long totalShuffleWrite;
     private long maxMemory;
 
+    private boolean hasFailedTasks = false;
+
     private GCMetrics gcMetrics = new GCMetrics();
 
     public Executor(JsonObject executorJson) {
@@ -70,6 +72,9 @@ public class Executor {
         totalShuffleRead = executorJson.get("totalShuffleRead").getAsLong();
         totalShuffleWrite = executorJson.get("totalShuffleWrite").getAsLong();
         maxMemory = executorJson.get("maxMemory").getAsLong();
+
+        if (failedTasks > 0)
+            hasFailedTasks = true;
     }
 
 

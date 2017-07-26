@@ -45,6 +45,11 @@ class AppBoxplotMetricsAnalyzer:
                             statistics.addStatistics(line, file)
                             self.metricsMap[metricName] = statistics
 
+        # Fill the NaA values
+        for metricName, statistics in self.metricsMap.items():
+           statistics.checkAndFillNulls()
+                            
+
     def plotMetrics(self, outputDir):
 
         if not os.path.exists(outputDir):
@@ -59,7 +64,7 @@ class AppBoxplotMetricsAnalyzer:
 
 if __name__ == '__main__':
 
-    appName = "GroupByRDD-1.0-2"
+    appName = "RDDJoin-1.0"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + appName + "/Statistics"
     outputDir = statisticsDir + "/figures-boxplot"
 
@@ -78,6 +83,14 @@ if __name__ == '__main__':
                ("stage1.task.jvmGcTime", "Time (s)", 1000, "Stage1.task.jvmGcTime"),
                ("stage1.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.memoryBytesSpilled"),
                ("stage1.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.diskBytesSpilled"),
+
+               ("stage2.duration", "Time (s)", 1000, "Stage2.duration"),
+               ("stage2.jvmGCTime", "Time (s)", 1000, "Stage2.jvmGCTime"),
+               ("stage2.task.executorRunTime", "Time (s)", 1000, "Stage1.task.executorRunTime"),
+               ("stage2.task.jvmGcTime", "Time (s)", 1000, "Stage2.task.jvmGcTime"),
+               ("stage2.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage2.task.memoryBytesSpilled"),
+               ("stage2.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage2.task.diskBytesSpilled"),
+
 
                # ("executor.memoryUsed", "GB", 1024 * 1024 * 1024),
                # ("executor.totalDuration", "Time (s)", 1000),

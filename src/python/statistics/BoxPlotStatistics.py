@@ -67,3 +67,19 @@ class BoxPlotStatistics:
 
         stat[executorType]['whislo'] = stat[executorType]['q1']
         stat[executorType]['whishi'] = stat[executorType]['q3']
+
+    def checkAndFillNulls(self):
+        for stat in [self.Parallel, self.CMS, self.G1]:
+            for executorType in ['E-1', 'E-2', 'E-4']:
+                if(stat[executorType].has_key('label') == False):
+                    stat[executorType]['label'] = executorType
+                    stat[executorType]['fliers'] = []
+
+                    stat[executorType]['mean'] = float('NaN')
+                    stat[executorType]['med'] = float('NaN')
+                    stat[executorType]['whislo'] = float('NaN')
+                    stat[executorType]['whishi'] = float('NaN')
+                    stat[executorType]['q1'] = float('NaN')
+                    stat[executorType]['q3'] = float('NaN')
+
+

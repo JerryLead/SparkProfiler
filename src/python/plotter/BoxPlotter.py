@@ -12,7 +12,6 @@ class BoxPlotter:
         G1 = statistics.G1
 
         colors = ['pink', 'lightblue', 'lightgreen']
-        i = 0
 
         for ax, stats in zip(axes, [Parallel, CMS, G1]):
             list = [stats['E-1'], stats['E-2'], stats['E-4']]

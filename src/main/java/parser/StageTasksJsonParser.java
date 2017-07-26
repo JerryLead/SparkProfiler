@@ -44,16 +44,19 @@ public class StageTasksJsonParser {
     private void parseTaskSummary(File attemptFile, Stage stage, int stageAttemptId) {
         String taskSummaryJson = JsonFileReader.readFile(attemptFile.getAbsolutePath());
 
-        try {
-            JsonParser parser = new JsonParser();
-            JsonElement el = parser.parse(taskSummaryJson);
-            stage.addTaskSummary(stageAttemptId, el.getAsJsonObject());
+        if (!taskSummaryJson.trim().isEmpty()) {
+            try {
+                JsonParser parser = new JsonParser();
+                JsonElement el = parser.parse(taskSummaryJson);
+                stage.addTaskSummary(stageAttemptId, el.getAsJsonObject());
 
-        } catch (JsonIOException e) {
-            e.printStackTrace();
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
+            } catch (JsonIOException e) {
+                e.printStackTrace();
+            } catch (JsonSyntaxException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
 

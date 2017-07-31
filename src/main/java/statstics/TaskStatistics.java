@@ -6,6 +6,7 @@ import util.Statistics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by xulijie on 17-7-3.
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class TaskStatistics {
 
-    private int stageId;
+    private Set<Integer> stageId;
     private int taskId;
 
     private Statistics duration;
@@ -49,7 +50,7 @@ public class TaskStatistics {
     // In general, we run each application 5 times, and each stage has multiple tasks.
     // The length of tasksInSameStage depends on how many stages are calculated.
 
-    public TaskStatistics(List<Task> tasksInSameStage, int stageId) {
+    public TaskStatistics(List<Task> tasksInSameStage, Set<Integer> stageId) {
         List<TaskAttempt> taskAttempts = new ArrayList<TaskAttempt>();
 
         for (Task task : tasksInSameStage) {
@@ -100,7 +101,7 @@ public class TaskStatistics {
     @Override
     public String toString() {
 
-        String prefix = "stage" + stageId;
+        String prefix = "stage" + formatSet(stageId);
 
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
@@ -127,6 +128,17 @@ public class TaskStatistics {
         sb.append("[" + prefix + ".task.shuffleWriteMetrics.bytesWritten] " + shuffleWriteMetrics_bytesWritten + "\n");
         sb.append("[" + prefix + ".task.shuffleWriteMetrics.writeTime] " + shuffleWriteMetrics_writeTime + "\n");
         sb.append("[" + prefix + ".task.shuffleWriteMetrics.recordsWritten] " + shuffleWriteMetrics_recordsWritten + "\n");
+
+        return sb.toString();
+    }
+
+    private String formatSet(Set<Integer> stageId) {
+        StringBuilder sb = new StringBuilder();
+
+        for (Integer i : stageId)
+            sb.append(i + "+");
+
+        sb.delete(sb.length() - 1, sb.length());
 
         return sb.toString();
     }

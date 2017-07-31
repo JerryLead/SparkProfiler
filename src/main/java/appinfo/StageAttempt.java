@@ -17,6 +17,7 @@ public class StageAttempt {
 
     private String status;
     private int attemptId;
+    private String name;
     private long duration = 0L;
     private int numActiveTasks;
     private int numCompleteTasks;
@@ -73,6 +74,8 @@ public class StageAttempt {
             if (stageAttemptObject.has("submissionTime") && stageAttemptObject.has("completionTime"))
                 duration = DateParser.durationMS(firstTaskLaunchedTime, completionTime);
         }
+
+        name = stageAttemptObject.get("name").getAsString();
 
         numActiveTasks = stageAttemptObject.get("numActiveTasks").getAsInt();
         numCompleteTasks = stageAttemptObject.get("numCompleteTasks").getAsInt();
@@ -275,5 +278,9 @@ public class StageAttempt {
 
     public long getMetrics_executorDeserializeCpuTime() {
         return metrics_executorDeserializeCpuTime;
+    }
+
+    public String getName() {
+        return name;
     }
 }

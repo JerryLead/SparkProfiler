@@ -87,27 +87,31 @@ public class AppJsonParser {
                 // mkdir outputDir/appName_appId/jobId/stageId
                 Stage stage = app.getStage(stageId);
 
-                for (int stageAttemptId : stage.getStageAttemptIds()) {
+                if (stage == null) {
+                    System.out.println("Stage " + stageId + " is skipped!");
+                } else {
+                    for (int stageAttemptId : stage.getStageAttemptIds()) {
 
-                    // http://masterIP:18080/api/v1/applications/app-20170618202557-0295/stages/stageId/stageAttemptId
-                    String stageAttemptURL = appURL + "/stages/" + stageId + "/" + stageAttemptId;
+                        // http://masterIP:18080/api/v1/applications/app-20170618202557-0295/stages/stageId/stageAttemptId
+                        String stageAttemptURL = appURL + "/stages/" + stageId + "/" + stageAttemptId;
 
-                    // "outputDir/appName_appId/jobId/stageId/attempt-attemptId.json"
-                    String stageAttemptJsonFile = appDir + File.separatorChar + "job-" + jobId +
-                            File.separatorChar + "stage-" + stageId + File.separatorChar + "attempt-" + stageAttemptId + ".json";
-                    String stageAttemptJson = HtmlFetcher.fetch(stageAttemptURL);
-                    FileTextWriter.write(stageAttemptJsonFile, stageAttemptJson);
+                        // "outputDir/appName_appId/jobId/stageId/attempt-attemptId.json"
+                        String stageAttemptJsonFile = appDir + File.separatorChar + "job-" + jobId +
+                                File.separatorChar + "stage-" + stageId + File.separatorChar + "attempt-" + stageAttemptId + ".json";
+                        String stageAttemptJson = HtmlFetcher.fetch(stageAttemptURL);
+                        FileTextWriter.write(stageAttemptJsonFile, stageAttemptJson);
 
-                    if(stage.getStageAttemptStatus(stageAttemptId).equals("COMPLETE")) {
-                        String taskSummaryURL = stageAttemptURL + "/taskSummary?quantiles=0,0.25,0.5,0.75,1";
-                        // "outputDir/appName_appId/jobId/stageId/attempt-attemptId-taskSummary.json"
-                        String taskSummaryJsonFile = appDir + File.separatorChar + "job-" + jobId +
-                                File.separatorChar + "stage-" + stageId + File.separatorChar + "attempt-" +
-                                stageAttemptId + "-taskSummary.json";
-                        String taskSummaryJson = HtmlFetcher.fetch(taskSummaryURL);
-                        FileTextWriter.write(taskSummaryJsonFile, taskSummaryJson);
+                        if(stage.getStageAttemptStatus(stageAttemptId).equals("COMPLETE")) {
+                            String taskSummaryURL = stageAttemptURL + "/taskSummary?quantiles=0,0.25,0.5,0.75,1";
+                            // "outputDir/appName_appId/jobId/stageId/attempt-attemptId-taskSummary.json"
+                            String taskSummaryJsonFile = appDir + File.separatorChar + "job-" + jobId +
+                                    File.separatorChar + "stage-" + stageId + File.separatorChar + "attempt-" +
+                                    stageAttemptId + "-taskSummary.json";
+                            String taskSummaryJson = HtmlFetcher.fetch(taskSummaryURL);
+                            FileTextWriter.write(taskSummaryJsonFile, taskSummaryJson);
+                        }
+
                     }
-
                 }
             }
         }

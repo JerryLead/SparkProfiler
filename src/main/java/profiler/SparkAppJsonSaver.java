@@ -154,7 +154,7 @@ public class SparkAppJsonSaver {
         //       app-20170623113111-0009
         //       app-20170623112547-0008
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/RDDJoin-1.0/";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/SVM-1.0/";
 
         // The executor log files are stored on each slave node
         String executorLogFile = "/dataDisk/spark-2.1.4.19-bin-2.7.1/worker";

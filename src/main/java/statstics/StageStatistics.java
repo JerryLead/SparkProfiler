@@ -7,13 +7,15 @@ import util.Statistics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by xulijie on 17-7-3.
  */
 public class StageStatistics {
 
-    private int stageId = -1;
+    private Set<Integer> stageId = new TreeSet<Integer>();
 
     private Statistics duration;
 
@@ -54,8 +56,8 @@ public class StageStatistics {
                 System.err.println("[WARN] Stage " + stage.getStageId() + " in "
                         + stage.getAppName() + "-" + stage.getAppId() + " is not completed!");
 
-            if (stageId == -1)
-                stageId = stage.getStageId();
+            stageId.add(stage.getStageId());
+
         }
 
         computeStatistics(stageAttempts);
@@ -105,7 +107,7 @@ public class StageStatistics {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        String prefix = "stage" + stageId;
+        String prefix = "stage" + formatSet(stageId);
 
         sb.append("[" + prefix + ".duration] " + duration + "\n");
         sb.append("[" + prefix + ".inputBytes] " + inputBytes + "\n");
@@ -129,5 +131,20 @@ public class StageStatistics {
         sb.append(taskStatistics);
 
         return sb.toString();
+    }
+
+    private String formatSet(Set<Integer> stageId) {
+        StringBuilder sb = new StringBuilder();
+
+        for (Integer i : stageId)
+            sb.append(i + "+");
+
+        sb.delete(sb.length() - 1, sb.length());
+
+        return sb.toString();
+    }
+
+    public Set<Integer> getStageId() {
+        return stageId;
     }
 }

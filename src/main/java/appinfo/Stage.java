@@ -89,6 +89,7 @@ public class Stage {
 
     private String appId;
     private String appName;
+    private String stageName;
 
     private int stageId;
     private Map<Integer, StageAttempt> stageAttemptMap = new TreeMap<Integer, StageAttempt>();
@@ -103,6 +104,9 @@ public class Stage {
     public void addStageAttempt(JsonObject stageObject) {
         // stageId = stageObject.get("stageId").getAsInt();
         StageAttempt stageAttempt = new StageAttempt(stageObject);
+
+        if (stageName == null)
+            stageName = stageAttempt.getName();
         // Note that the attemptId may not be consistent with the array index.
         stageAttemptMap.put(stageAttempt.getAttemptId(), stageAttempt);
 
@@ -157,5 +161,9 @@ public class Stage {
 
     public String getAppName() {
         return appName;
+    }
+
+    public String getStageName() {
+        return stageName;
     }
 }

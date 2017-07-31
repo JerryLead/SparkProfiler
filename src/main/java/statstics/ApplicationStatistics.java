@@ -7,10 +7,7 @@ import appinfo.Stage;
 import util.FileTextWriter;
 import util.Statistics;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by xulijie on 17-7-3.
@@ -22,7 +19,8 @@ public class ApplicationStatistics {
     private Statistics duration;
 
     // each stage has its stage statistics
-    private Map<Integer, StageStatistics> stageStatisticsMap = new TreeMap<Integer, StageStatistics>();
+    // private Map<Integer, StageStatistics> stageStatisticsMap = new TreeMap<Integer, StageStatistics>();
+    private Map<String, StageStatistics> stageStatisticsMap = new TreeMap<String, StageStatistics>();
     private ExecutorStatistics executorStatistics;
 
     // 1. Successful without any failed stages/tasks
@@ -58,6 +56,7 @@ public class ApplicationStatistics {
         duration = new Statistics(appObjs, "getDuration");
     }
 
+    /*
     private void computeStageStatistics() {
 
         // <stageId, [stage from app1, stage from app2, stage from appN]>
@@ -84,6 +83,39 @@ public class ApplicationStatistics {
         }
 
         for (Map.Entry<Integer, List<Stage>> stagesEntry : stagesWithSameId.entrySet()) {
+            StageStatistics stageStatistics = new StageStatistics(stagesEntry.getValue());
+            stageStatisticsMap.put(stagesEntry.getKey(), stageStatistics);
+        }
+    }
+    */
+
+    private void computeStageStatistics() {
+
+        // <stageId, [stage from app1, stage from app2, stage from appN]>
+        Map<String, List<Stage>> stagesWithSameName = new TreeMap<String, List<Stage>>();
+
+        List<Application> appList = new ArrayList<Application>();
+        appList.addAll(completedApps);
+        appList.addAll(failedApps);
+
+        // also consider the complete stages in the failed apps
+        for (Application app : appList) {
+            for (Map.Entry<Integer, Stage> stageEntry : app.getStageMap().entrySet()) {
+                int stageId = stageEntry.getKey();
+                String stageName = stageEntry.getValue().getStageName();
+                Stage stage = stageEntry.getValue();
+
+                if (stagesWithSameName.containsKey(stageName)) {
+                    stagesWithSameName.get(stageName).add(stage);
+                } else {
+                    List<Stage> stageList = new ArrayList<Stage>();
+                    stageList.add(stage);
+                    stagesWithSameName.put(stageName, stageList);
+                }
+            }
+        }
+
+        for (Map.Entry<String, List<Stage>> stagesEntry : stagesWithSameName.entrySet()) {
             StageStatistics stageStatistics = new StageStatistics(stagesEntry.getValue());
             stageStatisticsMap.put(stagesEntry.getKey(), stageStatistics);
         }
@@ -137,8 +169,8 @@ public class ApplicationStatistics {
                 + "===============================================================\n");
         sb.append("[app.duration] " + duration + "\n");
 
-        for (Map.Entry<Integer, StageStatistics> stageStatisticsEntry : stageStatisticsMap.entrySet()) {
-            int stageId = stageStatisticsEntry.getKey();
+        for (Map.Entry<String, StageStatistics> stageStatisticsEntry : stageStatisticsMap.entrySet()) {
+            Set<Integer> stageId = stageStatisticsEntry.getValue().getStageId();
             StageStatistics stageStatistics = stageStatisticsEntry.getValue();
 
             sb.append("-------------------------------------------------------------------[Stage "

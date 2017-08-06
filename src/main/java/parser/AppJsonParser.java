@@ -26,6 +26,7 @@ public class AppJsonParser {
 
     // application.json
     public Application parseApplication(String appJsonFile) {
+
         String appJson = JsonFileReader.readFile(appJsonFile);
         return new Application(appJson);
     }

@@ -64,7 +64,7 @@ class AppBoxplotMetricsAnalyzer:
 
 if __name__ == '__main__':
 
-    appName = "GroupByRDD-0.5-2"
+    appName = "PageRank-1.0"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + appName + "/Statistics"
     outputDir = statisticsDir + "/figures-boxplot"
 
@@ -77,12 +77,12 @@ if __name__ == '__main__':
                # ("stage0.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage0.task.memoryBytesSpilled"),
                # ("stage0.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage0.task.diskBytesSpilled"),
                #
-               ("stage1.duration", "Time (s)", 1000, "Stage1.duration"),
-               ("stage1.jvmGCTime", "Time (s)", 1000, "Stage1.jvmGCTime"),
-               ("stage1.task.executorRunTime", "Time (s)", 1000, "Stage1.task.executorRunTime"),
-               ("stage1.task.jvmGcTime", "Time (s)", 1000, "Stage1.task.jvmGcTime"),
-               ("stage1.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.memoryBytesSpilled"),
-               ("stage1.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.diskBytesSpilled"),
+               # ("stage1.duration", "Time (s)", 1000, "Stage1.duration"),
+               # ("stage1.jvmGCTime", "Time (s)", 1000, "Stage1.jvmGCTime"),
+               # ("stage1.task.executorRunTime", "Time (s)", 1000, "Stage1.task.executorRunTime"),
+               # ("stage1.task.jvmGcTime", "Time (s)", 1000, "Stage1.task.jvmGcTime"),
+               # ("stage1.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.memoryBytesSpilled"),
+               # ("stage1.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.diskBytesSpilled"),
 
                # for SVM
                # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.duration", "Time (s)", 1000, "Stage10.duration"),
@@ -94,12 +94,12 @@ if __name__ == '__main__':
 
 
                # for PageRank
-               # ("stage1+2+3+4+5+6+7+8+9+10.duration", "Time (s)", 1000, "Stage10.duration"),
-               # ("stage1+2+3+4+5+6+7+8+9+10.jvmGCTime", "Time (s)", 1000, "Stage10.jvmGCTime"),
-               # ("stage1+2+3+4+5+6+7+8+9+10.task.executorRunTime", "Time (s)", 1000, "Stage10.task.executorRunTime"),
-               # ("stage1+2+3+4+5+6+7+8+9+10.task.jvmGcTime", "Time (s)", 1000, "Stage10.task.jvmGcTime"),
-               # ("stage1+2+3+4+5+6+7+8+9+10.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.memoryBytesSpilled"),
-               # ("stage1+2+3+4+5+6+7+8+9+10.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.diskBytesSpilled"),
+               ("stage1+2+3+4+5+6+7+8+9+10.duration", "Time (s)", 1000, "Stage10.duration"),
+               ("stage1+2+3+4+5+6+7+8+9+10.jvmGCTime", "Time (s)", 1000, "Stage10.jvmGCTime"),
+               ("stage1+2+3+4+5+6+7+8+9+10.task.executorRunTime", "Time (s)", 1000, "Stage10.task.executorRunTime"),
+               ("stage1+2+3+4+5+6+7+8+9+10.task.jvmGcTime", "Time (s)", 1000, "Stage10.task.jvmGcTime"),
+               ("stage1+2+3+4+5+6+7+8+9+10.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.memoryBytesSpilled"),
+               ("stage1+2+3+4+5+6+7+8+9+10.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.diskBytesSpilled"),
 
 
                # ("executor.memoryUsed", "GB", 1024 * 1024 * 1024),

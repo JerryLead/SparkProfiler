@@ -77,6 +77,7 @@ public class SparkAppProfiler {
                         System.out.println("[Done] " + fileName + " has been profiled!");
                     }
                 } else {
+                    System.out.println("[Parsing] " + fileName);
                     applications.add(profileApp(appJsonFile));
                     System.out.println("[Done] " + fileName + " has been profiled!");
                 }
@@ -152,7 +153,7 @@ public class SparkAppProfiler {
         boolean useAppList = false;
         // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-        String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/GroupByRDD-1.0-2";
+        String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/PageRank-1.0";
 
         SparkAppProfiler profiler = new SparkAppProfiler(useAppList, appJsonDir);
 

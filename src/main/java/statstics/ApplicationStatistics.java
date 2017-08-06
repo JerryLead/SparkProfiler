@@ -23,25 +23,35 @@ public class ApplicationStatistics {
     private Map<String, StageStatistics> stageStatisticsMap = new TreeMap<String, StageStatistics>();
     private ExecutorStatistics executorStatistics;
 
-    // 1. Successful without any failed stages/tasks
-    // 2. Successful with failed stages/tasks
-    private List<Application> completedApps = new ArrayList<Application>();
+    // Successful without any failed stages/tasks
+    private List<Application> successfulApps = new ArrayList<Application>();
+
+    // Successful with failed stages/tasks
+    private List<Application> finishedApps = new ArrayList<Application>();
 
     // Failed applications
     private List<Application> failedApps = new ArrayList<Application>();
+
+    // Running applications
+    private List<Application> runningApps = new ArrayList<Application>();
 
     // In general, we run  application 5 times, so the length of stageWithSameId is 5
     public ApplicationStatistics(List<Application> appsWithSameName) {
         // check if all the applications are completed
         for (Application app : appsWithSameName) {
-            if (app.isCompleted() == false) {
-                System.err.println("[Error]:" + app.getAppId() + " is not completed!");
+            if (app.getStatus().equals("RUNNING")) {
+                System.err.println("[WARN] The status of " + app.getName() + "-" + app.getAppId() + " is RUNNING");
+                runningApps.add(app);
             } else if (app.getStatus().equals("FAILED")) {
                 System.err.println("[WARN] The status of " + app.getName() + "-" + app.getAppId() + " is FAILED");
                 failedApps.add(app);
-            } else {
+            } else if (app.getStatus().equals("FINISHED")) {
                 // has succeed and finished apps
-                completedApps.add(app);
+                finishedApps.add(app);
+                System.out.println("[INFO] The status of " + app.getName() + "-" + app.getAppId() + " is " + app.getStatus());
+            } else if (app.getStatus().equals("SUCCEEDED")) {
+                // has succeed and finished apps
+                successfulApps.add(app);
                 System.out.println("[INFO] The status of " + app.getName() + "-" + app.getAppId() + " is " + app.getStatus());
             }
         }
@@ -52,7 +62,7 @@ public class ApplicationStatistics {
     }
 
     private void computeAppStatistics() {
-        Object[] appObjs = completedApps.toArray();
+        Object[] appObjs = successfulApps.toArray();
         duration = new Statistics(appObjs, "getDuration");
     }
 
@@ -95,7 +105,8 @@ public class ApplicationStatistics {
         Map<String, List<Stage>> stagesWithSameName = new TreeMap<String, List<Stage>>();
 
         List<Application> appList = new ArrayList<Application>();
-        appList.addAll(completedApps);
+        appList.addAll(successfulApps);
+        appList.addAll(finishedApps);
         appList.addAll(failedApps);
 
         // also consider the complete stages in the failed apps
@@ -125,7 +136,8 @@ public class ApplicationStatistics {
         List<Executor> executorsMultipleApps = new ArrayList<Executor>();
 
         List<Application> appList = new ArrayList<Application>();
-        appList.addAll(completedApps);
+        appList.addAll(successfulApps);
+        appList.addAll(finishedApps);
         appList.addAll(failedApps);
 
         for (Application app : appList) {

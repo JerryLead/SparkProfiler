@@ -22,8 +22,8 @@ public class Application {
     private String startTime;
     private String endTime;
     private String lastUpdated;
-    private long duration; // ms
-    private boolean completed = false;
+    private long duration = 0; // ms
+    // private boolean completed = false;
     private long startTimeEpoch;
     private long lastUpdatedEpoch;
     private long endTimeEpoch;
@@ -56,6 +56,7 @@ public class Application {
             parse(el.getAsJsonObject());
         else {
             System.err.println("Error in parsing the app json html!");
+            System.err.println(json);
             System.exit(1);
         }
     }
@@ -65,11 +66,12 @@ public class Application {
         name = appObject.get("name").getAsString();
         JsonArray attempts = appObject.get("attempts").getAsJsonArray();
 
-        for (JsonElement attemptElem : attempts) {
-            if (completed == false) {
-                initAppAttempt(attemptElem.getAsJsonObject());
-            }
-        }
+        if (attempts.size() == 1)
+            initAppAttempt(attempts.get(0).getAsJsonObject());
+        else if (attempts.size() > 0)
+            System.err.println(name + "_" + appId + "has multiple application attempts!");
+        else
+            System.err.println(name + "_" + appId + "does not have any application attempts!");
     }
 
     public void initAppAttempt(JsonObject attemptObj) {
@@ -77,7 +79,7 @@ public class Application {
         endTime = attemptObj.getAsJsonObject().get("endTime").getAsString();
         lastUpdated = attemptObj.getAsJsonObject().get("lastUpdated").getAsString();
         duration = attemptObj.getAsJsonObject().get("duration").getAsLong();
-        completed = attemptObj.getAsJsonObject().get("completed").getAsBoolean();
+        // completed = attemptObj.getAsJsonObject().get("completed").getAsBoolean();
         startTimeEpoch = attemptObj.getAsJsonObject().get("startTimeEpoch").getAsLong();
         lastUpdatedEpoch = attemptObj.getAsJsonObject().get("lastUpdatedEpoch").getAsLong();
         endTimeEpoch = attemptObj.getAsJsonObject().get("endTimeEpoch").getAsLong();
@@ -94,7 +96,16 @@ public class Application {
     public void addJob(Job job) {
         int jobId = job.getJobId();
         jobMap.put(jobId, job);
-        status = job.getStatus();
+
+        String jobStatus = job.getStatus();
+        if (status == null)
+            status = jobStatus;
+        else if (status.equalsIgnoreCase("SUCCEEDED"))
+            status = jobStatus;
+        else if (status.equalsIgnoreCase("FINISHED")) {
+            if (!jobStatus.equalsIgnoreCase("SUCCEEDED"))
+                status = jobStatus;
+        }
     }
 
     public void addStage(JsonObject stageObject) {
@@ -136,18 +147,11 @@ public class Application {
     }
 
     public long getDuration() {
-        if (completed)
-            return duration;
-        else
-            return 0;
+        return duration;
     }
 
     public List<Executor> getExecutors() {
         return new ArrayList<Executor>(executorMap.values());
-    }
-
-    public boolean isCompleted() {
-        return completed;
     }
 
     public String getStatus() {

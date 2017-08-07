@@ -50,23 +50,26 @@ class AppBoxplotMetricsAnalyzer:
            statistics.checkAndFillNulls()
                             
 
-    def plotMetrics(self, outputDir):
+    def plotMetrics(self, outputDir, sucessfulAppNum):
 
         if not os.path.exists(outputDir):
             os.mkdir(outputDir)
 
         for metricName, statistics in self.metricsMap.items():
             file = os.path.join(outputDir, metricName.replace(".", "-") + ".pdf")
-            bplt.BoxPlotter.plotStatisticsByGCAlgo(statistics, file)
+            bplt.BoxPlotter.plotStatisticsByGCAlgo(statistics, file, sucessfulAppNum)
             print "[Done] The " + file + " has been generated!"
 
 
 
 if __name__ == '__main__':
 
-    appName = "PageRank-1.0"
+    appName = "SVM-1.0"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + appName + "/Statistics"
     outputDir = statisticsDir + "/figures-boxplot"
+
+    sucessfulAppNum = [[4, 5, 5], [5, 5, 5], [0, 5, 5]] # Parallel, CMS, G1
+
 
     metrics = [("app.duration", "Time (s)", 1000, "App.duration"), # (metric, ylablel, unit, title)
 
@@ -85,21 +88,21 @@ if __name__ == '__main__':
                # ("stage1.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.diskBytesSpilled"),
 
                # for SVM
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.duration", "Time (s)", 1000, "Stage10.duration"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.jvmGCTime", "Time (s)", 1000, "Stage10.jvmGCTime"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.executorRunTime", "Time (s)", 1000, "Stage10.task.executorRunTime"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.jvmGcTime", "Time (s)", 1000, "Stage10.task.jvmGcTime"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.memoryBytesSpilled"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.diskBytesSpilled"),
+               ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.duration", "Time (s)", 1000, "Stage10.duration"),
+               ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.jvmGCTime", "Time (s)", 1000, "Stage10.jvmGCTime"),
+               ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.executorRunTime", "Time (s)", 1000, "Stage10.task.executorRunTime"),
+               ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.jvmGcTime", "Time (s)", 1000, "Stage10.task.jvmGcTime"),
+               ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.memoryBytesSpilled"),
+               ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.diskBytesSpilled"),
 
 
                # for PageRank
-               ("stage1+2+3+4+5+6+7+8+9+10.duration", "Time (s)", 1000, "Stage10.duration"),
-               ("stage1+2+3+4+5+6+7+8+9+10.jvmGCTime", "Time (s)", 1000, "Stage10.jvmGCTime"),
-               ("stage1+2+3+4+5+6+7+8+9+10.task.executorRunTime", "Time (s)", 1000, "Stage10.task.executorRunTime"),
-               ("stage1+2+3+4+5+6+7+8+9+10.task.jvmGcTime", "Time (s)", 1000, "Stage10.task.jvmGcTime"),
-               ("stage1+2+3+4+5+6+7+8+9+10.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.memoryBytesSpilled"),
-               ("stage1+2+3+4+5+6+7+8+9+10.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.diskBytesSpilled"),
+               # ("stage1+2+3+4+5+6+7+8+9+10.duration", "Time (s)", 1000, "Stage10.duration"),
+               # ("stage1+2+3+4+5+6+7+8+9+10.jvmGCTime", "Time (s)", 1000, "Stage10.jvmGCTime"),
+               # ("stage1+2+3+4+5+6+7+8+9+10.task.executorRunTime", "Time (s)", 1000, "Stage10.task.executorRunTime"),
+               # ("stage1+2+3+4+5+6+7+8+9+10.task.jvmGcTime", "Time (s)", 1000, "Stage10.task.jvmGcTime"),
+               # ("stage1+2+3+4+5+6+7+8+9+10.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.memoryBytesSpilled"),
+               # ("stage1+2+3+4+5+6+7+8+9+10.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.diskBytesSpilled"),
 
 
                # ("executor.memoryUsed", "GB", 1024 * 1024 * 1024),
@@ -118,4 +121,4 @@ if __name__ == '__main__':
     appMetricsAnalyzer = AppBoxplotMetricsAnalyzer(appName, statisticsDir)
 
     appMetricsAnalyzer.analyzeMetrics(metrics)
-    appMetricsAnalyzer.plotMetrics(outputDir)
+    appMetricsAnalyzer.plotMetrics(outputDir, sucessfulAppNum)

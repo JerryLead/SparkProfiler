@@ -153,7 +153,7 @@ public class SparkAppProfiler {
         boolean useAppList = false;
         // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-        String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/PageRank-1.0";
+        String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/SVM-1.0";
 
         SparkAppProfiler profiler = new SparkAppProfiler(useAppList, appJsonDir);
 

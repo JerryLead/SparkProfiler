@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 class BoxPlotter:
     @staticmethod
-    def plotStatisticsByGCAlgo(statistics, file):
+    def plotStatisticsByGCAlgo(statistics, file, sucessfulAppNum):
 
         fig, axes = plt.subplots(ncols=3, sharey=True)
         fig.subplots_adjust(wspace=0)
@@ -12,6 +12,8 @@ class BoxPlotter:
         G1 = statistics.G1
 
         colors = ['pink', 'lightblue', 'lightgreen']
+
+        i = 0
 
         for ax, stats in zip(axes, [Parallel, CMS, G1]):
             list = [stats['E-1'], stats['E-2'], stats['E-4']]
@@ -25,9 +27,16 @@ class BoxPlotter:
             # ax.set(xticklabels=['E1*32', 'E2*16', 'E4*8'], xlabel=stats['label'], fontsize=12)
             ax.set_xlabel(xlabel=stats['label'], fontsize=22)
             ax.tick_params(axis='y', labelsize=20)
+
+            ax2 = ax.twiny()  # ax2 is responsible for "top" axis and "right" axis
+            ax2.set_xticks(ax.get_xticks())
+            ax2.set_xticklabels(sucessfulAppNum[i], fontsize=20)
+            i += 1
+            ax2.set_xlim(ax.get_xlim())
+
             ax.margins(0.05) # Optional
 
         axes[0].set_ylabel(statistics.ylabel, fontsize=20)
-        fig.suptitle(statistics.title, fontsize=22)
+        fig.suptitle(statistics.title, fontsize=22, y=1.02)
 
         plt.savefig(file, dpi=150, bbox_inches='tight')

@@ -107,7 +107,13 @@ fig.subplots_adjust(wspace=0)
 for ax, stats in zip(axes, [Parallel, CMS, G1]):
     list = [stats['E-1'], stats['E-2'], stats['E-4']]
     ax.bxp(list, showfliers=False, showcaps=False, meanline=False, showmeans=True)
-    ax.set(xticklabels=['E-1', 'E-2', 'E-4'], xlabel=stats['label'])
+    ax.set(xticklabels=['E1', 'E2', 'E4'], xlabel=stats['label'])
+
+    ax2 = ax.twiny()  # ax2 is responsible for "top" axis and "right" axis
+    ax2.set_xticks(ax.get_xticks())
+    ax2.set_xticklabels(['5', '4', '3'])
+    ax2.set_xlim(ax.get_xlim())
+
     ax.margins(0.05) # Optional
 
 plt.show()

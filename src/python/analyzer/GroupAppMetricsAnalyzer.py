@@ -75,62 +75,83 @@ class GroupAppMetricsAnalyzer:
 
 
 if __name__ == '__main__':
+    # for GroupBy
+    # title = "GroupBy"
+    # firstAppName = "GroupByRDD-0.5-2"
+    # secondAppName = "GroupByRDD-1.0-2"
 
-    title = "Join"
-    firstAppName = "RDDJoin-0.5-2"
-    secondAppName = "RDDJoin-1.0"
+    # for Join
+    # title = "Join"
+    # firstAppName = "RDDJoin-0.5-2"
+    # secondAppName = "RDDJoin-1.0"
+
+    # for SVM
+    # title = "SVM"
+    # firstAppName = "SVM-0.5"
+    # secondAppName = "SVM-1.0"
+
+    # for PageRank
+    title = "PageRank"
+    firstAppName = "PageRank-0.5"
+    secondAppName = "PageRank-1.0"
 
     firstStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + firstAppName + "/Statistics"
     secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + secondAppName + "/Statistics"
 
     outputDir = secondStatisticsDir + "/figures-grouped-boxplot"
 
+    # for GroupBy
+    # firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [4, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
+    # secondSucessfulAppNum = [[0, 5, 5], [0, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-1.0
+
+    # for Join
+    # firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [5, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
+    # secondSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [0, 0, 0]] # Parallel, CMS, G1, RDDJoin-1.0
+
+    # for SVM
+    # firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
+    # secondSucessfulAppNum = [[4, 5, 5], [5, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-1.0
+
+    # for PageRank
     firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [5, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
-    secondSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [0, 0, 0]] # Parallel, CMS, G1, RDDJoin-1.0
+    secondSucessfulAppNum = [[0, 0, 5], [0, 1, 1], [0, 0, 0]] # Parallel, CMS, G1, RDDJoin-1.0
 
 
     metrics = [("app.duration", "Time (s)", 1000, title + ".app.duration"), # (metric, ylablel, unit, title)
 
                # for GroupBy
-               # ("stage0.duration", "Time (s)", 1000, "Stage0.duration"),
-               # ("stage0.jvmGCTime", "Time (s)", 1000, "Stage0.jvmGCTime"),
-               # ("stage0.task.executorRunTime", "Time (s)", 1000, "Stage0.task.executorRunTime"),
-               # ("stage0.task.jvmGcTime", "Time (s)", 1000, "Stage0.task.jvmGcTime"),
-               # ("stage0.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage0.task.memoryBytesSpilled"),
-               # ("stage0.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage0.task.diskBytesSpilled"),
-               #
-               # ("stage1.duration", "Time (s)", 1000, "Stage1.duration"),
-               # ("stage1.jvmGCTime", "Time (s)", 1000, "Stage1.jvmGCTime"),
-               # ("stage1.task.executorRunTime", "Time (s)", 1000, "Stage1.task.executorRunTime"),
-               # ("stage1.task.jvmGcTime", "Time (s)", 1000, "Stage1.task.jvmGcTime"),
-               # ("stage1.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.memoryBytesSpilled"),
-               # ("stage1.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage1.task.diskBytesSpilled"),
+               # ("stage1.duration", "Time (s)", 1000, title + ".stage1.duration"),
+               # ("stage1.jvmGCTime", "Time (s)", 1000, title + ".stage1.jvmGCTime"),
+               # ("stage1.task.executorRunTime", "Time (s)", 1000, title + ".stage1.task.duration"),
+               # ("stage1.task.jvmGcTime", "Time (s)", 1000, title + ".stage1.task.jvmGcTime"),
+               # ("stage1.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage1.task.memoryBytesSpilled"),
+               # ("stage1.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage1.task.diskBytesSpilled"),
 
 
                # for RDDJoin
-               ("stage2.duration", "Time (s)", 1000, title + ".stage2.duration"),
-               ("stage2.jvmGCTime", "Time (s)", 1000, title + ".stage2.jvmGCTime"),
-               ("stage2.task.executorRunTime", "Time (s)", 1000, title + ".stage2.task.duration"),
-               ("stage2.task.jvmGcTime", "Time (s)", 1000, title + ".stage2.task.jvmGcTime"),
-               ("stage2.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage2.task.memoryBytesSpilled"),
-               ("stage2.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage2.task.diskBytesSpilled"),
+               # ("stage2.duration", "Time (s)", 1000, title + ".stage2.duration"),
+               # ("stage2.jvmGCTime", "Time (s)", 1000, title + ".stage2.jvmGCTime"),
+               # ("stage2.task.executorRunTime", "Time (s)", 1000, title + ".stage2.task.duration"),
+               # ("stage2.task.jvmGcTime", "Time (s)", 1000, title + ".stage2.task.jvmGcTime"),
+               # ("stage2.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage2.task.memoryBytesSpilled"),
+               # ("stage2.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage2.task.diskBytesSpilled"),
 
                # for SVM
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.duration", "Time (s)", 1000, "Stage10.duration"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.jvmGCTime", "Time (s)", 1000, "Stage10.jvmGCTime"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.executorRunTime", "Time (s)", 1000, "Stage10.task.executorRunTime"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.jvmGcTime", "Time (s)", 1000, "Stage10.task.jvmGcTime"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.memoryBytesSpilled"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.diskBytesSpilled"),
+               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.duration", "Time (s)", 1000, title + ".stage10.duration"),
+               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.jvmGCTime", "Time (s)", 1000, title + ".stage10.jvmGCTime"),
+               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.executorRunTime", "Time (s)", 1000, title + ".stage10.task.duration"),
+               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.jvmGcTime", "Time (s)", 1000, title + ".stage10.task.jvmGcTime"),
+               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage10.task.memoryBytesSpilled"),
+               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage10.task.diskBytesSpilled"),
 
 
                # for PageRank
-               # ("stage1+2+3+4+5+6+7+8+9+10.duration", "Time (s)", 1000, "Stage10.duration"),
-               # ("stage1+2+3+4+5+6+7+8+9+10.jvmGCTime", "Time (s)", 1000, "Stage10.jvmGCTime"),
-               # ("stage1+2+3+4+5+6+7+8+9+10.task.executorRunTime", "Time (s)", 1000, "Stage10.task.executorRunTime"),
-               # ("stage1+2+3+4+5+6+7+8+9+10.task.jvmGcTime", "Time (s)", 1000, "Stage10.task.jvmGcTime"),
-               # ("stage1+2+3+4+5+6+7+8+9+10.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.memoryBytesSpilled"),
-               # ("stage1+2+3+4+5+6+7+8+9+10.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, "Stage10.task.diskBytesSpilled"),
+               ("stage1+2+3+4+5+6+7+8+9+10.duration", "Time (s)", 1000, title + ".stage10.duration"),
+               ("stage1+2+3+4+5+6+7+8+9+10.jvmGCTime", "Time (s)", 1000, title + ".stage10.jvmGCTime"),
+               ("stage1+2+3+4+5+6+7+8+9+10.task.executorRunTime", "Time (s)", 1000, title + ".stage10.task.duration"),
+               ("stage1+2+3+4+5+6+7+8+9+10.task.jvmGcTime", "Time (s)", 1000, title + ".stage10.task.jvmGcTime"),
+               ("stage1+2+3+4+5+6+7+8+9+10.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage10.task.memoryBytesSpilled"),
+               ("stage1+2+3+4+5+6+7+8+9+10.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage10.task.diskBytesSpilled"),
 
 
                # ("executor.memoryUsed", "GB", 1024 * 1024 * 1024),

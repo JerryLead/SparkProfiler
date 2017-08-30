@@ -5,7 +5,7 @@ class GroupBoxPlotter:
     def plotStatisticsByGCAlgo(file, firstSucessfulAppNum, secondSucessfulAppNum,
                                firstStatistics, secondStatistics):
 
-        fig, axes = plt.subplots(nrows=2, ncols=3, sharey='row')
+        fig, axes = plt.subplots(nrows=2, ncols=3, sharey=True) # sharey='row')
         fig.subplots_adjust(wspace=0)
 
 

@@ -101,10 +101,23 @@ G1['E-4']['whislo'] = G1['E-4']['q1']
 G1['E-4']['mean'] = 13.00
 G1['E-4']['fliers'] = []
 
-fig, axes = plt.subplots(ncols=3, sharey=True)
+fig, axes = plt.subplots(nrows=2, ncols=3, sharey='row')
 fig.subplots_adjust(wspace=0)
 
-for ax, stats in zip(axes, [Parallel, CMS, G1]):
+for ax, stats in zip(axes[0], [Parallel, CMS, G1]):
+    list = [stats['E-1'], stats['E-2'], stats['E-4']]
+    ax.bxp(list, showfliers=False, showcaps=False, meanline=False, showmeans=True)
+    # ax.set(xticklabels=['E1', 'E2', 'E4'], xlabel=stats['label'])
+    ax.set_xticklabels([])
+
+    ax2 = ax.twiny()  # ax2 is responsible for "top" axis and "right" axis
+    ax2.set_xticks(ax.get_xticks())
+    ax2.set_xticklabels(['5', '4', '3'])
+    ax2.set_xlim(ax.get_xlim())
+
+    ax.margins(0.05) # Optional
+
+for ax, stats in zip(axes[1], [Parallel, CMS, G1]):
     list = [stats['E-1'], stats['E-2'], stats['E-4']]
     ax.bxp(list, showfliers=False, showcaps=False, meanline=False, showmeans=True)
     ax.set(xticklabels=['E1', 'E2', 'E4'], xlabel=stats['label'])

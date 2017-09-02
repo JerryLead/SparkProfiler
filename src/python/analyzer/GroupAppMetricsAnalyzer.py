@@ -98,7 +98,8 @@ if __name__ == '__main__':
     firstStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + firstAppName + "/Statistics"
     secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + secondAppName + "/Statistics"
 
-    outputDir = secondStatisticsDir + "/figures-grouped-boxplot"
+    outputDir = secondStatisticsDir + "/" + title + "-max"
+
 
     # for GroupBy
     # firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [4, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2

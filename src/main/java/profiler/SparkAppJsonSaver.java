@@ -1,6 +1,7 @@
 package profiler;
 
 import gc.ExecutorGCLogParser;
+import gc.ExecutorGCLogParserWithGCeasy;
 import parser.AppJsonParser;
 import parser.ExecutorsJsonParser;
 import util.CommandRunner;
@@ -133,8 +134,11 @@ public class SparkAppJsonSaver {
                             String exportCVSFile = executorDir.getAbsolutePath() + File.separatorChar + "gcMetrics-" + executorId + ".csv";
                             String chartPNGFile = executorDir.getAbsolutePath() + File.separatorChar + "gcChart-" + executorId + ".png";
 
-                            if (FileChecker.isGCFile(gcLogFile))
-                                ExecutorGCLogParser.parseExecutorGCLog(gcLogFile, exportCVSFile, chartPNGFile);
+                            String gcMetricsFile = executorDir.getAbsolutePath() + File.separatorChar + "gcMetrics-" + executorId + ".json";
+                            if (FileChecker.isGCFile(gcLogFile)) {
+                                // ExecutorGCLogParser.parseExecutorGCLog(gcLogFile, exportCVSFile, chartPNGFile);
+                                ExecutorGCLogParserWithGCeasy.parseExecutorGCLog(gcLogFile, gcMetricsFile);
+                            }
 
                         }
                     }
@@ -154,7 +158,7 @@ public class SparkAppJsonSaver {
         //       app-20170623113111-0009
         //       app-20170623112547-0008
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/RDDJoin-1.0/";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/SVM-1.0/";
 
         // The executor log files are stored on each slave node
         String executorLogFile = "/dataDisk/spark-2.1.4.19-bin-2.7.1/worker";

@@ -66,7 +66,7 @@ class BoxPlotStatistics:
                 stat[executorType]['q3'] = metricValue
 
         stat[executorType]['whislo'] = stat[executorType]['q1']
-        stat[executorType]['whishi'] = stat[executorType]['q3']
+        # stat[executorType]['whishi'] = stat[executorType]['q3']
 
     def checkAndFillNulls(self):
         for stat in [self.Parallel, self.CMS, self.G1]:

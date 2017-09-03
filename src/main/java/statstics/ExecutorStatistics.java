@@ -63,6 +63,34 @@ public class ExecutorStatistics {
     private Statistics gcPerformance; // 11,776.4 M/s
     private Statistics fullGCPerformance; // 2,198.114 K/s
 
+    private Statistics jvmHeapSize_youngGen_allocatedSize; // 7.5 gb
+    private Statistics jvmHeapSize_youngGen_peakSize; // 6 gb
+    private Statistics jvmHeapSize_oldGen_allocatedSize; // 22.5 gb
+    private Statistics jvmHeapSize_oldGen_peakSize; // 22.5 gb
+    private Statistics jvmHeapSize_metaSpace_allocatedSize; // 1.04 gb
+    private Statistics jvmHeapSize_metaSpace_peakSize; // 48.52 mb
+    private Statistics jvmHeapSize_total_allocatedSize; // 30 gb
+    private Statistics jvmHeapSize_total_peakSize; // 28.5 gb
+
+    private Statistics gcStatistics_totalCreatedBytes; // 249.49 gb
+    private Statistics gcStatistics_measurementDuration; // 7 hrs 32 min 52 sec",
+    private Statistics gcStatistics_avgAllocationRate; // 9.4 mb/sec
+    private Statistics gcStatistics_avgPromotionRate; // 1.35 mb/sec
+    private Statistics gcStatistics_minorGCCount; // 62
+    private Statistics gcStatistics_minorGCTotalTime; // 1 min 19 sec
+    private Statistics gcStatistics_minorGCAvgTime; // 1 sec 274 ms
+    private Statistics gcStatistics_minorGCAvgTimeStdDeviation; // 2 sec 374 ms
+    private Statistics gcStatistics_minorGCMinTIme; // 0
+    private Statistics gcStatistics_minorGCMaxTime; // 13 sec 780 ms
+    private Statistics gcStatistics_minorGCIntervalAvgTime; // 7 min 25 sec 442 ms
+    private Statistics gcStatistics_fullGCCount; // 166
+    private Statistics gcStatistics_fullGCTotalTime; // 14 min 11 sec 620 ms
+    private Statistics gcStatistics_fullGCAvgTime; // 5 sec 130 ms
+    private Statistics gcStatistics_fullGCAvgTimeStdDeviation; // 5 sec 207 ms
+    private Statistics gcStatistics_fullGCMinTIme; // 120 ms
+    private Statistics gcStatistics_fullGCMaxTime; // 57 sec 880 ms
+    private Statistics gcStatistics_fullGCIntervalAvgTime; // 2 min 19 sec 104 ms
+    private Statistics throughputPercentage;
 
     // In general, we run each application 5 times and each application has N executors,
     // so the length of executorList is 5N
@@ -132,6 +160,38 @@ public class ExecutorStatistics {
         freedMemoryPerMin = new Statistics(executorObjs, "getGcMetrics", "getFreedMemoryPerMin");
         gcPerformance = new Statistics(executorObjs, "getGcMetrics", "getGcPerformance");
         fullGCPerformance = new Statistics(executorObjs, "getGcMetrics", "getFullGCPerformance");
+
+
+        jvmHeapSize_youngGen_allocatedSize = new Statistics(executorObjs, "getgCeasyMetrics", "getJvmHeapSize_youngGen_allocatedSize");
+        jvmHeapSize_youngGen_peakSize = new Statistics(executorObjs, "getgCeasyMetrics", "getJvmHeapSize_youngGen_peakSize");
+        jvmHeapSize_oldGen_allocatedSize = new Statistics(executorObjs, "getgCeasyMetrics", "getJvmHeapSize_oldGen_allocatedSize");
+        jvmHeapSize_oldGen_peakSize = new Statistics(executorObjs, "getgCeasyMetrics", "getJvmHeapSize_oldGen_peakSize");
+        jvmHeapSize_metaSpace_allocatedSize = new Statistics(executorObjs, "getgCeasyMetrics", "getJvmHeapSize_metaSpace_allocatedSize");
+        jvmHeapSize_metaSpace_peakSize = new Statistics(executorObjs, "getgCeasyMetrics", "getJvmHeapSize_metaSpace_peakSize");
+        jvmHeapSize_total_allocatedSize = new Statistics(executorObjs, "getgCeasyMetrics", "getJvmHeapSize_total_allocatedSize");
+        jvmHeapSize_total_peakSize = new Statistics(executorObjs, "getgCeasyMetrics", "getJvmHeapSize_total_peakSize");
+
+        gcStatistics_totalCreatedBytes = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_totalCreatedBytes");
+        gcStatistics_measurementDuration = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_measurementDuration");
+        gcStatistics_avgAllocationRate = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_avgAllocationRate");
+        gcStatistics_avgPromotionRate = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_avgPromotionRate");
+        gcStatistics_minorGCCount = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_minorGCCount");
+        gcStatistics_minorGCTotalTime = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_minorGCTotalTime");
+        gcStatistics_minorGCAvgTime = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_minorGCAvgTime");
+        gcStatistics_minorGCAvgTimeStdDeviation = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_minorGCAvgTimeStdDeviation");
+        gcStatistics_minorGCMinTIme = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_minorGCMinTIme");
+        gcStatistics_minorGCMaxTime = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_minorGCMaxTime");
+        gcStatistics_minorGCIntervalAvgTime = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_minorGCIntervalAvgTime");
+        gcStatistics_fullGCCount = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_fullGCCount");
+        gcStatistics_fullGCTotalTime = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_fullGCTotalTime");
+        gcStatistics_fullGCAvgTime = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_fullGCAvgTime");
+        gcStatistics_fullGCAvgTimeStdDeviation = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_fullGCAvgTimeStdDeviation");
+        gcStatistics_fullGCMinTIme = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_fullGCMinTIme");
+        gcStatistics_fullGCMaxTime = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_fullGCMaxTime");
+        gcStatistics_fullGCIntervalAvgTime = new Statistics(executorObjs, "getgCeasyMetrics", "getGcStatistics_fullGCIntervalAvgTime");
+
+        throughputPercentage = new Statistics(executorObjs, "getgCeasyMetrics", "getThroughputPercentage");
+
     }
 
 
@@ -191,6 +251,35 @@ public class ExecutorStatistics {
         sb.append("[executor.gc.freedMemoryPerMin] " + freedMemoryPerMin + "\n");
         sb.append("[executor.gc.gcPerformance] " + gcPerformance + "\n");
         sb.append("[executor.gc.fullGCPerformance] " + fullGCPerformance + "\n");
+
+        sb.append("\n");
+        sb.append("[gceasy.jvmHeapSize_youngGen_allocatedSize] " + jvmHeapSize_youngGen_allocatedSize + "\n");
+        sb.append("[gceasy.jvmHeapSize_youngGen_peakSize] " + jvmHeapSize_youngGen_peakSize + "\n");
+        sb.append("[gceasy.jvmHeapSize_oldGen_allocatedSize] " + jvmHeapSize_oldGen_allocatedSize + "\n");
+        sb.append("[gceasy.jvmHeapSize_oldGen_peakSize] " + jvmHeapSize_oldGen_peakSize + "\n");
+        sb.append("[gceasy.jvmHeapSize_metaSpace_allocatedSize] " + jvmHeapSize_metaSpace_allocatedSize + "\n");
+        sb.append("[gceasy.jvmHeapSize_metaSpace_peakSize] " + jvmHeapSize_metaSpace_peakSize + "\n");
+        sb.append("[gceasy.jvmHeapSize_total_allocatedSize] " + jvmHeapSize_total_allocatedSize + "\n");
+        sb.append("[gceasy.jvmHeapSize_total_peakSize] " + jvmHeapSize_total_peakSize + "\n");
+        sb.append("[gceasy.gcStatistics_totalCreatedBytes] " + gcStatistics_totalCreatedBytes + "\n");
+        sb.append("[gceasy.gcStatistics_measurementDuration] " + gcStatistics_measurementDuration + "\n");
+        sb.append("[gceasy.gcStatistics_avgAllocationRate] " + gcStatistics_avgAllocationRate + "\n");
+        sb.append("[gceasy.gcStatistics_avgPromotionRate] " + gcStatistics_avgPromotionRate + "\n");
+        sb.append("[gceasy.gcStatistics_minorGCCount] " + gcStatistics_minorGCCount + "\n");
+        sb.append("[gceasy.gcStatistics_minorGCTotalTime] " + gcStatistics_minorGCTotalTime + "\n");
+        sb.append("[gceasy.gcStatistics_minorGCAvgTime] " + gcStatistics_minorGCAvgTime + "\n");
+        sb.append("[gceasy.gcStatistics_minorGCAvgTimeStdDeviation] " + gcStatistics_minorGCAvgTimeStdDeviation + "\n");
+        sb.append("[gceasy.gcStatistics_minorGCMinTIme] " + gcStatistics_minorGCMinTIme + "\n");
+        sb.append("[gceasy.gcStatistics_minorGCMaxTime] " + gcStatistics_minorGCMaxTime + "\n");
+        sb.append("[gceasy.gcStatistics_minorGCIntervalAvgTime] " + gcStatistics_minorGCIntervalAvgTime + "\n");
+        sb.append("[gceasy.gcStatistics_fullGCCount] " + gcStatistics_fullGCCount + "\n");
+        sb.append("[gceasy.gcStatistics_fullGCTotalTime] " + gcStatistics_fullGCTotalTime + "\n");
+        sb.append("[gceasy.gcStatistics_fullGCAvgTime] " + gcStatistics_fullGCAvgTime + "\n");
+        sb.append("[gceasy.gcStatistics_fullGCAvgTimeStdDeviation] " + gcStatistics_fullGCAvgTimeStdDeviation + "\n");
+        sb.append("[gceasy.gcStatistics_fullGCMinTIme] " + gcStatistics_fullGCMinTIme + "\n");
+        sb.append("[gceasy.gcStatistics_fullGCMaxTime] " + gcStatistics_fullGCMaxTime + "\n");
+        sb.append("[gceasy.gcStatistics_fullGCIntervalAvgTime] " + gcStatistics_fullGCIntervalAvgTime + "\n");
+        sb.append("[gceasy.throughputPercentage] " + throughputPercentage + "\n");
 
         return sb.toString();
     }

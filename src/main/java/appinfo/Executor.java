@@ -53,6 +53,8 @@ public class Executor {
 
     private GCMetrics gcMetrics = new GCMetrics();
 
+    private GCeasyMetrics gCeasyMetrics = new GCeasyMetrics();
+
     public Executor(JsonObject executorJson) {
         id = executorJson.get("id").getAsString();
         hostPort = executorJson.get("hostPort").getAsString();
@@ -87,9 +89,10 @@ public class Executor {
             gcMetrics.set(name, value.replace(",", ""));
         else
             gcMetrics.set(name, "-1");
+    }
 
-
-
+    public void addGCeasyMetric(String json) {
+        gCeasyMetrics.parseJson(json);
     }
 
     public String getId() {
@@ -166,5 +169,9 @@ public class Executor {
 
     public GCMetrics getGcMetrics() {
         return gcMetrics;
+    }
+
+    public GCeasyMetrics getgCeasyMetrics() {
+        return gCeasyMetrics;
     }
 }

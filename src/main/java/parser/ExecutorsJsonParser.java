@@ -52,6 +52,11 @@ public class ExecutorsJsonParser {
                         String[] metrics = line.split(";");
                         app.getExecutor(executorId).addGCMetric(metrics);
                     }
+
+                    String gceasyFile = executorDir.getAbsolutePath() + File.separatorChar
+                            + "gcMetrics-" + executorId + ".json";
+                    String gceasyJson = JsonFileReader.readFile(gceasyFile);
+                    app.getExecutor(executorId).addGCeasyMetric(gceasyJson);
                 }
             }
         }

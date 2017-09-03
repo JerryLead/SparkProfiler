@@ -123,44 +123,46 @@ public class GCeasyMetrics {
     private boolean isProblem;
     private String problem;
 
-    private String jvmHeapSize_youngGen_allocatedSize; // 7.5 gb
-    private String jvmHeapSize_youngGen_peakSize; // 6 gb
-    private String jvmHeapSize_oldGen_allocatedSize; // 22.5 gb
-    private String jvmHeapSize_oldGen_peakSize; // 22.5 gb
-    private String jvmHeapSize_metaSpace_allocatedSize; // 1.04 gb
-    private String jvmHeapSize_metaSpace_peakSize; // 48.52 mb
-    private String jvmHeapSize_total_allocatedSize; // 30 gb
-    private String jvmHeapSize_total_peakSize; // 28.5 gb
+    private double jvmHeapSize_youngGen_allocatedSize; // 7.5 gb
+    private double jvmHeapSize_youngGen_peakSize; // 6 gb
+    private double jvmHeapSize_oldGen_allocatedSize; // 22.5 gb
+    private double jvmHeapSize_oldGen_peakSize; // 22.5 gb
+    private double jvmHeapSize_metaSpace_allocatedSize; // 1.04 gb
+    private double jvmHeapSize_metaSpace_peakSize; // 48.52 mb
+    private double jvmHeapSize_total_allocatedSize; // 30 gb
+    private double jvmHeapSize_total_peakSize; // 28.5 gb
 
-    private String gcStatistics_totalCreatedBytes; // 249.49 gb
-    private String gcStatistics_measurementDuration; // 7 hrs 32 min 52 sec",
-    private String gcStatistics_avgAllocationRate; // 9.4 mb/sec
-    private String gcStatistics_avgPromotionRate; // 1.35 mb/sec
-    private String gcStatistics_minorGCCount; // 62
-    private String gcStatistics_minorGCTotalTime; // 1 min 19 sec
-    private String gcStatistics_minorGCAvgTime; // 1 sec 274 ms
-    private String gcStatistics_minorGCAvgTimeStdDeviation; // 2 sec 374 ms
-    private String gcStatistics_minorGCMinTIme; // 0
-    private String gcStatistics_minorGCMaxTime; // 13 sec 780 ms
-    private String gcStatistics_minorGCIntervalAvgTime; // 7 min 25 sec 442 ms
-    private String gcStatistics_fullGCCount; // 166
-    private String gcStatistics_fullGCTotalTime; // 14 min 11 sec 620 ms
-    private String gcStatistics_fullGCAvgTime; // 5 sec 130 ms
-    private String gcStatistics_fullGCAvgTimeStdDeviation; // 5 sec 207 ms
-    private String gcStatistics_fullGCMinTIme; // 120 ms
-    private String gcStatistics_fullGCMaxTime; // 57 sec 880 ms
-    private String gcStatistics_fullGCIntervalAvgTime; // 2 min 19 sec 104 ms
+    private double gcStatistics_totalCreatedBytes; // 249.49 gb
+    private double gcStatistics_measurementDuration; // 7 hrs 32 min 52 sec,
+    private double gcStatistics_avgAllocationRate; // 9.4 mb/sec
+    private double gcStatistics_avgPromotionRate; // 1.35 mb/sec
+    private long gcStatistics_minorGCCount; // 62
+    private double gcStatistics_minorGCTotalTime; // 1 min 19 sec
+    private double gcStatistics_minorGCAvgTime; // 1 sec 274 ms
+    private double gcStatistics_minorGCAvgTimeStdDeviation; // 2 sec 374 ms
+    private double gcStatistics_minorGCMinTIme; // 0
+    private double gcStatistics_minorGCMaxTime; // 13 sec 780 ms
+    private double gcStatistics_minorGCIntervalAvgTime; // 7 min 25 sec 442 ms
+    private long gcStatistics_fullGCCount; // 166
+    private double gcStatistics_fullGCTotalTime; // 14 min 11 sec 620 ms
+    private double gcStatistics_fullGCAvgTime; // 5 sec 130 ms
+    private double gcStatistics_fullGCAvgTimeStdDeviation; // 5 sec 207 ms
+    private double gcStatistics_fullGCMinTIme; // 120 ms
+    private double gcStatistics_fullGCMaxTime; // 57 sec 880 ms
+    private double gcStatistics_fullGCIntervalAvgTime; // 2 min 19 sec 104 ms
+    private double throughputPercentage; // 99.996
+
     private List<Group> gcDurationSummary_groups = new ArrayList<Group>();
     private List<GcCause> gcCauses = new ArrayList<GcCause>();
     private String commandLineFlags;
     private String heapTuningTips;
     private String tipsToReduceGCTime;
 
-    private double throughputPercentage;
     private String responseId;
     private String graphURL;
 
-    public GCeasyMetrics(String json) {
+
+    public void parseJson(String json) {
         JsonParser parser = new JsonParser();
         JsonElement el = parser.parse(json);
 
@@ -168,57 +170,71 @@ public class GCeasyMetrics {
             JsonObject root = el.getAsJsonObject();
             parseJsonObject(root);
         }
-
     }
 
     private void parseJsonObject(JsonObject root) {
         this.isProblem = root.get("isProblem").getAsBoolean();
-        this.problem = root.get("problem").getAsJsonArray().toString();
+        if (isProblem)
+            this.problem = root.get("problem").getAsJsonArray().toString();
 
         JsonObject jvmHeapSizeObj = root.getAsJsonObject("jvmHeapSize");
-        this.jvmHeapSize_youngGen_allocatedSize = jvmHeapSizeObj.getAsJsonObject("youngGen")
-                .get("allocatedSize").getAsString();
-        this.jvmHeapSize_youngGen_peakSize = jvmHeapSizeObj.getAsJsonObject("youngGen")
-                .get("peakSize").getAsString();
-        this.jvmHeapSize_oldGen_allocatedSize = jvmHeapSizeObj.getAsJsonObject("oldGen")
-                .get("allocatedSize").getAsString();
-        this.jvmHeapSize_oldGen_peakSize = jvmHeapSizeObj.getAsJsonObject("oldGen")
-                .get("peakSize").getAsString();
-        this.jvmHeapSize_metaSpace_allocatedSize = jvmHeapSizeObj.getAsJsonObject("metaSpace")
-                .get("allocatedSize").getAsString();
-        this.jvmHeapSize_metaSpace_peakSize = jvmHeapSizeObj.getAsJsonObject("metaSpace")
-                .get("peakSize").getAsString();
-        this.jvmHeapSize_total_allocatedSize = jvmHeapSizeObj.getAsJsonObject("total")
-                .get("allocatedSize").getAsString();
-        this.jvmHeapSize_total_peakSize = jvmHeapSizeObj.getAsJsonObject("total")
-                .get("peakSize").getAsString();
+        this.jvmHeapSize_youngGen_allocatedSize = parseMemoryString(jvmHeapSizeObj.getAsJsonObject("youngGen")
+                .get("allocatedSize").getAsString());
+        this.jvmHeapSize_youngGen_peakSize = parseMemoryString(jvmHeapSizeObj.getAsJsonObject("youngGen")
+                .get("peakSize").getAsString());
+        this.jvmHeapSize_oldGen_allocatedSize = parseMemoryString(jvmHeapSizeObj.getAsJsonObject("oldGen")
+                .get("allocatedSize").getAsString());
+        this.jvmHeapSize_oldGen_peakSize = parseMemoryString(jvmHeapSizeObj.getAsJsonObject("oldGen")
+                .get("peakSize").getAsString());
+        if(jvmHeapSizeObj.getAsJsonObject("metaSpace") != null) {
+            this.jvmHeapSize_metaSpace_allocatedSize = parseMemoryString(jvmHeapSizeObj.getAsJsonObject("metaSpace")
+                    .get("allocatedSize").getAsString());
+            this.jvmHeapSize_metaSpace_peakSize = parseMemoryString(jvmHeapSizeObj.getAsJsonObject("metaSpace")
+                    .get("peakSize").getAsString());
+        }
+
+        this.jvmHeapSize_total_allocatedSize = parseMemoryString(jvmHeapSizeObj.getAsJsonObject("total")
+                .get("allocatedSize").getAsString());
+        this.jvmHeapSize_total_peakSize = parseMemoryString(jvmHeapSizeObj.getAsJsonObject("total")
+                .get("peakSize").getAsString());
 
         JsonObject gcStatisticsObj = root.getAsJsonObject("gcStatistics");
-        this.gcStatistics_totalCreatedBytes = gcStatisticsObj.get("totalCreatedBytes").getAsString();
-        this.gcStatistics_measurementDuration = gcStatisticsObj.get("measurementDuration").getAsString();
-        this.gcStatistics_avgAllocationRate = gcStatisticsObj.get("avgAllocationRate").getAsString();
-        this.gcStatistics_avgPromotionRate = gcStatisticsObj.get("avgPromotionRate").getAsString();
-        this.gcStatistics_minorGCCount = gcStatisticsObj.get("minorGCCount").getAsString();
-        this.gcStatistics_minorGCTotalTime = gcStatisticsObj.get("minorGCTotalTime").getAsString();
-        this.gcStatistics_minorGCAvgTime = gcStatisticsObj.get("minorGCAvgTime").getAsString();
-        this.gcStatistics_minorGCAvgTimeStdDeviation = gcStatisticsObj.get("minorGCAvgTimeStdDeviation").getAsString();
-        this.gcStatistics_minorGCMinTIme = gcStatisticsObj.get("minorGCMinTIme").getAsString();
-        this.gcStatistics_minorGCMaxTime = gcStatisticsObj.get("minorGCMaxTime").getAsString();
-        this.gcStatistics_minorGCIntervalAvgTime = gcStatisticsObj.get("minorGCIntervalAvgTime").getAsString();
-        this.gcStatistics_fullGCCount = gcStatisticsObj.get("fullGCCount").getAsString();
-        this.gcStatistics_fullGCTotalTime = gcStatisticsObj.get("fullGCTotalTime").getAsString();
-        this.gcStatistics_fullGCAvgTime = gcStatisticsObj.get("fullGCAvgTime").getAsString();
-        this.gcStatistics_fullGCAvgTimeStdDeviation = gcStatisticsObj.get("fullGCAvgTimeStdDeviation").getAsString();
-        this.gcStatistics_fullGCMinTIme = gcStatisticsObj.get("fullGCMinTIme").getAsString();
-        this.gcStatistics_fullGCMaxTime = gcStatisticsObj.get("fullGCMaxTime").getAsString();
-        this.gcStatistics_fullGCIntervalAvgTime = gcStatisticsObj.get("fullGCIntervalAvgTime").getAsString();
+        this.gcStatistics_totalCreatedBytes = parseMemoryString(gcStatisticsObj.get("totalCreatedBytes").getAsString());
+        this.gcStatistics_measurementDuration = parseTimeString(gcStatisticsObj.get("measurementDuration").getAsString());
+        if (gcStatisticsObj.get("avgAllocationRate") != null)
+            this.gcStatistics_avgAllocationRate = parseRateString(gcStatisticsObj.get("avgAllocationRate").getAsString());
+        if (gcStatisticsObj.get("avgPromotionRate") != null)
+            this.gcStatistics_avgPromotionRate = parseRateString(gcStatisticsObj.get("avgPromotionRate").getAsString());
+        this.gcStatistics_minorGCCount = Long.parseLong(gcStatisticsObj.get("minorGCCount").getAsString());
+        this.gcStatistics_minorGCTotalTime = parseTimeString(gcStatisticsObj.get("minorGCTotalTime").getAsString());
+        this.gcStatistics_minorGCAvgTime = parseTimeString(gcStatisticsObj.get("minorGCAvgTime").getAsString());
+        this.gcStatistics_minorGCAvgTimeStdDeviation = parseTimeString(gcStatisticsObj.get("minorGCAvgTimeStdDeviation").getAsString());
+        this.gcStatistics_minorGCMinTIme = parseTimeString(gcStatisticsObj.get("minorGCMinTIme").getAsString());
+        this.gcStatistics_minorGCMaxTime = parseTimeString(gcStatisticsObj.get("minorGCMaxTime").getAsString());
+        this.gcStatistics_minorGCIntervalAvgTime = parseTimeString(gcStatisticsObj.get("minorGCIntervalAvgTime").getAsString());
+        this.gcStatistics_fullGCCount = Long.parseLong(gcStatisticsObj.get("fullGCCount").getAsString());
+        if (gcStatisticsObj.get("fullGCTotalTime") != null)
+            this.gcStatistics_fullGCTotalTime = parseTimeString(gcStatisticsObj.get("fullGCTotalTime").getAsString());
+        if (gcStatisticsObj.get("fullGCAvgTime") != null)
+            this.gcStatistics_fullGCAvgTime = parseTimeString(gcStatisticsObj.get("fullGCAvgTime").getAsString());
+        if (gcStatisticsObj.get("fullGCAvgTimeStdDeviation") != null)
+            this.gcStatistics_fullGCAvgTimeStdDeviation = parseTimeString(gcStatisticsObj.get("fullGCAvgTimeStdDeviation").getAsString());
+        if (gcStatisticsObj.get("fullGCMinTIme") != null)
+            this.gcStatistics_fullGCMinTIme = parseTimeString(gcStatisticsObj.get("fullGCMinTIme").getAsString());
+        if (gcStatisticsObj.get("fullGCMaxTime") != null)
+            this.gcStatistics_fullGCMaxTime = parseTimeString(gcStatisticsObj.get("fullGCMaxTime").getAsString());
+        if (gcStatisticsObj.get("fullGCIntervalAvgTime") != null)
+            this.gcStatistics_fullGCIntervalAvgTime = parseTimeString(gcStatisticsObj.get("fullGCIntervalAvgTime").getAsString());
+
+        if (root.get("throughputPercentage") != null)
+            this.throughputPercentage = root.get("throughputPercentage").getAsDouble();
 
         JsonObject gcDurationSummaryObj = root.getAsJsonObject("gcDurationSummary");
         JsonArray groupArray = gcDurationSummaryObj.get("groups").getAsJsonArray();
         for (JsonElement elem : groupArray) {
             JsonObject obj = elem.getAsJsonObject();
-            int start = obj.get("start").getAsInt();
-            int end = obj.get("end").getAsInt();
+            double start = Double.parseDouble(obj.get("start").getAsString().replaceAll(",", ""));
+            double end = Double.parseDouble(obj.get("end").getAsString().replaceAll(",", ""));
             int numberOfGCs = obj.get("numberOfGCs").getAsInt();
             gcDurationSummary_groups.add(new Group(start, end, numberOfGCs));
         }
@@ -231,20 +247,98 @@ public class GCeasyMetrics {
             gcCauses.add(new GcCause(cause, count));
         }
 
-        this.commandLineFlags = root.get("commandLineFlags").getAsString();
-        this.heapTuningTips = root.get("heapTuningTips").getAsJsonArray().toString();
-        this.tipsToReduceGCTime = root.get("tipsToReduceGCTime").getAsJsonArray().toString();
+        if (root.get("commandLineFlags") != null)
+            this.commandLineFlags = root.get("commandLineFlags").getAsString();
+        if (root.get("heapTuningTips") != null)
+            this.heapTuningTips = root.get("heapTuningTips").getAsJsonArray().toString();
+        if (root.get("tipsToReduceGCTime") != null)
+            this.tipsToReduceGCTime = root.get("tipsToReduceGCTime").getAsJsonArray().toString();
 
-        this.throughputPercentage = root.get("throughputPercentage").getAsDouble();
         this.responseId = root.get("responseId").getAsString();
         this.graphURL = root.get("graphURL").getAsString();
+
+        if (isProblem) {
+            System.err.println("[Executor.isProblem=true] " + root);
+        }
     }
+
+    // return MB
+    private double parseMemoryString(String memorySizeStr) {
+        // 7.5 gb 48.52 mb 3.5 kb
+        String[] sizes = memorySizeStr.replaceAll(",", "").trim().split("\\s+");
+        double size = 0;
+        if (sizes.length < 2) {
+            System.err.println("[Error] while parsing memorySizeStr " + memorySizeStr);
+            return size;
+        }
+
+        for (int i = sizes.length - 1; i > 0; i--) {
+            String unit = sizes[i];
+            if (unit.equalsIgnoreCase("kb"))
+                size += Double.parseDouble(sizes[i - 1]) / 1024;
+            else if (unit.equalsIgnoreCase("mb"))
+                size += Double.parseDouble(sizes[i - 1]);
+            else if (unit.equalsIgnoreCase("gb"))
+                size += Double.parseDouble(sizes[i - 1]) * 1024;
+            i--;
+        }
+
+        return size;
+    }
+
+    // return seconds
+    private double parseTimeString(String timeStr) {
+        // 7 hrs 32 min 52 sec 32 ms
+        String[] times = timeStr.trim().split("\\s+");
+        double seconds = 0;
+        if (times.length < 2) {
+            System.err.println("[Error] while parsing parseTimeString " + timeStr);
+            return seconds;
+        }
+
+        for (int i = times.length - 1; i > 0; i--) {
+            String unit = times[i];
+            if (unit.equalsIgnoreCase("ms"))
+                seconds += Double.parseDouble(times[i - 1]) / 1000;
+            else if (unit.equalsIgnoreCase("sec"))
+                seconds += Double.parseDouble(times[i - 1]);
+            else if (unit.equalsIgnoreCase("min"))
+                seconds += Double.parseDouble(times[i - 1]) * 60;
+            else if (unit.equalsIgnoreCase("hrs"))
+                seconds += Double.parseDouble(times[i - 1]) * 60 * 60;
+            i--;
+        }
+
+        return seconds;
+    }
+
+    // return mb/sec
+    private double parseRateString(String rateStr) {
+        // 1.35 mb/sec
+        String[] rates = rateStr.replaceAll(",", "").trim().split("\\s+");
+        double rate = Double.parseDouble(rates[0]);
+
+        if (rates.length < 2) {
+            System.err.println("[Error] while parsing rateStr " + rateStr);
+            return rate;
+        }
+
+        String unit = rates[1];
+
+        if (unit.equalsIgnoreCase("gb/sec"))
+            rate *= 1024;
+        else if (unit.equalsIgnoreCase("kb/sec"))
+            rate /= 1024;
+        else if (unit.endsWith("min"))
+            rate *= 60;
+
+        return rate;
+    }
+
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("isProblem = " + isProblem + "\n");
-
         sb.append("isProblem = " + isProblem + "\n");
         sb.append("problem = " + problem + "\n");
         sb.append("jvmHeapSize_youngGen_allocatedSize = " + jvmHeapSize_youngGen_allocatedSize + "\n");
@@ -394,10 +488,155 @@ public class GCeasyMetrics {
                 "  \"graphURL\": \"http://gceasy.io/my-gc-report.jsp?p=YXJjaGl2ZWQvMjAxNy8wMi8xNy8tLWFwaS1lMDk0YTM0ZS1jM2ViLTRjOWEtODI1NC1mMGRkMTA3MjQ1Y2NjOWU0NGEzMS0yMDg2LTRhMzAtOWU5YS1jMDc0ZWQ4MWNlZjgudHh0LS0=&channel=API\"\n" +
                 "}";
 
-        GCeasyMetrics gCeasyMetrics = new GCeasyMetrics(json);
+        GCeasyMetrics gCeasyMetrics = new GCeasyMetrics();
+        gCeasyMetrics.parseJson(json);
         System.out.println(gCeasyMetrics.toString());
+
     }
 
+    public boolean isProblem() {
+        return isProblem;
+    }
+
+    public String getProblem() {
+        return problem;
+    }
+
+    public double getJvmHeapSize_youngGen_allocatedSize() {
+        return jvmHeapSize_youngGen_allocatedSize;
+    }
+
+    public double getJvmHeapSize_youngGen_peakSize() {
+        return jvmHeapSize_youngGen_peakSize;
+    }
+
+    public double getJvmHeapSize_oldGen_allocatedSize() {
+        return jvmHeapSize_oldGen_allocatedSize;
+    }
+
+    public double getJvmHeapSize_oldGen_peakSize() {
+        return jvmHeapSize_oldGen_peakSize;
+    }
+
+    public double getJvmHeapSize_metaSpace_allocatedSize() {
+        return jvmHeapSize_metaSpace_allocatedSize;
+    }
+
+    public double getJvmHeapSize_metaSpace_peakSize() {
+        return jvmHeapSize_metaSpace_peakSize;
+    }
+
+    public double getJvmHeapSize_total_allocatedSize() {
+        return jvmHeapSize_total_allocatedSize;
+    }
+
+    public double getJvmHeapSize_total_peakSize() {
+        return jvmHeapSize_total_peakSize;
+    }
+
+    public double getGcStatistics_totalCreatedBytes() {
+        return gcStatistics_totalCreatedBytes;
+    }
+
+    public double getGcStatistics_measurementDuration() {
+        return gcStatistics_measurementDuration;
+    }
+
+    public double getGcStatistics_avgAllocationRate() {
+        return gcStatistics_avgAllocationRate;
+    }
+
+    public double getGcStatistics_avgPromotionRate() {
+        return gcStatistics_avgPromotionRate;
+    }
+
+    public long getGcStatistics_minorGCCount() {
+        return gcStatistics_minorGCCount;
+    }
+
+    public double getGcStatistics_minorGCTotalTime() {
+        return gcStatistics_minorGCTotalTime;
+    }
+
+    public double getGcStatistics_minorGCAvgTime() {
+        return gcStatistics_minorGCAvgTime;
+    }
+
+    public double getGcStatistics_minorGCAvgTimeStdDeviation() {
+        return gcStatistics_minorGCAvgTimeStdDeviation;
+    }
+
+    public double getGcStatistics_minorGCMinTIme() {
+        return gcStatistics_minorGCMinTIme;
+    }
+
+    public double getGcStatistics_minorGCMaxTime() {
+        return gcStatistics_minorGCMaxTime;
+    }
+
+    public double getGcStatistics_minorGCIntervalAvgTime() {
+        return gcStatistics_minorGCIntervalAvgTime;
+    }
+
+    public long getGcStatistics_fullGCCount() {
+        return gcStatistics_fullGCCount;
+    }
+
+    public double getGcStatistics_fullGCTotalTime() {
+        return gcStatistics_fullGCTotalTime;
+    }
+
+    public double getGcStatistics_fullGCAvgTime() {
+        return gcStatistics_fullGCAvgTime;
+    }
+
+    public double getGcStatistics_fullGCAvgTimeStdDeviation() {
+        return gcStatistics_fullGCAvgTimeStdDeviation;
+    }
+
+    public double getGcStatistics_fullGCMinTIme() {
+        return gcStatistics_fullGCMinTIme;
+    }
+
+    public double getGcStatistics_fullGCMaxTime() {
+        return gcStatistics_fullGCMaxTime;
+    }
+
+    public double getGcStatistics_fullGCIntervalAvgTime() {
+        return gcStatistics_fullGCIntervalAvgTime;
+    }
+
+    public double getThroughputPercentage() {
+        return throughputPercentage;
+    }
+
+    public List<Group> getGcDurationSummary_groups() {
+        return gcDurationSummary_groups;
+    }
+
+    public List<GcCause> getGcCauses() {
+        return gcCauses;
+    }
+
+    public String getCommandLineFlags() {
+        return commandLineFlags;
+    }
+
+    public String getHeapTuningTips() {
+        return heapTuningTips;
+    }
+
+    public String getTipsToReduceGCTime() {
+        return tipsToReduceGCTime;
+    }
+
+    public String getResponseId() {
+        return responseId;
+    }
+
+    public String getGraphURL() {
+        return graphURL;
+    }
 }
 
 class GcCause {
@@ -415,11 +654,11 @@ class GcCause {
 }
 
 class Group {
-    int start; // seconds;
-    int end;
+    double start; // seconds;
+    double end;
     int numberOfGCs;
 
-    public Group(int start, int end, int numberOfGCs) {
+    public Group(double start, double end, int numberOfGCs) {
         this.start = start;
         this.end = end;
         this.numberOfGCs = numberOfGCs;

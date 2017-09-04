@@ -36,7 +36,7 @@ public class ApplicationStatistics {
     private List<Application> runningApps = new ArrayList<Application>();
 
     // In general, we run  application 5 times, so the length of stageWithSameId is 5
-    public ApplicationStatistics(List<Application> appsWithSameName) {
+    public ApplicationStatistics(List<Application> appsWithSameName, Integer[] stageIdsToMerge) {
         // check if all the applications are completed
         for (Application app : appsWithSameName) {
             if (app.getStatus().equals("RUNNING")) {
@@ -57,9 +57,10 @@ public class ApplicationStatistics {
         }
 
         computeAppStatistics();
-        computeStageStatistics();
+        computeStageStatistics(stageIdsToMerge);
         computeExecutorStatistics();
     }
+
 
     private void computeAppStatistics() {
         Object[] appObjs = successfulApps.toArray();
@@ -99,7 +100,7 @@ public class ApplicationStatistics {
     }
     */
 
-    private void computeStageStatistics() {
+    private void computeStageStatistics(Integer[] stageIdsToMerge) {
 
         // <stageId, [stage from app1, stage from app2, stage from appN]>
         Map<String, List<Stage>> stagesWithSameName = new TreeMap<String, List<Stage>>();
@@ -109,12 +110,17 @@ public class ApplicationStatistics {
         appList.addAll(finishedApps);
         appList.addAll(failedApps);
 
+        Set<Integer> stageIdsToMergeSet = new HashSet<Integer>(Arrays.asList(stageIdsToMerge));
+
         // also consider the complete stages in the failed apps
         for (Application app : appList) {
             for (Map.Entry<Integer, Stage> stageEntry : app.getStageMap().entrySet()) {
                 int stageId = stageEntry.getKey();
                 String stageName = stageEntry.getValue().getStageName();
                 Stage stage = stageEntry.getValue();
+
+                if (stageIdsToMergeSet.contains(stageId))
+                    stageName += "m";
 
                 if (stagesWithSameName.containsKey(stageName)) {
                     stagesWithSameName.get(stageName).add(stage);

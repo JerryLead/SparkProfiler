@@ -153,7 +153,11 @@ public class SparkAppProfiler {
         boolean useAppList = false;
         // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-        String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/SVM-1.0";
+        String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/SVM-0.5";
+
+
+        // for SVM
+        Integer[] stageIdsToMerge = {4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
 
         SparkAppProfiler profiler = new SparkAppProfiler(useAppList, appJsonDir);
 
@@ -167,7 +171,7 @@ public class SparkAppProfiler {
         List<Application> apps = profiler.profileApps();
 
         SparkAppsAnalyzer analyzer = new SparkAppsAnalyzer(apps);
-        analyzer.analyzeAppStatistics();
+        analyzer.analyzeAppStatistics(stageIdsToMerge);
         analyzer.outputStatistics(appJsonDir + File.separatorChar + "Statistics");
 
     }

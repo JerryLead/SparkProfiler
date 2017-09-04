@@ -81,9 +81,9 @@ if __name__ == '__main__':
     # secondAppName = "GroupByRDD-1.0-2"
 
     # for Join
-    # title = "Join"
-    # firstAppName = "RDDJoin-0.5-2"
-    # secondAppName = "RDDJoin-1.0"
+    title = "Join"
+    firstAppName = "RDDJoin-0.5-2"
+    secondAppName = "RDDJoin-1.0"
 
     # for SVM
     # title = "SVM"
@@ -91,9 +91,9 @@ if __name__ == '__main__':
     # secondAppName = "SVM-1.0"
 
     # for PageRank
-    title = "PageRank"
-    firstAppName = "PageRank-0.5"
-    secondAppName = "PageRank-1.0"
+    # title = "PageRank"
+    # firstAppName = "PageRank-0.5"
+    # secondAppName = "PageRank-1.0"
 
     firstStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + firstAppName + "/Statistics"
     secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + secondAppName + "/Statistics"
@@ -131,7 +131,8 @@ if __name__ == '__main__':
         stageName = "stage2"
 
     elif (title == "SVM"):
-        stageid = "stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22"
+        stageid = "stage4+6+8+10+12+14+16+18+20+22"
+        #stageid = "stage3+5+7+9+11+13+15+17+19+21"
         stageName = "stage10"
 
     elif (title == "PageRank"):
@@ -147,6 +148,8 @@ if __name__ == '__main__':
                (stageid + ".memoryBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".memoryBytesSpilled"),
                (stageid + ".diskBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".diskBytesSpilled"),
                (stageid + ".shuffle_write_writeTime", "Time (s)", 1000, title + "." + stageName + ".shuffleWriteTime"),
+               (stageid + ".inputBytes", "Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".inputBytes"),
+               (stageid + ".outputBytes", "Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".outputBytes"),
 
                (stageid + ".task.duration", "Time (s)", 1000, title + "." + stageName + ".task.duration"),
                (stageid + ".task.jvmGcTime", "Time (s)", 1000, title + "." + stageName + ".task.jvmGcTime"),

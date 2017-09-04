@@ -34,9 +34,9 @@ public class SparkAppsAnalyzer {
         }
     }
 
-    public void analyzeAppStatistics() {
+    public void analyzeAppStatistics(Integer[] stageIdsToMerge) {
         for (Map.Entry<String, List<Application>> app : appNameToIdsMap.entrySet()) {
-            ApplicationStatistics appStatistics = new ApplicationStatistics(app.getValue());
+            ApplicationStatistics appStatistics = new ApplicationStatistics(app.getValue(), stageIdsToMerge);
             appStatisticsMap.put(app.getKey(), appStatistics);
         }
     }

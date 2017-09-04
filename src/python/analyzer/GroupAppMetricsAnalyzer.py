@@ -98,67 +98,71 @@ if __name__ == '__main__':
     firstStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + firstAppName + "/Statistics"
     secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + secondAppName + "/Statistics"
 
-    outputDir = secondStatisticsDir + "/" + title + "-max"
+    outputDir = secondStatisticsDir + "/" + title + "-full"
 
+    firstSucessfulAppNum = []
+    secondSucessfulAppNum = []
+    stageid = ""
+    stageName = ""
 
     # for GroupBy
-    # firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [4, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
-    # secondSucessfulAppNum = [[0, 5, 5], [0, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-1.0
+    if (title == "GroupBy"):
+        firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [4, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
+        secondSucessfulAppNum = [[0, 5, 5], [0, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-1.0
 
-    # for Join
-    # firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [5, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
-    # secondSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [0, 0, 0]] # Parallel, CMS, G1, RDDJoin-1.0
+    elif (title == "Join"):
+        firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [5, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
+        secondSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [0, 0, 0]] # Parallel, CMS, G1, RDDJoin-1.0
 
-    # for SVM
-    # firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
-    # secondSucessfulAppNum = [[4, 5, 5], [5, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-1.0
+    elif (title == "SVM"):
+        firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
+        secondSucessfulAppNum = [[4, 5, 5], [5, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-1.0
 
-    # for PageRank
-    firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [5, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
-    secondSucessfulAppNum = [[0, 0, 5], [0, 1, 1], [0, 0, 0]] # Parallel, CMS, G1, RDDJoin-1.0
+    elif (title == "PageRank"):
+        firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [5, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
+        secondSucessfulAppNum = [[0, 0, 5], [0, 1, 1], [0, 0, 0]] # Parallel, CMS, G1, RDDJoin-1.0
 
+    if (title == "GroupBy"):
+        stageid = "stage1"
+        stageName = "stage1"
+
+    elif (title == "Join"):
+        stageid = "stage2"
+        stageName = "stage2"
+
+    elif (title == "SVM"):
+        stageid = "stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22"
+        stageName = "stage10"
+
+    elif (title == "PageRank"):
+        stageid = "stage1+2+3+4+5+6+7+8+9+10"
+        stageName = "stage10"
 
     metrics = [("app.duration", "Time (s)", 1000, title + ".app.duration"), # (metric, ylablel, unit, title)
 
-               # for GroupBy
-               # ("stage1.duration", "Time (s)", 1000, title + ".stage1.duration"),
-               # ("stage1.jvmGCTime", "Time (s)", 1000, title + ".stage1.jvmGCTime"),
-               # ("stage1.task.executorRunTime", "Time (s)", 1000, title + ".stage1.task.duration"),
-               # ("stage1.task.jvmGcTime", "Time (s)", 1000, title + ".stage1.task.jvmGcTime"),
-               # ("stage1.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage1.task.memoryBytesSpilled"),
-               # ("stage1.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage1.task.diskBytesSpilled"),
+               (stageid + ".duration", "Time (s)", 1000, title + "." + stageName + ".duration"),
+               (stageid + ".jvmGCTime", "Time (s)", 1000, title + "." + stageName + ".jvmGCTime"),
+               (stageid + ".shuffleReadBytes", "Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".shuffleReadBytes"),
+               (stageid + ".shuffleWriteBytes", "Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".shuffleWriteBytes"),
+               (stageid + ".memoryBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".memoryBytesSpilled"),
+               (stageid + ".diskBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".diskBytesSpilled"),
+               (stageid + ".shuffle_write_writeTime", "Time (s)", 1000, title + "." + stageName + ".shuffleWriteTime"),
+
+               (stageid + ".task.duration", "Time (s)", 1000, title + "." + stageName + ".task.duration"),
+               (stageid + ".task.jvmGcTime", "Time (s)", 1000, title + "." + stageName + ".task.jvmGcTime"),
+               (stageid + ".task.memoryBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".task.memoryBytesSpilled"),
+               (stageid + ".task.diskBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".task.diskBytesSpilled"),
+               (stageid + ".task.inputMetrics.bytesRead", "Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".task.bytesRead"),
+               (stageid + ".task.outputMetrics.bytesWritten", "Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".task.bytesWritten"),
 
 
-               # for RDDJoin
-               # ("stage2.duration", "Time (s)", 1000, title + ".stage2.duration"),
-               # ("stage2.jvmGCTime", "Time (s)", 1000, title + ".stage2.jvmGCTime"),
-               # ("stage2.task.executorRunTime", "Time (s)", 1000, title + ".stage2.task.duration"),
-               # ("stage2.task.jvmGcTime", "Time (s)", 1000, title + ".stage2.task.jvmGcTime"),
-               # ("stage2.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage2.task.memoryBytesSpilled"),
-               # ("stage2.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage2.task.diskBytesSpilled"),
-
-               # for SVM
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.duration", "Time (s)", 1000, title + ".stage10.duration"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.jvmGCTime", "Time (s)", 1000, title + ".stage10.jvmGCTime"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.executorRunTime", "Time (s)", 1000, title + ".stage10.task.duration"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.jvmGcTime", "Time (s)", 1000, title + ".stage10.task.jvmGcTime"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage10.task.memoryBytesSpilled"),
-               # ("stage3+4+5+6+7+8+9+10+11+12+13+14+15+16+17+18+19+20+21+22.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage10.task.diskBytesSpilled"),
+               (stageid + ".task.shuffleReadMetrics.recordsRead", "Number (M)", 1000 * 1000, title + "." + stageName + ".task.shuffleReadRecords"),
+               (stageid + ".task.shuffleReadMetrics.recordsWritten", "Number (M)", 1000 * 1000, title + "." + stageName + ".task.shuffleWriteRecords"),
+               (stageid + ".task.shuffleWriteMetrics.writeTime", "Time (s)", 1000, title + "." + stageName + ".task.shuffleWriteTime"),
 
 
-               # for PageRank
-               ("stage1+2+3+4+5+6+7+8+9+10.duration", "Time (s)", 1000, title + ".stage10.duration"),
-               ("stage1+2+3+4+5+6+7+8+9+10.jvmGCTime", "Time (s)", 1000, title + ".stage10.jvmGCTime"),
-               ("stage1+2+3+4+5+6+7+8+9+10.task.executorRunTime", "Time (s)", 1000, title + ".stage10.task.duration"),
-               ("stage1+2+3+4+5+6+7+8+9+10.task.jvmGcTime", "Time (s)", 1000, title + ".stage10.task.jvmGcTime"),
-               ("stage1+2+3+4+5+6+7+8+9+10.task.memoryBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage10.task.memoryBytesSpilled"),
-               ("stage1+2+3+4+5+6+7+8+9+10.task.diskBytesSpilled", "Spilled Size (MB)", 1024 * 1024, title + ".stage10.task.diskBytesSpilled"),
-
-
-               # ("executor.memoryUsed", "GB", 1024 * 1024 * 1024),
-               # ("executor.totalDuration", "Time (s)", 1000),
-               # ("executor.totalGCTime", "Time (s)", 1000),
-               # ("executor.maxMemory", "GB", 1024 * 1024 * 1024),
+               ("executor.totalShuffleRead", "Size (GB)", 1024 * 1024 * 1024, title + ".executor.totalShuffleRead"),
+               ("executor.totalShuffleWrite", "Size (GB)", 1024 * 1024 * 1024, title + ".executor.totalShuffleWrite"),
 
                ("executor.gc.footprint", "Memory (GB)", 1024, title + ".executor.footprint"), # Maximal amount of memory allocated
                ("executor.gc.freedMemoryByGC", "Memory (GB)", 1024, title + ".executor.freedMemoryByGC"), # Total amount of memory that has been freed
@@ -166,7 +170,22 @@ if __name__ == '__main__':
                ("executor.gc.gcPause", "Time (s)", 1, title + ".executor.minorGC.pause"), # This shows all stop-the-world pauses, that are not full gc pauses.
                ("executor.gc.throughput", "Throughput (%)", 1, title + ".executor.gc.throughput"), # Time percentage the application was NOT busy with GC
                ("executor.gc.totalTime", "Time (s)", 1, title + ".executor.duration"), # The duration of running executor
-               ("executor.gc.gcPerformance", "Speed (MB/s)", 1, title + ".executor.minorGC.Performance")] # Performance of minor collections
+               ("executor.gc.gcPerformance", "Speed (GB/s)", 1024, title + ".executor.minorGC.Performance"), # Performance of minor collections
+
+               ("gceasy.jvmHeapSize_youngGen_peakSize", "Memory (GB)", 1024, title + ".executor.youngGen.peakSize"),
+               ("gceasy.jvmHeapSize_oldGen_peakSize", "Memory (GB)", 1024, title + ".executor.oldGen.peakSize"),
+               ("gceasy.jvmHeapSize_total_allocatedSize", "Memory (GB)", 1024, title + ".executor.total.allocatedSize"), # Young + Old + Perm (or Metaspace)
+               ("gceasy.jvmHeapSize_total_peakSize", "Memory (GB)", 1024, title + ".executor.total.peakSize"), # Peak utilization of the heap size at runtime
+               ("gceasy.gcStatistics_totalCreatedBytes", "Object Size (GB)", 1024, title + ".executor.createdObjectSize"), # Total amount of objects created by the application
+               ("gceasy.gcStatistics_avgPromotionRate", "Rate (MB/s)", 1, title + ".executor.avgPromotionRate"),
+               ("gceasy.gcStatistics_minorGCCount", "Count", 1, title + ".executor.minorGCCount"),
+               ("gceasy.gcStatistics_minorGCTotalTime", "Time (s)", 1, title + ".executor.minorGCTotalTime"),
+               ("gceasy.gcStatistics_fullGCCount", "Count", 1, title + ".executor.fullGCCount"),
+               ("gceasy.gcStatistics_fullGCTotalTime", "Time (s)", 1, title + ".executor.fullGCTotalTime"),
+               ("gceasy.gcStatistics_fullGCMaxTime", "Time (s)", 1, title + ".executor.fullGCMaxTime"),
+               ("gceasy.throughputPercentage", "Throughput (%)", 1, title + ".executor.throughputPercentage")
+            ]
+
 
     appMetricsAnalyzer = GroupAppMetricsAnalyzer(firstAppName, secondAppName, firstStatisticsDir, secondStatisticsDir)
 

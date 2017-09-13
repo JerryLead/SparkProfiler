@@ -96,12 +96,12 @@ G1['E-4']['label'] = 'G1_4_28G'
 G1['E-4']['q1'] = 1.2
 G1['E-4']['med'] = 3.33
 G1['E-4']['q3'] = 14.85
-G1['E-4']['whishi'] = G1['E-4']['q3']
-G1['E-4']['whislo'] = G1['E-4']['q1']
+G1['E-4']['whishi'] = 18
+G1['E-4']['whislo'] = 0.3
 G1['E-4']['mean'] = 13.00
 G1['E-4']['fliers'] = []
 
-fig, axes = plt.subplots(nrows=2, ncols=3, sharey='row')
+fig, axes = plt.subplots(nrows=2, ncols=3, sharey=False, figsize=(8,9))
 fig.subplots_adjust(wspace=0)
 
 for ax, stats in zip(axes[0], [Parallel, CMS, G1]):

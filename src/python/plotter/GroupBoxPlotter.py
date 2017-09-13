@@ -5,7 +5,7 @@ class GroupBoxPlotter:
     def plotStatisticsByGCAlgo(file, firstSucessfulAppNum, secondSucessfulAppNum,
                                firstStatistics, secondStatistics):
 
-        fig, axes = plt.subplots(nrows=2, ncols=3, sharey=True) # sharey='row')
+        fig, axes = plt.subplots(nrows=2, ncols=3, sharey=True, figsize=(8,7.6)) # sharey='row')
         fig.subplots_adjust(wspace=0)
 
 
@@ -36,22 +36,25 @@ class GroupBoxPlotter:
             ax2.set_xlim(ax.get_xlim())
 
             ax.margins(0.05) # Optional
-            if (firstStatistics.title.endswith("shuffleReadBytes")):
-                print(secondStatistics.title)
-                print(list)
-            if (firstStatistics.title.endswith("shuffleWriteBytes")):
-                print(secondStatistics.title)
-                print(list)
-            if (firstStatistics.title.endswith("inputBytes")):
-                print(secondStatistics.title)
-                print(list)
-            if (firstStatistics.title.endswith("outputBytes")):
-                print(secondStatistics.title)
-                print(list)
+            # if (firstStatistics.title.endswith("shuffleReadBytes")):
+            #     print(secondStatistics.title)
+            #     print(list)
+            # if (firstStatistics.title.endswith("shuffleWriteBytes")):
+            #     print(secondStatistics.title)
+            #     print(list)
+            # if (firstStatistics.title.endswith("inputBytes")):
+            #     print(secondStatistics.title)
+            #     print(list)
+            # if (firstStatistics.title.endswith("outputBytes")):
+            #     print(secondStatistics.title)
+            #     print(list)
+            # if (secondStatistics.title.endswith("resultSize")):
+            #     print(secondStatistics.title)
+            #     print(list)
 
 
         axes[0][0].set_ylabel(firstStatistics.ylabel, fontsize=20)
-        fig.suptitle(firstStatistics.title, fontsize=22, y=1.02)
+        fig.suptitle(firstStatistics.title, fontsize=22)#, y=1.02)
 
 
 
@@ -82,18 +85,21 @@ class GroupBoxPlotter:
 
             ax.margins(0.05) # Optional
 
-            if (secondStatistics.title.endswith("shuffleReadBytes")):
-                print(secondStatistics.title)
-                print(list)
-            if (secondStatistics.title.endswith("shuffleWriteBytes")):
-                print(secondStatistics.title)
-                print(list)
-            if (secondStatistics.title.endswith("inputBytes")):
-                print(secondStatistics.title)
-                print(list)
-            if (secondStatistics.title.endswith("outputBytes")):
-                print(secondStatistics.title)
-                print(list)
+            # if (secondStatistics.title.endswith("shuffleReadBytes")):
+            #     print(secondStatistics.title)
+            #     print(list)
+            # if (secondStatistics.title.endswith("shuffleWriteBytes")):
+            #     print(secondStatistics.title)
+            #     print(list)
+            # if (secondStatistics.title.endswith("inputBytes")):
+            #     print(secondStatistics.title)
+            #     print(list)
+            # if (secondStatistics.title.endswith("outputBytes")):
+            #     print(secondStatistics.title)
+            #     print(list)
+            # if (secondStatistics.title.endswith("resultSize")):
+            #     print(secondStatistics.title)
+            #     print(list)
 
 
         axes[1][0].set_ylabel(secondStatistics.ylabel, fontsize=20)

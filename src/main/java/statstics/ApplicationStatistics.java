@@ -107,8 +107,8 @@ public class ApplicationStatistics {
 
         List<Application> appList = new ArrayList<Application>();
         appList.addAll(successfulApps);
-        appList.addAll(finishedApps);
-        appList.addAll(failedApps);
+        // appList.addAll(finishedApps);
+        // appList.addAll(failedApps);
 
         Set<Integer> stageIdsToMergeSet = new HashSet<Integer>(Arrays.asList(stageIdsToMerge));
 

@@ -25,7 +25,7 @@ class BoxPlotStatistics:
         self.G1['E-4'] = {}
 
 
-    def addStatistics(self, line, fileName):
+    def addStatistics(self, line, fileName, withMax):
         self.name = line[line.find('[') + 1: line.find(']')]
         metrics = line[line.find(']') + 1:].replace(' ', '').split(',')
 
@@ -66,7 +66,9 @@ class BoxPlotStatistics:
                 stat[executorType]['q3'] = metricValue
 
         stat[executorType]['whislo'] = stat[executorType]['q1']
-        # stat[executorType]['whishi'] = stat[executorType]['q3']
+
+        if(withMax == False):
+            stat[executorType]['whishi'] = stat[executorType]['q3']
 
     def checkAndFillNulls(self):
         for stat in [self.Parallel, self.CMS, self.G1]:

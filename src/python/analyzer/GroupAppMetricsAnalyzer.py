@@ -17,7 +17,7 @@ class GroupAppMetricsAnalyzer:
 
 
 
-    def fillStatistics(self, metrics, statisticsDir, statisticsFiles, metricsMap):
+    def fillStatistics(self, metrics, statisticsDir, statisticsFiles, metricsMap, withMax):
         metricsTupleDict = {} # ["app.duration", ("app.duration", "Time (s)", 1000)]
 
         for tuple in metrics:
@@ -33,17 +33,17 @@ class GroupAppMetricsAnalyzer:
                     metricName = line[line.find('[') + 1: line.find(']')]
                     if metricsTupleDict.has_key(metricName):
                         if metricsMap.has_key(metricName):
-                            metricsMap[metricName].addStatistics(line, file)
+                            metricsMap[metricName].addStatistics(line, file, withMax)
                         else:
                             statistics = st.BoxPlotStatistics(metricsTupleDict[metricName])
-                            statistics.addStatistics(line, file)
+                            statistics.addStatistics(line, file, withMax)
                             metricsMap[metricName] = statistics
 
         # Fill the NaA values
         for metricName, statistics in metricsMap.items():
             statistics.checkAndFillNulls()
 
-    def analyzeMetrics(self, metrics):
+    def analyzeMetrics(self, metrics, firstStatisticsDir, secondStatisticsDir, withMax):
         """
         :param metrics: [
                ("app.duration", "Time (s)", 1000),
@@ -53,10 +53,10 @@ class GroupAppMetricsAnalyzer:
                ...]
         """
         firstStatisticsFiles = os.listdir(self.firstStatisticsDir)
-        self.fillStatistics(metrics, firstStatisticsDir, firstStatisticsFiles, self.firstMetricsMap)
+        self.fillStatistics(metrics, firstStatisticsDir, firstStatisticsFiles, self.firstMetricsMap, withMax)
 
         secondStatisticsFiles = os.listdir(self.secondStatisticsDir)
-        self.fillStatistics(metrics, secondStatisticsDir, secondStatisticsFiles, self.secondMetricsMap)
+        self.fillStatistics(metrics, secondStatisticsDir, secondStatisticsFiles, self.secondMetricsMap, withMax)
 
 
     def plotMetrics(self, outputDir, firstSucessfulAppNum, secondSucessfulAppNum):
@@ -73,32 +73,15 @@ class GroupAppMetricsAnalyzer:
             print "[Done] The " + file + " has been generated!"
 
 
-
-if __name__ == '__main__':
-    # for GroupBy
-    # title = "GroupBy"
-    # firstAppName = "GroupByRDD-0.5-2"
-    # secondAppName = "GroupByRDD-1.0-2"
-
-    # for Join
-    title = "Join"
-    firstAppName = "RDDJoin-0.5-2"
-    secondAppName = "RDDJoin-1.0"
-
-    # for SVM
-    # title = "SVM"
-    # firstAppName = "SVM-0.5"
-    # secondAppName = "SVM-1.0"
-
-    # for PageRank
-    # title = "PageRank"
-    # firstAppName = "PageRank-0.5"
-    # secondAppName = "PageRank-1.0"
+def plotApp(title, firstAppName, secondAppName, withMax):
 
     firstStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + firstAppName + "/Statistics"
     secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + secondAppName + "/Statistics"
 
-    outputDir = secondStatisticsDir + "/" + title + "-full"
+    if (withMax == True):
+        outputDir = secondStatisticsDir + "/" + title + "-full"
+    else:
+        outputDir = secondStatisticsDir + "/" + title + "-nomax"
 
     firstSucessfulAppNum = []
     secondSucessfulAppNum = []
@@ -150,6 +133,7 @@ if __name__ == '__main__':
                (stageid + ".shuffle_write_writeTime", "Time (s)", 1000, title + "." + stageName + ".shuffleWriteTime"),
                (stageid + ".inputBytes", "Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".inputBytes"),
                (stageid + ".outputBytes", "Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".outputBytes"),
+               (stageid + ".resultSize", "Size (GB)", 1024 * 1024 * 1024, title + "." + stageName + ".resultSize"),
 
                (stageid + ".task.duration", "Time (s)", 1000, title + "." + stageName + ".task.duration"),
                (stageid + ".task.jvmGcTime", "Time (s)", 1000, title + "." + stageName + ".task.jvmGcTime"),
@@ -187,10 +171,39 @@ if __name__ == '__main__':
                ("gceasy.gcStatistics_fullGCTotalTime", "Time (s)", 1, title + ".executor.fullGCTotalTime"),
                ("gceasy.gcStatistics_fullGCMaxTime", "Time (s)", 1, title + ".executor.fullGCMaxTime"),
                ("gceasy.throughputPercentage", "Throughput (%)", 1, title + ".executor.throughputPercentage")
-            ]
-
+               ]
 
     appMetricsAnalyzer = GroupAppMetricsAnalyzer(firstAppName, secondAppName, firstStatisticsDir, secondStatisticsDir)
 
-    appMetricsAnalyzer.analyzeMetrics(metrics)
+    appMetricsAnalyzer.analyzeMetrics(metrics, firstStatisticsDir, secondStatisticsDir, withMax)
     appMetricsAnalyzer.plotMetrics(outputDir, firstSucessfulAppNum, secondSucessfulAppNum)
+
+
+if __name__ == '__main__':
+    withMax = False
+
+    # for GroupBy
+    title = "GroupBy"
+    firstAppName = "GroupByRDD-0.5-2"
+    secondAppName = "GroupByRDD-1.0-2"
+    plotApp(title, firstAppName, secondAppName, withMax)
+
+    # for Join
+    title = "Join"
+    firstAppName = "RDDJoin-0.5-2"
+    secondAppName = "RDDJoin-1.0"
+    plotApp(title, firstAppName, secondAppName, withMax)
+
+    # for SVM
+    # title = "SVM"
+    firstAppName = "SVM-0.5"
+    secondAppName = "SVM-1.0"
+    plotApp(title, firstAppName, secondAppName, withMax)
+
+    # for PageRank
+    title = "PageRank"
+    firstAppName = "PageRank-0.5"
+    secondAppName = "PageRank-1.0"
+
+    plotApp(title, firstAppName, secondAppName, withMax)
+

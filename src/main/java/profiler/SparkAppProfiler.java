@@ -145,6 +145,21 @@ public class SparkAppProfiler {
         return app;
     }
 
+    private static void profile(String app, String appJsonDir) {
+
+        Integer[] stageIdsToMerge = {};
+        if (app.equalsIgnoreCase("SVM"))
+            stageIdsToMerge = new Integer[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
+
+        SparkAppProfiler profiler = new SparkAppProfiler(false, appJsonDir);
+
+        // Profile the app based on the saved json and output the profiles
+        List<Application> apps = profiler.profileApps();
+
+        SparkAppsAnalyzer analyzer = new SparkAppsAnalyzer(apps);
+        analyzer.analyzeAppStatistics(stageIdsToMerge);
+        analyzer.outputStatistics(appJsonDir + File.separatorChar + "Statistics");
+    }
 
     public static void main(String args[]) {
 
@@ -153,26 +168,33 @@ public class SparkAppProfiler {
         boolean useAppList = false;
         // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-        String appJsonDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/SVM-0.5";
 
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
 
-        // for SVM
-        Integer[] stageIdsToMerge = {4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
+        String app = "GroupBy";
+        String appJsonDir = appJsonRootDir + "GroupByRDD-0.5-2";
+        profile(app, appJsonDir);
+        appJsonDir = appJsonRootDir + "GroupByRDD-1.0-2";
+        profile(app, appJsonDir);
 
-        SparkAppProfiler profiler = new SparkAppProfiler(useAppList, appJsonDir);
+        app = "Join";
+        appJsonDir = appJsonRootDir + "RDDJoin-0.5-2";
+        profile(app, appJsonDir);
+        appJsonDir = appJsonRootDir + "RDDJoin-1.0";
+        profile(app, appJsonDir);
 
-        if (useAppList) {
-            // Obtain the appIds from the file (a list of appIds)
-            Set<String> appIdSet = profiler.parseAppIdList(appIdsFile);
-            profiler.setAppSet(appIdSet);
-        }
-        
-        // Profile the app based on the saved json and output the profiles
-        List<Application> apps = profiler.profileApps();
+        app = "SVM";
+        appJsonDir = appJsonRootDir + "SVM-0.5";
+        profile(app, appJsonDir);
+        appJsonDir = appJsonRootDir + "SVM-1.0";
+        profile(app, appJsonDir);
 
-        SparkAppsAnalyzer analyzer = new SparkAppsAnalyzer(apps);
-        analyzer.analyzeAppStatistics(stageIdsToMerge);
-        analyzer.outputStatistics(appJsonDir + File.separatorChar + "Statistics");
+        app = "PageRank";
+        appJsonDir = appJsonRootDir + "PageRank-0.5";
+        profile(app, appJsonDir);
+        appJsonDir = appJsonRootDir + "PageRank-1.0";
+        profile(app, appJsonDir);
 
     }
+
 }

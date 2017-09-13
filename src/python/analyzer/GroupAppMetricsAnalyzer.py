@@ -79,7 +79,7 @@ def plotApp(title, firstAppName, secondAppName, withMax):
     secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + secondAppName + "/Statistics"
 
     if (withMax == True):
-        outputDir = secondStatisticsDir + "/" + title + "-full"
+        outputDir = secondStatisticsDir + "/" + title + "-max"
     else:
         outputDir = secondStatisticsDir + "/" + title + "-nomax"
 
@@ -195,7 +195,7 @@ if __name__ == '__main__':
     plotApp(title, firstAppName, secondAppName, withMax)
 
     # for SVM
-    # title = "SVM"
+    title = "SVM"
     firstAppName = "SVM-0.5"
     secondAppName = "SVM-1.0"
     plotApp(title, firstAppName, secondAppName, withMax)

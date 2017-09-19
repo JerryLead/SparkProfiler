@@ -54,28 +54,45 @@ import java.util.TreeMap;
 
 public class Task {
 
+    private String appId;
+    private String appName;
+    private int stageId;
     private int taskId;
 
     private Map<Integer, TaskAttempt> taskAttemptMap = new TreeMap<Integer, TaskAttempt>();
 
-    public Task(int taskId) {
+    public Task(String appId, String appName, int taskId) {
+        this.appId = appId;
+        this.appName = appName;
         this.taskId = taskId;
     }
 
     public void addTaskAttempt(JsonObject taskObject) {
 
-        TaskAttempt taskAttempt = new TaskAttempt(taskObject);
+        TaskAttempt taskAttempt = new TaskAttempt(appId, appName, taskObject);
         // Note that the attemptId may not be consistent with the array index.
         taskAttemptMap.put(taskAttempt.getTaskAttemptId(), taskAttempt);
     }
 
     public TaskAttempt getCompletedTask() {
+
         for (TaskAttempt taskAttempt : taskAttemptMap.values()) {
             if (taskAttempt.getErrorMessage() == null)
                 return taskAttempt;
         }
 
         return null;
+
+    }
+
+    public TaskAttempt getFirstCompletedTask() {
+        TaskAttempt attempt0 = taskAttemptMap.get(0);
+
+        // only consider the taskAttempt with attemptId = 0
+        if (attempt0 != null && attempt0.getErrorMessage().trim().isEmpty())
+            return attempt0;
+        else
+            return null;
     }
 
     public int getTaskId() {

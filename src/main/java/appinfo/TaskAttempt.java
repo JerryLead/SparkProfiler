@@ -8,6 +8,9 @@ import com.google.gson.JsonObject;
 
 public class TaskAttempt {
 
+    private String appId;
+    private String appName;
+
     private int index;
     private int attempt;
     private String launchTime;
@@ -45,10 +48,13 @@ public class TaskAttempt {
     private long shuffleWriteMetrics_writeTime;
     private long shuffleWriteMetrics_recordsWritten;
 
-    private String errorMessage;
+    private String errorMessage = "";
+    private JsonObject taskAttempObject;
 
 
-    public TaskAttempt(JsonObject taskAttemptObject) {
+    public TaskAttempt(String appId, String appName, JsonObject taskAttemptObject) {
+        this.appId = appId;
+        this.appName = appName;
         parseTaskAttempt(taskAttemptObject);
     }
 
@@ -57,6 +63,7 @@ public class TaskAttempt {
     }
 
     public void parseTaskAttempt(JsonObject taskAttemptObject) {
+        this.taskAttempObject = taskAttemptObject;
         this.index = taskAttemptObject.get("index").getAsInt();
         this.attempt = taskAttemptObject.get("attempt").getAsInt();
         this.launchTime = taskAttemptObject.get("launchTime").getAsString();
@@ -231,6 +238,46 @@ public class TaskAttempt {
 
     public String getErrorMessage() {
         return errorMessage;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public String toString(String prefix) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n");
+        sb.append("[" + prefix + ".task.duration] " + duration + "\n");
+        sb.append("[" + prefix + ".task.executorDeserializeTime] " + executorDeserializeTime + "\n");
+        sb.append("[" + prefix + ".task.executorDeserializeCpuTime] " + executorDeserializeCpuTime + "\n");
+        sb.append("[" + prefix + ".task.executorRunTime] " + executorRunTime + "\n");
+        sb.append("[" + prefix + ".task.executorCpuTime] " + executorCpuTime + "\n");
+        sb.append("[" + prefix + ".task.resultSize] " + resultSize + "\n");
+        sb.append("[" + prefix + ".task.jvmGcTime] " + jvmGcTime + "\n");
+        sb.append("[" + prefix + ".task.resultSerializationTime] " + resultSerializationTime + "\n");
+        sb.append("[" + prefix + ".task.memoryBytesSpilled] " + memoryBytesSpilled + "\n");
+        sb.append("[" + prefix + ".task.diskBytesSpilled] " + diskBytesSpilled + "\n");
+        sb.append("[" + prefix + ".task.inputMetrics.bytesRead] " + inputMetrics_bytesRead + "\n");
+        sb.append("[" + prefix + ".task.inputMetrics.recordsRead] " + inputMetrics_recordsRead + "\n");
+        sb.append("[" + prefix + ".task.outputMetrics.bytesWritten] " + outputMetrics_bytesWritten + "\n");
+        sb.append("[" + prefix + ".task.outputMetrics.recordsWritten] " + outputMetrics_recordsWritten + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.remoteBlocksFetched] " + shuffleReadMetrics_remoteBlocksFetched + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.localBlocksFetched] " + shuffleReadMetrics_localBlocksFetched + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.fetchWaitTime] " + shuffleReadMetrics_fetchWaitTime + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.remoteBytesRead] " + shuffleReadMetrics_remoteBytesRead + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.localBytesRead] " + shuffleReadMetrics_localBytesRead + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.recordsRead] " + shuffleReadMetrics_recordsRead + "\n");
+        sb.append("[" + prefix + ".task.shuffleWriteMetrics.bytesWritten] " + shuffleWriteMetrics_bytesWritten + "\n");
+        sb.append("[" + prefix + ".task.shuffleWriteMetrics.writeTime] " + shuffleWriteMetrics_writeTime + "\n");
+        sb.append("[" + prefix + ".task.shuffleWriteMetrics.recordsWritten] " + shuffleWriteMetrics_recordsWritten + "\n");
+
+        return sb.toString();
+
     }
 
 }

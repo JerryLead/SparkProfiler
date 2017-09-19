@@ -152,8 +152,10 @@ public class GCeasyMetrics {
     private double gcStatistics_fullGCIntervalAvgTime; // 2 min 19 sec 104 ms
     private double throughputPercentage; // 99.996
 
-    private List<Group> gcDurationSummary_groups = new ArrayList<Group>();
-    private List<GcCause> gcCauses = new ArrayList<GcCause>();
+    // private List<Group> gcDurationSummary_groups = new ArrayList<Group>();
+    // private List<GcCause> gcCauses = new ArrayList<GcCause>();
+    private String gcDurationSummary_groups;
+    private String gcCauses;
     private String commandLineFlags;
     private String heapTuningTips;
     private String tipsToReduceGCTime;
@@ -229,6 +231,7 @@ public class GCeasyMetrics {
         if (root.get("throughputPercentage") != null)
             this.throughputPercentage = root.get("throughputPercentage").getAsDouble();
 
+        /*
         JsonObject gcDurationSummaryObj = root.getAsJsonObject("gcDurationSummary");
         JsonArray groupArray = gcDurationSummaryObj.get("groups").getAsJsonArray();
         for (JsonElement elem : groupArray) {
@@ -246,6 +249,13 @@ public class GCeasyMetrics {
             int count = obj.get("count").getAsInt();
             gcCauses.add(new GcCause(cause, count));
         }
+        */
+
+        JsonObject gcDurationSummaryObj = root.getAsJsonObject("gcDurationSummary");
+        gcDurationSummary_groups = gcDurationSummaryObj.toString();
+
+        JsonArray gcCausesArray = root.get("gcCauses").getAsJsonArray();
+        gcCauses = gcCausesArray.toString();
 
         if (root.get("commandLineFlags") != null)
             this.commandLineFlags = root.get("commandLineFlags").getAsString();
@@ -610,11 +620,21 @@ public class GCeasyMetrics {
         return throughputPercentage;
     }
 
+    /*
     public List<Group> getGcDurationSummary_groups() {
         return gcDurationSummary_groups;
     }
 
     public List<GcCause> getGcCauses() {
+        return gcCauses;
+    }
+    */
+
+    public String getGcDurationSummary_groups() {
+        return gcDurationSummary_groups;
+    }
+
+    public String getGcCauses() {
         return gcCauses;
     }
 

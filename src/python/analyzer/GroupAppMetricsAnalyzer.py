@@ -103,7 +103,7 @@ def plotApp(title, firstAppName, secondAppName, withMax):
 
     elif (title == "PageRank"):
         firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [5, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
-        secondSucessfulAppNum = [[0, 0, 5], [0, 1, 1], [0, 0, 0]] # Parallel, CMS, G1, RDDJoin-1.0
+        secondSucessfulAppNum = [[0, 0, 5], [0, 0, 1], [0, 0, 0]] # Parallel, CMS, G1, RDDJoin-1.0
 
     if (title == "GroupBy"):
         stageid = "stage1"
@@ -186,13 +186,13 @@ if __name__ == '__main__':
     title = "GroupBy"
     firstAppName = "GroupByRDD-0.5-2"
     secondAppName = "GroupByRDD-1.0-2"
-    plotApp(title, firstAppName, secondAppName, withMax)
+    #plotApp(title, firstAppName, secondAppName, withMax)
 
     # for Join
     title = "Join"
     firstAppName = "RDDJoin-0.5-2"
     secondAppName = "RDDJoin-1.0"
-    plotApp(title, firstAppName, secondAppName, withMax)
+    #plotApp(title, firstAppName, secondAppName, withMax)
 
     # for SVM
     title = "SVM"
@@ -204,6 +204,5 @@ if __name__ == '__main__':
     title = "PageRank"
     firstAppName = "PageRank-0.5"
     secondAppName = "PageRank-1.0"
-
-    plotApp(title, firstAppName, secondAppName, withMax)
+    #plotApp(title, firstAppName, secondAppName, withMax)
 

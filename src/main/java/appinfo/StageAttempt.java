@@ -15,6 +15,9 @@ import java.util.TreeMap;
 
 public class StageAttempt {
 
+    private String appId;
+    private String appName;
+
     private String status;
     private int attemptId;
     private String name;
@@ -56,7 +59,9 @@ public class StageAttempt {
     private Map<Integer, Task> taskMap = new TreeMap<Integer, Task>();
     private TaskSummary taskSummary;
 
-    public StageAttempt(JsonObject stageAttemptObject) {
+    public StageAttempt(String appId, String appName, JsonObject stageAttemptObject) {
+        this.appId = appId;
+        this.appName = appName;
         parseStageAttempt(stageAttemptObject);
     }
 
@@ -133,7 +138,7 @@ public class StageAttempt {
             Task task = taskMap.get(taskId);
             task.addTaskAttempt(taskObject);
         } else {
-            Task task = new Task(taskId);
+            Task task = new Task(appId, appName, taskId);
             task.addTaskAttempt(taskObject);
             taskMap.put(taskId, task);
         }

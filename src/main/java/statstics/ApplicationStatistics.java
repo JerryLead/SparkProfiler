@@ -4,6 +4,7 @@ import appinfo.Application;
 
 import appinfo.Executor;
 import appinfo.Stage;
+import appinfo.TaskAttempt;
 import util.FileTextWriter;
 import util.Statistics;
 
@@ -206,5 +207,59 @@ public class ApplicationStatistics {
 
         return sb.toString();
     }
+
+    public static boolean isSetEqual(Set set1, Set set2) {
+        if (set1 == null && set2 == null) {
+            return true; // Both are null
+        }
+        if (set1 == null || set2 == null || set1.size() != set2.size()
+                || set1.size() == 0 || set2.size() == 0) {
+            return false;
+        }
+
+        Iterator ite1 = set1.iterator();
+        Iterator ite2 = set2.iterator();
+
+        boolean isFullEqual = true;
+
+        while (ite2.hasNext()) {
+            if (!set1.contains(ite2.next())) {
+                isFullEqual = false;
+            }
+        }
+
+        return isFullEqual;
+    }
+
+    public TaskAttempt getSlowestTask(Set<Integer> selectedStageIds) {
+        if (stageStatisticsMap == null && stageStatisticsMap.isEmpty()) {
+            System.err.println("Stage statistics is null in " + appName);
+            return null;
+        }
+
+        StageStatistics stageStatistics = null;
+
+        for (Map.Entry<String, StageStatistics> stageStatisticsEntry : stageStatisticsMap.entrySet()) {
+            Set<Integer> stageId = stageStatisticsEntry.getValue().getStageId();
+
+            if (isSetEqual(stageId, selectedStageIds)) {
+                stageStatistics = stageStatisticsEntry.getValue();
+                break;
+            }
+        }
+
+        if (stageStatistics == null) {
+            StringBuilder sb = new StringBuilder();
+            for (Integer id : selectedStageIds)
+                sb.append(id + ",");
+            if (sb.toString().endsWith(","))
+                sb.deleteCharAt(sb.length() - 1);
+            System.err.println("Cannot find stage[" + sb.toString() + "]");
+            return null;
+        } else
+            return stageStatistics.getSlowestTask();
+    }
+
+
 }
 

@@ -1,14 +1,14 @@
 package analyzer;
 
 import appinfo.Application;
+import appinfo.Executor;
+import appinfo.TaskAttempt;
 import statstics.ApplicationStatistics;
 import util.FileTextWriter;
+import util.JsonFileReader;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class SparkAppsAnalyzer {
@@ -52,6 +52,54 @@ public class SparkAppsAnalyzer {
 
             System.out.println("[Done] The statistics of " + appName + " has been computed!");
         }
+    }
 
+    public void outputSlowestTask(String appDir, String dirName, int[] selectedStageIds) {
+
+        Set<Integer> stageIds = new HashSet<Integer>();
+        for (int id : selectedStageIds)
+            stageIds.add(id);
+
+        for (Map.Entry<String, ApplicationStatistics> appEntry : appStatisticsMap.entrySet()) {
+            String appName = appEntry.getKey();
+            ApplicationStatistics appStatistics = appEntry.getValue();
+            appStatistics.setAppName(appName);
+
+            String appStatisticsFile = appDir + File.separatorChar + dirName + File.separatorChar + appName + "-slowestTask.txt";
+            TaskAttempt slowestTask = appStatistics.getSlowestTask(stageIds);
+
+            if (slowestTask != null) {
+
+                String appId = slowestTask.getAppId();
+                int executorId = slowestTask.getExecutorId();
+
+                Application appWithSlowestTask = null;
+
+                for (Application app : appNameToIdsMap.get(appName)) {
+                    if (app.getAppId().equalsIgnoreCase(appId))
+                        appWithSlowestTask = app;
+                }
+                Executor executor = appWithSlowestTask.getExecutor(executorId + "");
+
+                String stderr = appDir + File.separatorChar + appName + "_" + appId + File.separatorChar +
+                        "executors" + File.separatorChar + executorId + File.separatorChar + "stderr";
+                String excutorLog = JsonFileReader.readFile(stderr);
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("======================= Slowest Task in " + appName + "_" + appId + " stage" + stageIds + " =======================\n");
+
+                sb.append(slowestTask.toString(stageIds.toString()) + "\n\n");
+                sb.append("======================= Slowest Task Executor GC Metrics " + " =======================\n");
+                sb.append(executor + "\n\n");
+                sb.append("======================= Slowest Task Execution Log " + " =======================\n");
+                sb.append(excutorLog);
+
+
+
+                FileTextWriter.write(appStatisticsFile, sb.toString());
+            }
+
+            System.out.println("[Done] The slowestTask of " + appName + " has been computed!");
+        }
     }
 }

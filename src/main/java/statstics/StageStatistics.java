@@ -3,6 +3,7 @@ package statstics;
 import appinfo.Stage;
 import appinfo.StageAttempt;
 import appinfo.Task;
+import appinfo.TaskAttempt;
 import util.Statistics;
 
 import java.util.ArrayList;
@@ -146,5 +147,11 @@ public class StageStatistics {
 
     public Set<Integer> getStageId() {
         return stageId;
+    }
+
+
+    public TaskAttempt getSlowestTask() {
+        TaskAttempt slowestTask = taskStatistics.getSlowestTask();
+        return slowestTask;
     }
 }

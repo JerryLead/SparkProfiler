@@ -145,7 +145,7 @@ public class SparkAppProfiler {
         return app;
     }
 
-    private static void profile(String app, String appJsonDir) {
+    private static void profile(String app, String appJsonDir, int[] selectedStageIds) {
 
         Integer[] stageIdsToMerge = {};
         if (app.equalsIgnoreCase("SVM"))
@@ -159,6 +159,7 @@ public class SparkAppProfiler {
         SparkAppsAnalyzer analyzer = new SparkAppsAnalyzer(apps);
         analyzer.analyzeAppStatistics(stageIdsToMerge);
         analyzer.outputStatistics(appJsonDir + File.separatorChar + "Statistics");
+        analyzer.outputSlowestTask(appJsonDir, "Abnormal", selectedStageIds);
     }
 
     public static void main(String args[]) {
@@ -172,28 +173,32 @@ public class SparkAppProfiler {
         String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
 
         String app = "GroupBy";
+        int[] selectedStageIds = new int[]{1};
         String appJsonDir = appJsonRootDir + "GroupByRDD-0.5-2";
-        profile(app, appJsonDir);
+        profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "GroupByRDD-1.0-2";
-        profile(app, appJsonDir);
+        profile(app, appJsonDir, selectedStageIds);
 
         app = "Join";
+        selectedStageIds = new int[]{2};
         appJsonDir = appJsonRootDir + "RDDJoin-0.5-2";
-        profile(app, appJsonDir);
+        profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "RDDJoin-1.0";
-        profile(app, appJsonDir);
+        profile(app, appJsonDir, selectedStageIds);
 
         app = "SVM";
+        selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
         appJsonDir = appJsonRootDir + "SVM-0.5";
-        profile(app, appJsonDir);
+        profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "SVM-1.0";
-        profile(app, appJsonDir);
+        profile(app, appJsonDir, selectedStageIds);
 
         app = "PageRank";
+        selectedStageIds = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         appJsonDir = appJsonRootDir + "PageRank-0.5";
-        profile(app, appJsonDir);
+        profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "PageRank-1.0";
-        profile(app, appJsonDir);
+        profile(app, appJsonDir, selectedStageIds);
 
     }
 

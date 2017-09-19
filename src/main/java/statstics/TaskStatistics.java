@@ -5,6 +5,7 @@ import appinfo.TaskAttempt;
 import util.Statistics;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -46,6 +47,7 @@ public class TaskStatistics {
     private Statistics shuffleWriteMetrics_writeTime;
     private Statistics shuffleWriteMetrics_recordsWritten;
 
+    private List<TaskAttempt> slowestTasks;
 
     // In general, we run each application 5 times, and each stage has multiple tasks.
     // The length of tasksInSameStage depends on how many stages are calculated.
@@ -54,16 +56,32 @@ public class TaskStatistics {
         List<TaskAttempt> taskAttempts = new ArrayList<TaskAttempt>();
 
         for (Task task : tasksInSameStage) {
-            TaskAttempt taskAttempt = task.getCompletedTask();
+            TaskAttempt taskAttempt = task.getFirstCompletedTask();
             if (taskAttempt != null)
                 taskAttempts.add(taskAttempt);
             else
-                System.err.println("Task " + task.getTaskId() + " does not have completed task attempt");
-
+                System.err.println("Task " + task.getTaskId() + " does not have a first completed task attempt");
         }
 
         computeStatistics(taskAttempts);
+        computeSlowestTasks(taskAttempts);
         this.stageId = stageId;
+    }
+
+    private void computeSlowestTasks(List<TaskAttempt> taskAttempts) {
+        taskAttempts.sort(new Comparator<TaskAttempt>() {
+            @Override
+            public int compare(TaskAttempt t1, TaskAttempt t2) {
+                if (t1.getDuration() < t2.getDuration())
+                    return 1;
+                else if (t1.getDuration() == t2.getDuration())
+                    return 0;
+                else
+                    return -1;
+            }
+        });
+
+        slowestTasks = taskAttempts;
     }
 
     private void computeStatistics(List<TaskAttempt> taskAttempts) {
@@ -141,5 +159,12 @@ public class TaskStatistics {
         sb.delete(sb.length() - 1, sb.length());
 
         return sb.toString();
+    }
+
+    public TaskAttempt getSlowestTask() {
+        if (slowestTasks.size() > 0)
+            return slowestTasks.get(0);
+        else
+            return null;
     }
 }

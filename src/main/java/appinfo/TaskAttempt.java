@@ -248,8 +248,9 @@ public class TaskAttempt {
         return appName;
     }
 
-    public String toString(String prefix) {
+    public String toString() {
 
+        String prefix = index + "";
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
         sb.append("[" + prefix + ".task.duration] " + duration + "\n");

@@ -10,6 +10,7 @@ public class TaskAttempt {
 
     private String appId;
     private String appName;
+    private int stageId;
 
     private int index;
     private int attempt;
@@ -52,9 +53,10 @@ public class TaskAttempt {
     private JsonObject taskAttempObject;
 
 
-    public TaskAttempt(String appId, String appName, JsonObject taskAttemptObject) {
+    public TaskAttempt(String appId, String appName, int stageId, JsonObject taskAttemptObject) {
         this.appId = appId;
         this.appName = appName;
+        this.stageId = stageId;
         parseTaskAttempt(taskAttemptObject);
     }
 
@@ -248,11 +250,19 @@ public class TaskAttempt {
         return appName;
     }
 
+    public String jsonString() {
+        return taskAttempObject.toString();
+    }
+
     public String toString() {
 
         String prefix = index + "";
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
+
+        sb.append("[" + prefix + ".task.index] " + index + "\n");
+        sb.append("[" + prefix + ".task.attemptId] " + attempt + "\n");
+        sb.append("[" + prefix + ".task.executorId] " + executorId + "\n");
         sb.append("[" + prefix + ".task.duration] " + duration + "\n");
         sb.append("[" + prefix + ".task.executorDeserializeTime] " + executorDeserializeTime + "\n");
         sb.append("[" + prefix + ".task.executorDeserializeCpuTime] " + executorDeserializeCpuTime + "\n");

@@ -54,6 +54,31 @@ public class SparkAppsAnalyzer {
         }
     }
 
+    public void outputTaskInStage(String appDir, String dirName, int[] selectedStageIds) {
+        Set<Integer> stageIds = new HashSet<Integer>();
+        for (int id : selectedStageIds)
+            stageIds.add(id);
+
+        for (Map.Entry<String, List<Application>> appEntry : appNameToIdsMap.entrySet()) {
+            // appName = RDDJoin-CMS-1-7G-0.5
+            String appName = appEntry.getKey();
+            String outputTaskInfoFile = appDir + File.separatorChar + dirName + File.separatorChar + appName + "-tasks.txt";
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("[appName = " + appName + "]\n");
+
+            for (Application app : appEntry.getValue()) {
+                if (app.getStatus().equals("SUCCEEDED")) {
+                    sb.append("[appId = " + app.getAppId() + "]\n");
+                    String taskInfo = app.getTaskInfosInStage(stageIds);
+                    sb.append(taskInfo);
+                }
+            }
+
+            FileTextWriter.write(outputTaskInfoFile, sb.toString());
+        }
+    }
+
     public void outputSlowestTask(String appDir, String dirName, int[] selectedStageIds) {
 
         Set<Integer> stageIds = new HashSet<Integer>();
@@ -102,4 +127,5 @@ public class SparkAppsAnalyzer {
             System.out.println("[Done] The slowestTask of " + appName + " has been computed!");
         }
     }
+
 }

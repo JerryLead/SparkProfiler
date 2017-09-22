@@ -61,15 +61,16 @@ public class Task {
 
     private Map<Integer, TaskAttempt> taskAttemptMap = new TreeMap<Integer, TaskAttempt>();
 
-    public Task(String appId, String appName, int taskId) {
+    public Task(String appId, String appName, int stageId, int taskId) {
         this.appId = appId;
         this.appName = appName;
+        this.stageId = stageId;
         this.taskId = taskId;
     }
 
     public void addTaskAttempt(JsonObject taskObject) {
 
-        TaskAttempt taskAttempt = new TaskAttempt(appId, appName, taskObject);
+        TaskAttempt taskAttempt = new TaskAttempt(appId, appName, stageId, taskObject);
         // Note that the attemptId may not be consistent with the array index.
         taskAttemptMap.put(taskAttempt.getTaskAttemptId(), taskAttempt);
     }

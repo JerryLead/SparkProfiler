@@ -103,7 +103,7 @@ public class Stage {
 
     public void addStageAttempt(JsonObject stageObject) {
         // stageId = stageObject.get("stageId").getAsInt();
-        StageAttempt stageAttempt = new StageAttempt(appId, appName, stageObject);
+        StageAttempt stageAttempt = new StageAttempt(appId, appName, stageId, stageObject);
 
         if (stageName == null)
             stageName = stageAttempt.getName();

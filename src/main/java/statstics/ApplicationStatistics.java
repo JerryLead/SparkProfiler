@@ -259,7 +259,5 @@ public class ApplicationStatistics {
         } else
             return stageStatistics.getSlowestTask();
     }
-
-
 }
 

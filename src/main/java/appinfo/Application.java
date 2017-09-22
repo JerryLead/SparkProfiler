@@ -5,10 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Application {
     private String appId;
@@ -156,5 +153,23 @@ public class Application {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getTaskInfosInStage(Set<Integer> stageIds) {
+
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<Integer, Stage> stageEntry : stageMap.entrySet()) {
+            if (stageIds.contains(stageEntry.getKey())) {
+                Stage selectedStage = stageEntry.getValue();
+                StageAttempt stageAttempt = selectedStage.getCompletedStage();
+                sb.append("[stageId = " + selectedStage.getStageId() + "]\n");
+                for (Task task : stageAttempt.getTaskMap().values()) {
+                    TaskAttempt taskAttempt = task.getFirstCompletedTask();
+                    sb.append(taskAttempt.jsonString() + "\n");
+                }
+            }
+        }
+
+        return sb.toString();
     }
 }

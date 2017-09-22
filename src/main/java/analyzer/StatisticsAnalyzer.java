@@ -81,6 +81,7 @@ public class StatisticsAnalyzer {
 
     private void compareMetricDifference() {
         // GroupBy-0.5: In E1, Parallel >> CMS ~ G1
+        System.out.println("\n[Comparison][" + app + "-" + dataMode + "]");
         compareGCWithSameMemory();
     }
 
@@ -93,7 +94,7 @@ public class StatisticsAnalyzer {
         appList.add(Parallel_E1_stat);
         appList.add(CMS_E1_stat);
         appList.add(G1_E1_stat);
-        System.out.println("\n[Comparison][" + metricName + "][E1]");
+        System.out.println("[" + metricName + "." + statName + "][E1]");
         computeRelativeDifference(appList, metricName, statName);
 
         // compare in E2 mode
@@ -101,7 +102,7 @@ public class StatisticsAnalyzer {
         appList.add(Parallel_E2_stat);
         appList.add(CMS_E2_stat);
         appList.add(G1_E2_stat);
-        System.out.println("\n[Comparison][" + metricName + "][E2]");
+        System.out.println("\n[" + metricName + "." + statName + "][E2]");
         computeRelativeDifference(appList, metricName, statName);
 
         // compare in E4 mode
@@ -109,7 +110,7 @@ public class StatisticsAnalyzer {
         appList.add(Parallel_E4_stat);
         appList.add(CMS_E4_stat);
         appList.add(G1_E4_stat);
-        System.out.println("\n[Comparison][" + metricName + "][E4]");
+        System.out.println("\n[" + metricName + "." + statName + "][E4]");
         computeRelativeDifference(appList, metricName, statName);
 
     }
@@ -121,7 +122,7 @@ public class StatisticsAnalyzer {
                 double value1 = o1.getMetric(metricName, statName);
                 double value2 = o2.getMetric(metricName, statName);
 
-                return (int)(value2 - value1);
+                return (int)(value1 - value2);
             }
         });
 
@@ -133,10 +134,12 @@ public class StatisticsAnalyzer {
             double value = appStatistics.getMetric(metricName, statName);
             double relativeDiff = RelativeDifference.getRelativeDifference(value, initValue) * 100;
             String label = "";
-            if (relativeDiff >= 15)
-                label = ">>";
+            if (relativeDiff > 20)
+                label = "<<";
+            else if (relativeDiff > 10)
+                label = "<";
             else if (relativeDiff >= 0)
-                label = "=";
+                label = "~";
             else
                 label = "!";
 
@@ -165,33 +168,48 @@ public class StatisticsAnalyzer {
         analyzer.init();
         analyzer.compareMetricDifference();
 
-//        appJsonDir = appJsonRootDir + "GroupByRDD-1.0-2" + File.separatorChar + "Statistics";
-//        analyzer.init(app, "1.0", appJsonDir, selectedStageIds);
+        appJsonDir = appJsonRootDir + "GroupByRDD-1.0-2" + File.separatorChar + "Statistics";
+        analyzer = new StatisticsAnalyzer(app, "1.0", appJsonDir, selectedStageIds);
+        analyzer.init();
+        analyzer.compareMetricDifference();
 
 
-
-        /*
-        app = "Join";
+        app = "RDDJoin";
         selectedStageIds = "2";
         appJsonDir = appJsonRootDir + "RDDJoin-0.5-2" + File.separatorChar + "Statistics";
-        analyzer.init(app,  "0.5", appJsonDir, selectedStageIds);
+        analyzer = new StatisticsAnalyzer(app,  "0.5", appJsonDir, selectedStageIds);
+        analyzer.init();
+        analyzer.compareMetricDifference();
+
         appJsonDir = appJsonRootDir + "RDDJoin-1.0" + File.separatorChar + "Statistics";
-        analyzer.init(app, "1.0",  appJsonDir, selectedStageIds);
+        analyzer = new StatisticsAnalyzer(app, "1.0",  appJsonDir, selectedStageIds);
+        analyzer.init();
+        analyzer.compareMetricDifference();
 
         app = "SVM";
         selectedStageIds = "4+6+8+10+12+14+16+18+20+22";
         appJsonDir = appJsonRootDir + "SVM-0.5" + File.separatorChar + "Statistics";
-        analyzer.init(app,  "0.5", appJsonDir, selectedStageIds);
+        analyzer = new StatisticsAnalyzer(app,  "0.5", appJsonDir, selectedStageIds);
+        analyzer.init();
+        analyzer.compareMetricDifference();
+
         appJsonDir = appJsonRootDir + "SVM-1.0" + File.separatorChar + "Statistics";
-        analyzer.init(app, "1.0",  appJsonDir, selectedStageIds);
+        analyzer = new StatisticsAnalyzer(app, "1.0",  appJsonDir, selectedStageIds);
+        analyzer.init();
+        analyzer.compareMetricDifference();
 
         app = "PageRank";
         selectedStageIds = "1+2+3+4+5+6+7+8+9+10";
         appJsonDir = appJsonRootDir + "PageRank-0.5" + File.separatorChar + "Statistics";
-        analyzer.init(app,  "0.5", appJsonDir, selectedStageIds);
+        analyzer = new StatisticsAnalyzer(app,  "0.5", appJsonDir, selectedStageIds);
+        analyzer.init();
+        analyzer.compareMetricDifference();
+
         appJsonDir = appJsonRootDir + "PageRank-1.0" + File.separatorChar + "Statistics";
-        analyzer.init(app,  "1.0", appJsonDir, selectedStageIds);
-        */
+        analyzer = new StatisticsAnalyzer(app,  "1.0", appJsonDir, selectedStageIds);
+        analyzer.init();
+        analyzer.compareMetricDifference();
+
     }
 
 

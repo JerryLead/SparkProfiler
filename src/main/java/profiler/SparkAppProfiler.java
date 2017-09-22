@@ -159,6 +159,7 @@ public class SparkAppProfiler {
         SparkAppsAnalyzer analyzer = new SparkAppsAnalyzer(apps);
         analyzer.analyzeAppStatistics(stageIdsToMerge);
         analyzer.outputStatistics(appJsonDir + File.separatorChar + "Statistics");
+        analyzer.outputTaskInStage(appJsonDir, "TaskInfo", selectedStageIds);
         analyzer.outputSlowestTask(appJsonDir, "Abnormal", selectedStageIds);
     }
 

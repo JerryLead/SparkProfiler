@@ -165,7 +165,7 @@ public class Application {
                 sb.append("[stageId = " + selectedStage.getStageId() + "]\n");
                 for (Task task : stageAttempt.getTaskMap().values()) {
                     TaskAttempt taskAttempt = task.getFirstCompletedTask();
-                    sb.append(taskAttempt.jsonString() + "\n");
+                    sb.append(taskAttempt + "\n");
                 }
             }
         }

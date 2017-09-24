@@ -15,14 +15,6 @@ class TaskMetricsCorrelationAnalyzer:
         self.taskList = []
 
     def analyzeMetrics(self):
-        """
-        :param metrics: [
-               ("app.duration", "Time (s)", 1000),
-               ("stage0.duration", "Time (s)", 1000),
-               ("stage0.jvmGCTime", "Time (s)", 1000),
-               ("stage0.task.executorRunTime", "Time (s)", 1000),
-               ...]
-        """
         taskInfoFiles = os.listdir(self.taskInfoDir)
 
         for file in taskInfoFiles:
@@ -41,6 +33,21 @@ class TaskMetricsCorrelationAnalyzer:
                 # [0.task.executorCpuTime] 2614115738
                 # [0.task.resultSize] 2865
                 # [0.task.jvmGcTime] 1305
+                GC = ""
+                executor = ""
+                if (file.find("CMS") != -1):
+                    GC = "CMS"
+                elif (file.find("G1") != -1):
+                    GC = "G1"
+                elif (file.find("Parallel") != -1):
+                    GC = "Parallel"
+
+                if (file.find("1-7G") != -1):
+                    executor = "E1"
+                elif (file.find("2-14G") != -1):
+                    executor = "E2"
+                elif (file.find("4-28G") != -1):
+                    executor = "E4"
 
                 for line in FileReader.readLines(os.path.join(self.taskInfoDir, file)):
                     if line.startswith('[appName'):
@@ -53,19 +60,43 @@ class TaskMetricsCorrelationAnalyzer:
                         metricName = line[line.find('task') + 5: line.find(']')]
                         metricValue = float(line[line.find(']') + 2:])
                         if (metricName == 'index'):
-                            taskAttempt = ta.TaskAttempt(appId, appName, stageId, int(metricValue))
+                            taskAttempt = ta.TaskAttempt(appId, appName, stageId, int(metricValue), GC, executor)
                         taskAttempt.set(metricName, metricValue)
                         self.taskList.append(taskAttempt)
 
     def plotTaskInfo(self):
         self.analyzeMetrics()
-        xmetric = []
-        ymetric = []
-        for task in self.taskList:
-            # print("[" + str(task.taskId) + "] " + str(task.get(xmetrics[0])) + ":" + str(task.get(ymetrics[0])))
-            xmetric.append(task.get(xmetrics[0]) / 1024 / 1024)
-            ymetric.append(task.get(ymetrics[0]) / 1000)
-        splt.ScatterPlotter.plotTaskMetrics(xmetric, ymetric)
+        for ymetric in self.ymetrics:
+            for xmetric in self.xmetrics:
+                xLabel = xmetric[0]
+                xUnit = xmetric[2]
+                yLabel = ymetric[0]
+                yUnit = ymetric[2]
+
+                xValues = []
+                yValues = []
+
+                colors = []
+                for task in self.taskList:
+                    # print("[" + str(task.taskId) + "] " + str(task.get(xmetrics[0])) + ":" + str(task.get(ymetrics[0])))
+                    xValues.append(task.get(xLabel) / float(xUnit))
+                    yValues.append(task.get(yLabel) / float(yUnit))
+                    if (task.GC == "Parallel"):
+                        colors.append("red")
+                    elif (task.GC == "CMS"):
+                        colors.append("blue")
+                    elif (task.GC == "G1"):
+                        colors.append("green")
+                fileName = xLabel + "-" + yLabel + ".pdf"
+                file = os.path.join(taskInfoDir + "/figures", fileName.replace(".", "-") + ".pdf")
+                if not os.path.exists(taskInfoDir + "/figures"):
+                    os.mkdir(taskInfoDir + "/figures")
+
+                splt.ScatterPlotter.plotTaskMetrics(xValues, yValues, xLabel, yLabel, colors, file)
+                print("[Done] " + file + " has been generated!")
+
+
+
 
 
 
@@ -157,13 +188,60 @@ class TaskMetricsCorrelationAnalyzer:
 if __name__ == '__main__':
 
     # for GroupBy
-    title = "Join"
-    appName = "RDDJoin-0.5-2"
+    title = "GroupBy"
+    appName = "GroupByRDD-0.5-2"
     taskInfoDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + appName + "/TaskInfo"
 
-    xmetrics = ["shuffleReadMetrics.bytesRead"]
-    # ymetrics = ["executorCpuTime"]
-    ymetrics = ["duration"]
+    # xmetrics = [("duration", "Time (s)", 1000),
+    #             ("executorDeserializeTime", "Time (s)", 1000),
+    #             ("executorDeserializeCpuTime", "Time (s)", 1000 * 1000 * 1000),
+    #             ("executorRunTime", "Time (s)", 1000),
+    #             ("executorCpuTime", "Time (s)", 1000 * 1000 * 1000),
+    #             ("resultSize", "Size (MB)", 1024 * 1024),
+    #             ("jvmGcTime", "Time (s)", 1000),
+    #             ("resultSerializationTime",  "Time (s)", 1000),
+    #             ("memoryBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024),
+    #             ("diskBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024),
+    #             ("inputMetrics.bytesRead", "Size (GB)", 1024 * 1024 * 1024),
+    #             ("inputMetrics.recordsRead", "Number (M)", 1000 * 1000),
+    #             ("outputMetrics.bytesWritten", "Size (GB)", 1024 * 1024 * 1024),
+    #             ("outputMetrics.recordsWritten", "Number (M)", 1000 * 1000),
+    #             ("shuffleReadMetrics.remoteBlocksFetched"," Number (M)", 1),
+    #             ("shuffleReadMetrics.localBlocksFetched", "Number (M)", 1),
+    #             ("shuffleReadMetrics.fetchWaitTime", "Time (s)", 1000),
+    #             ("shuffleReadMetrics.remoteBytesRead", "Size (GB)", 1024 * 1024 * 1024),
+    #             ("shuffleReadMetrics.recordsRead", "Number (M)", 1000 * 1000),
+    #             ("shuffleWriteMetrics.bytesWritten", "Size (GB)", 1024 * 1024 * 1024),
+    #             ("shuffleWriteMetrics.writeTime", "Time (s)", 1000),
+    #             ("shuffleWriteMetrics.recordsWritten", "Number (M)", 1000 * 1000),
+    #             ]
+
+    xmetrics = [
+                ("executorDeserializeTime", "Time (s)", 1000),
+                # ("executorDeserializeCpuTime", "Time (s)", 1000 * 1000 * 1000),
+                # ("executorRunTime", "Time (s)", 1000),
+                # ("executorCpuTime", "Time (s)", 1000 * 1000 * 1000),
+                # ("resultSize", "Size (MB)", 1024 * 1024),
+                # ("jvmGcTime", "Time (s)", 1000),
+                # ("resultSerializationTime",  "Time (s)", 1000),
+                # ("memoryBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024),
+                # ("diskBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024),
+                # ("inputMetrics.bytesRead", "Size (GB)", 1024 * 1024 * 1024),
+                # ("inputMetrics.recordsRead", "Number (M)", 1000 * 1000),
+                # ("outputMetrics.bytesWritten", "Size (GB)", 1024 * 1024 * 1024),
+                # ("outputMetrics.recordsWritten", "Number (M)", 1000 * 1000),
+                # ("shuffleReadMetrics.remoteBlocksFetched"," Number (M)", 1),
+                # ("shuffleReadMetrics.localBlocksFetched", "Number (M)", 1),
+                # ("shuffleReadMetrics.fetchWaitTime", "Time (s)", 1000),
+                # ("shuffleReadMetrics.remoteBytesRead", "Size (GB)", 1024 * 1024 * 1024),
+                # ("shuffleReadMetrics.recordsRead", "Number (M)", 1000 * 1000),
+                # ("shuffleWriteMetrics.bytesWritten", "Size (GB)", 1024 * 1024 * 1024),
+                # ("shuffleWriteMetrics.writeTime", "Time (s)", 1000),
+                # ("shuffleWriteMetrics.recordsWritten", "Number (M)", 1000 * 1000),
+                ]
+
+    ymetrics = [("duration", "Time (s)", 1000)
+                ]
     # can be the different colors in different data, configuration, and gc modes
     taskMetricsAnalyzer = TaskMetricsCorrelationAnalyzer(appName, taskInfoDir, xmetrics, ymetrics)
     taskMetricsAnalyzer.plotTaskInfo()

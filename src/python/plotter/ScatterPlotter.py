@@ -16,6 +16,10 @@ import matplotlib.pyplot as plt
 
 class ScatterPlotter:
     @staticmethod
-    def plotTaskMetrics(xmetric, ymetric):
-        plt.scatter(xmetric, ymetric)
-        plt.show()
+    def plotTaskMetrics(xValues, yValues, xLabel, yLabel, colors, file):
+        plt.scatter(xValues, yValues, c=colors)
+        plt.xlabel(xLabel)
+        plt.ylabel(yLabel)
+        plt.title(xLabel + "-" + yLabel)
+        # plt.show()
+        plt.savefig(file, dpi=150, bbox_inches='tight')

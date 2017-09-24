@@ -44,6 +44,7 @@ public class TaskAttempt {
     private long shuffleReadMetrics_remoteBytesRead;
     private long shuffleReadMetrics_localBytesRead;
     private long shuffleReadMetrics_recordsRead;
+    private long shuffleReadMetrics_bytesRead;
 
     private long shuffleWriteMetrics_bytesWritten;
     private long shuffleWriteMetrics_writeTime;
@@ -108,6 +109,7 @@ public class TaskAttempt {
         this.shuffleReadMetrics_remoteBytesRead = shuffleReadMetricsObj.get("remoteBytesRead").getAsLong();
         this.shuffleReadMetrics_localBytesRead = shuffleReadMetricsObj.get("localBytesRead").getAsLong();
         this.shuffleReadMetrics_recordsRead = shuffleReadMetricsObj.get("recordsRead").getAsLong();
+        this.shuffleReadMetrics_bytesRead = shuffleReadMetrics_localBytesRead + shuffleReadMetrics_remoteBytesRead;
 
         JsonObject shuffleWriteMetricsObj = taskMetricsObj.getAsJsonObject("shuffleWriteMetrics");
 
@@ -280,6 +282,7 @@ public class TaskAttempt {
         sb.append("[" + prefix + ".task.shuffleReadMetrics.remoteBlocksFetched] " + shuffleReadMetrics_remoteBlocksFetched + "\n");
         sb.append("[" + prefix + ".task.shuffleReadMetrics.localBlocksFetched] " + shuffleReadMetrics_localBlocksFetched + "\n");
         sb.append("[" + prefix + ".task.shuffleReadMetrics.fetchWaitTime] " + shuffleReadMetrics_fetchWaitTime + "\n");
+        sb.append("[" + prefix + ".task.shuffleReadMetrics.bytesRead] " + shuffleReadMetrics_bytesRead + "\n");
         sb.append("[" + prefix + ".task.shuffleReadMetrics.remoteBytesRead] " + shuffleReadMetrics_remoteBytesRead + "\n");
         sb.append("[" + prefix + ".task.shuffleReadMetrics.localBytesRead] " + shuffleReadMetrics_localBytesRead + "\n");
         sb.append("[" + prefix + ".task.shuffleReadMetrics.recordsRead] " + shuffleReadMetrics_recordsRead + "\n");

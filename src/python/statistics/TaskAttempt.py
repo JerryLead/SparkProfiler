@@ -1,5 +1,5 @@
 class TaskAttempt:
-    def __init__(self, appId, appName, stageId, index):
+    def __init__(self, appId, appName, stageId, index, GC, executor):
         self.appId = appId
         self.appName = appName
         self.stageId = stageId
@@ -33,15 +33,16 @@ class TaskAttempt:
         self.shuffleReadMetrics_remoteBytesRead = -1
         self.shuffleReadMetrics_localBytesRead = -1
         self.shuffleReadMetrics_recordsRead = -1
-        self.shuffleReadMetrics_bytesRead = 0
+        self.shuffleReadMetrics_bytesRead = -1
 
         self.shuffleWriteMetrics_bytesWritten = -1
         self.shuffleWriteMetrics_writeTime = -1
         self.shuffleWriteMetrics_recordsWritten = -1
 
-
-
         self.errorMessage = ''
+
+        self.GC = GC
+        self.executor = executor
 
     def set(self, metricName, metricValue):
         if (metricName == 'attemptId'):
@@ -82,12 +83,12 @@ class TaskAttempt:
             self.shuffleReadMetrics_localBlocksFetched = float(metricValue)
         elif (metricName == 'shuffleReadMetrics.fetchWaitTime'):
             self.shuffleReadMetrics_fetchWaitTime = float(metricValue)
+        elif (metricName == 'shuffleReadMetrics.bytesRead'):
+            self.shuffleReadMetrics_bytesRead += float(metricValue)
         elif (metricName == 'shuffleReadMetrics.remoteBytesRead'):
             self.shuffleReadMetrics_remoteBytesRead = float(metricValue)
-            self.shuffleReadMetrics_bytesRead += float(metricValue)
         elif (metricName == 'shuffleReadMetrics.localBytesRead'):
             self.shuffleReadMetrics_localBytesRead = float(metricValue)
-            self.shuffleReadMetrics_bytesRead += float(metricValue)
         elif (metricName == 'shuffleReadMetrics.recordsRead'):
             self.shuffleReadMetrics_recordsRead = float(metricValue)
         elif (metricName == 'shuffleWriteMetrics.bytesWritten'):
@@ -136,6 +137,8 @@ class TaskAttempt:
             return self.shuffleReadMetrics_localBlocksFetched
         elif (metricName == 'shuffleReadMetrics.fetchWaitTime'):
             return self.shuffleReadMetrics_fetchWaitTime
+        elif (metricName == 'shuffleReadMetrics.bytesRead'):
+            return self.shuffleReadMetrics_bytesRead
         elif (metricName == 'shuffleReadMetrics.remoteBytesRead'):
             return self.shuffleReadMetrics_remoteBytesRead
         elif (metricName == 'shuffleReadMetrics.localBytesRead'):

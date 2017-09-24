@@ -16,10 +16,19 @@ import matplotlib.pyplot as plt
 
 class ScatterPlotter:
     @staticmethod
-    def plotTaskMetrics(xValues, yValues, xLabel, yLabel, colors, file):
-        plt.scatter(xValues, yValues, c=colors)
+    def plotTaskMetrics(xValues, yValues, xLabel, yLabel, file):
+        parallel = plt.scatter(xValues["Parallel"], yValues["Parallel"], marker='o', color="red", alpha=0.1, edgecolors='none')
+        cms = plt.scatter(xValues["CMS"], yValues["CMS"], marker='o', color='blue', alpha=0.1, edgecolors='none')
+        g1  = plt.scatter(xValues["G1"], yValues["G1"], marker='o', color='green', alpha=0.1, edgecolors='none')
+
         plt.xlabel(xLabel)
         plt.ylabel(yLabel)
         plt.title(xLabel + "-" + yLabel)
+        plt.legend((parallel, cms, g1),
+                   ("Parallel", "CMS", "G1"),
+                   scatterpoints=1,
+                   loc='lower right',
+                   ncol=1,
+                   fontsize=8)
         # plt.show()
         plt.savefig(file, dpi=150, bbox_inches='tight')

@@ -73,26 +73,25 @@ class TaskMetricsCorrelationAnalyzer:
                 yLabel = ymetric[0]
                 yUnit = ymetric[2]
 
-                xValues = []
-                yValues = []
+                xValues = {} # key = "Parallel", value = [task1.value, task2.value, task3.value, ...]
+                yValues = {}
 
-                colors = []
                 for task in self.taskList:
                     # print("[" + str(task.taskId) + "] " + str(task.get(xmetrics[0])) + ":" + str(task.get(ymetrics[0])))
-                    xValues.append(task.get(xLabel) / float(xUnit))
-                    yValues.append(task.get(yLabel) / float(yUnit))
-                    if (task.GC == "Parallel"):
-                        colors.append("red")
-                    elif (task.GC == "CMS"):
-                        colors.append("blue")
-                    elif (task.GC == "G1"):
-                        colors.append("green")
+                    if (xValues.has_key(task.GC) == False):
+                        xValues[task.GC] = []
+                    if (yValues.has_key(task.GC) == False):
+                        yValues[task.GC] = []
+
+                    xValues[task.GC].append(task.get(xLabel) / float(xUnit))
+                    yValues[task.GC].append(task.get(yLabel) / float(yUnit))
+
                 fileName = xLabel + "-" + yLabel + ".pdf"
                 file = os.path.join(taskInfoDir + "/figures", fileName.replace(".", "-") + ".pdf")
                 if not os.path.exists(taskInfoDir + "/figures"):
                     os.mkdir(taskInfoDir + "/figures")
 
-                splt.ScatterPlotter.plotTaskMetrics(xValues, yValues, xLabel, yLabel, colors, file)
+                splt.ScatterPlotter.plotTaskMetrics(xValues, yValues, xLabel, yLabel, file)
                 print("[Done] " + file + " has been generated!")
 
 
@@ -218,26 +217,26 @@ if __name__ == '__main__':
 
     xmetrics = [
                 ("executorDeserializeTime", "Time (s)", 1000),
-                # ("executorDeserializeCpuTime", "Time (s)", 1000 * 1000 * 1000),
-                # ("executorRunTime", "Time (s)", 1000),
-                # ("executorCpuTime", "Time (s)", 1000 * 1000 * 1000),
-                # ("resultSize", "Size (MB)", 1024 * 1024),
-                # ("jvmGcTime", "Time (s)", 1000),
-                # ("resultSerializationTime",  "Time (s)", 1000),
-                # ("memoryBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024),
-                # ("diskBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024),
-                # ("inputMetrics.bytesRead", "Size (GB)", 1024 * 1024 * 1024),
-                # ("inputMetrics.recordsRead", "Number (M)", 1000 * 1000),
-                # ("outputMetrics.bytesWritten", "Size (GB)", 1024 * 1024 * 1024),
-                # ("outputMetrics.recordsWritten", "Number (M)", 1000 * 1000),
-                # ("shuffleReadMetrics.remoteBlocksFetched"," Number (M)", 1),
-                # ("shuffleReadMetrics.localBlocksFetched", "Number (M)", 1),
-                # ("shuffleReadMetrics.fetchWaitTime", "Time (s)", 1000),
-                # ("shuffleReadMetrics.remoteBytesRead", "Size (GB)", 1024 * 1024 * 1024),
-                # ("shuffleReadMetrics.recordsRead", "Number (M)", 1000 * 1000),
-                # ("shuffleWriteMetrics.bytesWritten", "Size (GB)", 1024 * 1024 * 1024),
-                # ("shuffleWriteMetrics.writeTime", "Time (s)", 1000),
-                # ("shuffleWriteMetrics.recordsWritten", "Number (M)", 1000 * 1000),
+                ("executorDeserializeCpuTime", "Time (s)", 1000 * 1000 * 1000),
+                ("executorRunTime", "Time (s)", 1000),
+                ("executorCpuTime", "Time (s)", 1000 * 1000 * 1000),
+                ("resultSize", "Size (MB)", 1024 * 1024),
+                ("jvmGcTime", "Time (s)", 1000),
+                ("resultSerializationTime",  "Time (s)", 1000),
+                ("memoryBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024),
+                ("diskBytesSpilled", "Spilled Size (GB)", 1024 * 1024 * 1024),
+                ("inputMetrics.bytesRead", "Size (GB)", 1024 * 1024 * 1024),
+                ("inputMetrics.recordsRead", "Number (M)", 1000 * 1000),
+                ("outputMetrics.bytesWritten", "Size (GB)", 1024 * 1024 * 1024),
+                ("outputMetrics.recordsWritten", "Number (M)", 1000 * 1000),
+                ("shuffleReadMetrics.remoteBlocksFetched"," Number (M)", 1),
+                ("shuffleReadMetrics.localBlocksFetched", "Number (M)", 1),
+                ("shuffleReadMetrics.fetchWaitTime", "Time (s)", 1000),
+                ("shuffleReadMetrics.remoteBytesRead", "Size (GB)", 1024 * 1024 * 1024),
+                ("shuffleReadMetrics.recordsRead", "Number (M)", 1000 * 1000),
+                ("shuffleWriteMetrics.bytesWritten", "Size (GB)", 1024 * 1024 * 1024),
+                ("shuffleWriteMetrics.writeTime", "Time (s)", 1000),
+                ("shuffleWriteMetrics.recordsWritten", "Number (M)", 1000 * 1000),
                 ]
 
     ymetrics = [("duration", "Time (s)", 1000)

@@ -113,7 +113,7 @@ public class SparkAppsAnalyzer {
                 StringBuilder sb = new StringBuilder();
                 sb.append("======================= Slowest Task in " + appName + "_" + appId + " stage" + stageIds + " =======================\n");
 
-                sb.append(slowestTask + "\n\n");
+                sb.append(slowestTask.jsonString() + "\n\n");
                 sb.append("======================= Slowest Task Executor GC Metrics " + " =======================\n");
                 sb.append(executor + "\n\n");
                 sb.append("======================= Slowest Task Execution Log " + " =======================\n");

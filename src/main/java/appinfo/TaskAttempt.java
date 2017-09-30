@@ -220,6 +220,10 @@ public class TaskAttempt {
         return shuffleReadMetrics_localBytesRead;
     }
 
+    public long getShuffleReadMetrics_bytesRead() {
+        return shuffleReadMetrics_bytesRead;
+    }
+
     public long getShuffleReadMetrics_recordsRead() {
         return shuffleReadMetrics_recordsRead;
     }

@@ -3,9 +3,11 @@ import matplotlib.pyplot as plt
 class GroupBoxPlotter:
     @staticmethod
     def plotStatisticsByGCAlgo(file, firstSucessfulAppNum, secondSucessfulAppNum,
-                               firstStatistics, secondStatistics):
-
-        fig, axes = plt.subplots(nrows=2, ncols=3, sharey=True, figsize=(8,7.6)) # sharey='row')
+                               firstStatistics, secondStatistics, sharedy):
+        if (sharedy):
+            fig, axes = plt.subplots(nrows=2, ncols=3, sharey=True) #, figsize=(8,7.6)) # sharey='row')
+        else:
+            fig, axes = plt.subplots(nrows=2, ncols=3, sharey='row') #, figsize=(8,7.6)) # sharey='row')
         fig.subplots_adjust(wspace=0)
 
 
@@ -54,7 +56,7 @@ class GroupBoxPlotter:
 
 
         axes[0][0].set_ylabel(firstStatistics.ylabel, fontsize=20)
-        fig.suptitle(firstStatistics.title, fontsize=22)#, y=1.02)
+        fig.suptitle(firstStatistics.title, fontsize=22, y=1.02)
 
 
 

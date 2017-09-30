@@ -59,7 +59,7 @@ class GroupAppMetricsAnalyzer:
         self.fillStatistics(metrics, secondStatisticsDir, secondStatisticsFiles, self.secondMetricsMap, withMax)
 
 
-    def plotMetrics(self, outputDir, firstSucessfulAppNum, secondSucessfulAppNum):
+    def plotMetrics(self, outputDir, firstSucessfulAppNum, secondSucessfulAppNum, sharedy):
 
         if not os.path.exists(outputDir):
             os.mkdir(outputDir)
@@ -69,19 +69,25 @@ class GroupAppMetricsAnalyzer:
             firstStatistics = self.firstMetricsMap[metricName]
             secondStatistics = self.secondMetricsMap[metricName]
             bplt.GroupBoxPlotter.plotStatisticsByGCAlgo(file, firstSucessfulAppNum, secondSucessfulAppNum,
-                                                   firstStatistics, secondStatistics)
+                                                   firstStatistics, secondStatistics, sharedy)
             print "[Done] The " + file + " has been generated!"
 
 
-def plotApp(title, firstAppName, secondAppName, withMax):
+def plotApp(title, firstAppName, secondAppName, withMax, sharedy):
 
     firstStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + firstAppName + "/Statistics"
     secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + secondAppName + "/Statistics"
 
     if (withMax == True):
-        outputDir = secondStatisticsDir + "/" + title + "-max"
+        if (sharedy == True):
+            outputDir = secondStatisticsDir + "/" + title + "-max-sharey-small"
+        else:
+            outputDir = secondStatisticsDir + "/" + title + "-max-sharerow-small"
     else:
-        outputDir = secondStatisticsDir + "/" + title + "-nomax"
+        if (sharedy == True):
+            outputDir = secondStatisticsDir + "/" + title + "-nomax-sharey-small"
+        else:
+            outputDir = secondStatisticsDir + "/" + title + "-nomax-sharerow-small"
 
     firstSucessfulAppNum = []
     secondSucessfulAppNum = []
@@ -176,33 +182,34 @@ def plotApp(title, firstAppName, secondAppName, withMax):
     appMetricsAnalyzer = GroupAppMetricsAnalyzer(firstAppName, secondAppName, firstStatisticsDir, secondStatisticsDir)
 
     appMetricsAnalyzer.analyzeMetrics(metrics, firstStatisticsDir, secondStatisticsDir, withMax)
-    appMetricsAnalyzer.plotMetrics(outputDir, firstSucessfulAppNum, secondSucessfulAppNum)
+    appMetricsAnalyzer.plotMetrics(outputDir, firstSucessfulAppNum, secondSucessfulAppNum, sharedy)
 
 
 if __name__ == '__main__':
-    withMax = False
+    withMax = True
+    sharedy = False
 
     # for GroupBy
     title = "GroupBy"
     firstAppName = "GroupByRDD-0.5-2"
     secondAppName = "GroupByRDD-1.0-2"
-    #plotApp(title, firstAppName, secondAppName, withMax)
+    plotApp(title, firstAppName, secondAppName, withMax, sharedy)
 
     # for Join
     title = "Join"
     firstAppName = "RDDJoin-0.5-2"
     secondAppName = "RDDJoin-1.0"
-    #plotApp(title, firstAppName, secondAppName, withMax)
+    plotApp(title, firstAppName, secondAppName, withMax, sharedy)
 
     # for SVM
     title = "SVM"
     firstAppName = "SVM-0.5"
     secondAppName = "SVM-1.0"
-    plotApp(title, firstAppName, secondAppName, withMax)
+    plotApp(title, firstAppName, secondAppName, withMax, sharedy)
 
     # for PageRank
     title = "PageRank"
     firstAppName = "PageRank-0.5"
     secondAppName = "PageRank-1.0"
-    #plotApp(title, firstAppName, secondAppName, withMax)
+    plotApp(title, firstAppName, secondAppName, withMax, sharedy)
 

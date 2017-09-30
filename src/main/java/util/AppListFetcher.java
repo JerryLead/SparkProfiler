@@ -9,7 +9,7 @@ import java.util.List;
 public class AppListFetcher {
 
     // [startId, endId]
-    public static List<String> fetch(String siteURL, int startId, int endId) {
+    public static List<String> fetch(String siteURL) {
         List<String> appList = new ArrayList<String>();
         List<String> lines = HtmlFetcher.fetchLines(siteURL);
         for (String line: lines) {
@@ -47,6 +47,7 @@ public class AppListFetcher {
     public static void main(String[] args) {
         String url = "http://aliMaster:8080/";
         url = "/Users/xulijie/Documents/GCResearch/Experiments/MasterUI/RDDJoin-1.0/G1-2/ISCAS Spark Master at spark___master_7077.htm";
+        // fetch(url);
         fetchLocalFile(url, 0, 0);
     }
 }

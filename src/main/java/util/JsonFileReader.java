@@ -1,6 +1,7 @@
 package util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +45,9 @@ public class JsonFileReader {
         BufferedReader br = null;
         FileReader fr = null;
         List<String> lines = new ArrayList<String>();
+
+        if (new File(fileName).exists() == false)
+            return lines;
 
         try {
             fr = new FileReader(fileName);

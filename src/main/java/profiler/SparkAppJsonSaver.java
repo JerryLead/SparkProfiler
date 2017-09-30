@@ -171,11 +171,11 @@ public class SparkAppJsonSaver {
         saver.parseAppIdList(appIdsFile);
 
         // Save the app's jsons info into the outputDir
-        // saver.saveAppJsonInfo(outputDir);
+        saver.saveAppJsonInfo(outputDir);
 
-        // saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
+        saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
 
-        saver.parseExecutorGCInfo(outputDir, false);
+        // saver.parseExecutorGCInfo(outputDir, false);
     }
 
 }

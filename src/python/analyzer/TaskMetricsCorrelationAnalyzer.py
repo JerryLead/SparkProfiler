@@ -86,10 +86,10 @@ class TaskMetricsCorrelationAnalyzer:
                     xValues[task.GC].append(task.get(xLabel) / float(xUnit))
                     yValues[task.GC].append(task.get(yLabel) / float(yUnit))
 
-                fileName = xLabel + "-" + yLabel + ".pdf"
-                file = os.path.join(taskInfoDir + "/figures", fileName.replace(".", "-") + ".pdf")
-                if not os.path.exists(taskInfoDir + "/figures"):
-                    os.mkdir(taskInfoDir + "/figures")
+                fileName = xLabel + "-" + yLabel
+                file = os.path.join(taskInfoDir + "/figures-png", fileName.replace(".", "_") + ".png")
+                if not os.path.exists(taskInfoDir + "/figures-png"):
+                    os.mkdir(taskInfoDir + "/figures-png")
 
                 splt.ScatterPlotter.plotTaskMetrics(xValues, yValues, xLabel, yLabel, file)
                 print("[Done] " + file + " has been generated!")
@@ -233,6 +233,7 @@ if __name__ == '__main__':
                 ("shuffleReadMetrics.localBlocksFetched", "Number (M)", 1),
                 ("shuffleReadMetrics.fetchWaitTime", "Time (s)", 1000),
                 ("shuffleReadMetrics.remoteBytesRead", "Size (GB)", 1024 * 1024 * 1024),
+                ("shuffleReadMetrics.bytesRead", "Size (GB)", 1024 * 1024 * 1024),
                 ("shuffleReadMetrics.recordsRead", "Number (M)", 1000 * 1000),
                 ("shuffleWriteMetrics.bytesWritten", "Size (GB)", 1024 * 1024 * 1024),
                 ("shuffleWriteMetrics.writeTime", "Time (s)", 1000),

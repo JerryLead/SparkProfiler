@@ -128,6 +128,7 @@ public class StatisticsAnalyzer {
 
         double initValue = 0;
 
+
         StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (ComputedAppStatistics appStatistics : appList) {
@@ -163,12 +164,12 @@ public class StatisticsAnalyzer {
 
         String app = "GroupByRDD";
         String selectedStageIds = "1";
-        String appJsonDir = appJsonRootDir + "GroupByRDD-0.5-2" + File.separatorChar + "Statistics";
+        String appJsonDir = appJsonRootDir + "GroupByRDD-0.5-2" + File.separatorChar + "Abnormal";
         StatisticsAnalyzer analyzer = new StatisticsAnalyzer(app, "0.5", appJsonDir, selectedStageIds);
         analyzer.init();
         analyzer.compareMetricDifference();
 
-        appJsonDir = appJsonRootDir + "GroupByRDD-1.0-2" + File.separatorChar + "Statistics";
+        appJsonDir = appJsonRootDir + "GroupByRDD-1.0-2" + File.separatorChar + "Abnormal";
         analyzer = new StatisticsAnalyzer(app, "1.0", appJsonDir, selectedStageIds);
         analyzer.init();
         analyzer.compareMetricDifference();
@@ -176,12 +177,12 @@ public class StatisticsAnalyzer {
 
         app = "RDDJoin";
         selectedStageIds = "2";
-        appJsonDir = appJsonRootDir + "RDDJoin-0.5-2" + File.separatorChar + "Statistics";
+        appJsonDir = appJsonRootDir + "RDDJoin-0.5-2" + File.separatorChar + "Abnormal";
         analyzer = new StatisticsAnalyzer(app,  "0.5", appJsonDir, selectedStageIds);
         analyzer.init();
         analyzer.compareMetricDifference();
 
-        appJsonDir = appJsonRootDir + "RDDJoin-1.0" + File.separatorChar + "Statistics";
+        appJsonDir = appJsonRootDir + "RDDJoin-1.0" + File.separatorChar + "Abnormal";
         analyzer = new StatisticsAnalyzer(app, "1.0",  appJsonDir, selectedStageIds);
         analyzer.init();
         analyzer.compareMetricDifference();

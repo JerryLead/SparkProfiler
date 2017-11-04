@@ -55,6 +55,8 @@ public class Executor {
 
     private GCeasyMetrics gCeasyMetrics = new GCeasyMetrics();
 
+    private ResourceMetrics resourceMetrics = new ResourceMetrics();
+
     public Executor(JsonObject executorJson) {
         id = executorJson.get("id").getAsString();
         hostPort = executorJson.get("hostPort").getAsString();

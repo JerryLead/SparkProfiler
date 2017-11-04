@@ -1,11 +1,15 @@
 package profiler;
 
+import appinfo.ResourceMetrics;
+import appinfo.TopMetrics;
 import gc.ExecutorGCLogParser;
 import gc.ExecutorGCLogParserWithGCeasy;
 import parser.AppJsonParser;
 import parser.ExecutorsJsonParser;
 import util.CommandRunner;
 import util.FileChecker;
+import util.FileTextWriter;
+import util.JsonFileReader;
 
 import java.io.*;
 import java.util.*;
@@ -20,6 +24,8 @@ public class SparkAppJsonSaver {
     private List<String> appIdList = new ArrayList<String>();
 
     private String prefix;
+
+    Map<String, List<TopMetrics>> topMetricsMap = new HashMap<String, List<TopMetrics>>();
 
 
     public SparkAppJsonSaver(String masterIP) {
@@ -148,6 +154,151 @@ public class SparkAppJsonSaver {
         }
     }
 
+    private void saveTopMetrics(String userName, String[] slavesIP, String sparkTopLogDir, String outputDir) {
+
+        // rsync -av root@aliSlave2:/dataDisk/GCTest/SparkTopLogs/RDDJoinTest-0.5-6.5G/*.top
+        // /Users/xulijie/Documents/GCResearch/NewExperiments/profiles/RDDJoin-0.5/topMetrics/slavex/*.top
+        String rsync = "rsync -av " + userName + "@";
+
+        for (String slaveIP : slavesIP) {
+            String logFile = sparkTopLogDir + "/*.top";
+            String outputFile = outputDir + "topMetrics/" + slaveIP;
+            String cmd = rsync + slaveIP + ":" + logFile + " " + outputFile;
+
+            File file = new File(outputFile);
+            if (!file.exists())
+                file.mkdirs();
+            CommandRunner.exec(cmd);
+        }
+    }
+
+    // outputDir = /Users/xulijie/Documents/GCResearch/NewExperiments/profiles/RDDJoin-0.5
+    private void parseTopMetrics(String outputDir) {
+        String topMetricsDir = outputDir + "/topMetrics";
+
+        // slaveDir = /Users/xulijie/Documents/GCResearch/NewExperiments/profiles/RDDJoin-0.5/aliSlave1
+        for (File slaveDir : new File(topMetricsDir).listFiles()) {
+            if (slaveDir.isDirectory()) {
+                String slaveName = slaveDir.getName();
+
+                // topFile = /Users/xulijie/Documents/GCResearch/NewExperiments/profiles/RDDJoin-0.5/aliSlave1/rjoin-CMS-1-6656m-0.5-n1.top
+                for (File topFile : slaveDir.listFiles()) {
+                    analyzeTopMetricFile(slaveName, topFile);
+                }
+            }
+        }
+
+        for (File appDir : new File(outputDir).listFiles()) {
+            if (appDir.isDirectory()) {
+                // RDDJoin-CMS-1-6656m-0.5-n1
+                String appName = appDir.getName();
+                if (appName.indexOf('_') != -1) {
+                    appName = appName.substring(appName.indexOf('-') + 1, appName.indexOf('_'));
+                    File executorsFile = new File(appDir, "executors");
+
+                    Set<String> aliveExecutorIds = ExecutorsJsonParser.getAliveExecutors(appDir.getAbsolutePath()
+                            + File.separatorChar + "allexecutors.json");
+
+                    for(File executorDir : executorsFile.listFiles()) {
+                        // executors/0
+                        if (executorDir.isDirectory()) {
+                            String executorId = executorDir.getName();
+
+                            if (aliveExecutorIds.contains(executorId)) {
+
+                                String stderrFile = executorDir.getAbsolutePath() + File.separatorChar + "stderr";
+
+                                List<String> lines = JsonFileReader.readFileLines(stderrFile);
+                                if (!lines.isEmpty()) {
+                                    // 17/11/02 11:17:44 INFO CoarseGrainedExecutorBackend: Started daemon with process name: 14388@slave7
+                                    String line = lines.get(0);
+                                    String pid = line.substring(line.lastIndexOf(':') + 2, line.lastIndexOf('@'));
+                                    String slave = line.substring(line.lastIndexOf('@') + 1);
+                                    String key = appName + "_" + slave + "_" + pid;
+
+                                    if (topMetricsMap.containsKey(key)) {
+                                        List<TopMetrics> list = topMetricsMap.get(key);
+                                        String topMetricFile = executorDir.getAbsolutePath() + File.separatorChar + "topMetrics.txt";
+                                        StringBuilder sb = new StringBuilder();
+
+                                        for (TopMetrics tm : list) {
+                                            sb.append(tm + "\n");
+                                        }
+
+                                        FileTextWriter.write(topMetricFile, sb.toString());
+                                    }
+
+
+                                }
+
+
+                            }
+                        }
+
+                    }
+                }
+            }
+
+        }
+    }
+
+    // rjoin-CMS-1-6656m-0.5-n1.top
+    private void analyzeTopMetricFile(String slaveName, File topFile) {
+        // key = appName_slaveName_PID
+
+        List<String> topMetricsLines = JsonFileReader.readFileLines(topFile.getAbsolutePath());
+        String time = "";
+
+        String name = topFile.getName();
+        // CMS-1-6656m-0.5-n1
+        name = name.substring(name.indexOf("-") + 1, name.lastIndexOf("."));
+        slaveName = slaveName.toLowerCase().substring(3);
+
+        for (String line : topMetricsLines) {
+            if (line.startsWith("top")) {
+                time = line.substring(line.indexOf("-") + 2, line.indexOf("up") - 1);
+
+            } else if (line.trim().endsWith("java")) {
+                String[] metrics = line.trim().split("\\s+");
+                String PID = metrics[0];
+                double CPU = Double.parseDouble(metrics[8]);
+                String memoryStr = metrics[5];
+                double memory;
+                if (memoryStr.endsWith("g")) {
+                    memory = Double.parseDouble(memoryStr.substring(0, memoryStr.indexOf("g")));
+                } else if (memoryStr.endsWith("t")) {
+                    memory = Double.parseDouble(memoryStr.substring(0, memoryStr.indexOf("t")));
+                    memory = memory * 1024;
+                } else if (memoryStr.endsWith("m")) {
+                    memory = Double.parseDouble(memoryStr.substring(0, memoryStr.indexOf("m")));
+                    memory = memory / 1024;
+                } else {
+                    memory = Double.parseDouble(memoryStr);
+                    memory = memory / 1024 / 1024;
+
+                }
+
+                TopMetrics topMetrics = new TopMetrics(time, CPU, memory);
+                // RDDJoin-CMS-1-6656m-0.5-1_app-20171102111743-0003
+                // rjoin-CMS-1-6656m-0.5-n1.top
+
+                String key = name + "_" + slaveName + "_" + PID;
+
+                if (topMetricsMap.containsKey(key)) {
+                    topMetricsMap.get(key).add(topMetrics);
+                } else {
+                    List<TopMetrics> list = new ArrayList<TopMetrics>();
+                    list.add(topMetrics);
+                    topMetricsMap.put(key, list);
+                }
+
+                // System.out.println("[" + time + "] PID = " + PID + ", CPU = "
+                //        + CPU + ", Memory = " + memory);
+            }
+        }
+
+    }
+
     public static void main(String args[]) {
 
 
@@ -157,8 +308,9 @@ public class SparkAppJsonSaver {
         // e.g., app-20170623113634-0010
         //       app-20170623113111-0009
         //       app-20170623112547-0008
-        String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/SVM-1.0/";
+        String appIdsFile = "/Users/xulijie/Documents/GCResearch/NewExperiments/applists/appList.txt";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/RDDJoin-1.0/";
+        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/RDDJoinTest-1.0-6.5G";
 
         // The executor log files are stored on each slave node
         String executorLogFile = "/dataDisk/spark-2.1.4.19-bin-2.7.1/worker";
@@ -171,11 +323,16 @@ public class SparkAppJsonSaver {
         saver.parseAppIdList(appIdsFile);
 
         // Save the app's jsons info into the outputDir
-        saver.saveAppJsonInfo(outputDir);
+        //saver.saveAppJsonInfo(outputDir);
 
-        saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
+        //saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
+
+        //saver.saveTopMetrics(userName, slavesIP, sparkTopLogDir, outputDir);
 
         // saver.parseExecutorGCInfo(outputDir, false);
+
+        saver.parseTopMetrics(outputDir);
     }
+
 
 }

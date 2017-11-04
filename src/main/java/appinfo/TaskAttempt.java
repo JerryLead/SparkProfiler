@@ -262,7 +262,7 @@ public class TaskAttempt {
 
     public String toString() {
 
-        String prefix = index + "";
+        String prefix = stageId + "";
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
 

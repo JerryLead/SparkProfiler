@@ -75,8 +75,8 @@ class GroupAppMetricsAnalyzer:
 
 def plotApp(title, firstAppName, secondAppName, withMax, sharedy):
 
-    firstStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + firstAppName + "/Statistics"
-    secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/" + secondAppName + "/Statistics"
+    firstStatisticsDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/" + firstAppName + "/Statistics"
+    secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/" + secondAppName + "/Statistics"
 
     if (withMax == True):
         if (sharedy == True):
@@ -101,7 +101,7 @@ def plotApp(title, firstAppName, secondAppName, withMax, sharedy):
 
     elif (title == "Join"):
         firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [5, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
-        secondSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [0, 0, 0]] # Parallel, CMS, G1, RDDJoin-1.0
+        secondSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [5, 5, 5]] # Parallel, CMS, G1, RDDJoin-1.0
 
     elif (title == "SVM"):
         firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
@@ -164,6 +164,8 @@ def plotApp(title, firstAppName, secondAppName, withMax, sharedy):
                ("executor.gc.throughput", "Throughput (%)", 1, title + ".executor.gc.throughput"), # Time percentage the application was NOT busy with GC
                ("executor.gc.totalTime", "Time (s)", 1, title + ".executor.duration"), # The duration of running executor
                ("executor.gc.gcPerformance", "Speed (GB/s)", 1024, title + ".executor.minorGC.Performance"), # Performance of minor collections
+               ("executor.maxCPUUsage", "CPU Usage (%)", 1, title + ".executor.cpuUsage"),
+               ("executor.maxMemoryUsage", "Memory (GB)", 1, title + ".executor.memoryUsage"),
 
                ("gceasy.jvmHeapSize_youngGen_peakSize", "Memory (GB)", 1024, title + ".executor.youngGen.peakSize"),
                ("gceasy.jvmHeapSize_oldGen_peakSize", "Memory (GB)", 1024, title + ".executor.oldGen.peakSize"),
@@ -190,26 +192,26 @@ if __name__ == '__main__':
     sharedy = False
 
     # for GroupBy
-    title = "GroupBy"
-    firstAppName = "GroupByRDD-0.5-2"
-    secondAppName = "GroupByRDD-1.0-2"
-    plotApp(title, firstAppName, secondAppName, withMax, sharedy)
+    # title = "GroupBy"
+    # firstAppName = "GroupByRDD-0.5-2"
+    # secondAppName = "GroupByRDD-1.0-2"
+    # plotApp(title, firstAppName, secondAppName, withMax, sharedy)
 
     # for Join
     title = "Join"
-    firstAppName = "RDDJoin-0.5-2"
+    firstAppName = "RDDJoin-0.5"
     secondAppName = "RDDJoin-1.0"
     plotApp(title, firstAppName, secondAppName, withMax, sharedy)
 
     # for SVM
-    title = "SVM"
-    firstAppName = "SVM-0.5"
-    secondAppName = "SVM-1.0"
-    plotApp(title, firstAppName, secondAppName, withMax, sharedy)
-
-    # for PageRank
-    title = "PageRank"
-    firstAppName = "PageRank-0.5"
-    secondAppName = "PageRank-1.0"
-    plotApp(title, firstAppName, secondAppName, withMax, sharedy)
+    # title = "SVM"
+    # firstAppName = "SVM-0.5"
+    # secondAppName = "SVM-1.0"
+    # plotApp(title, firstAppName, secondAppName, withMax, sharedy)
+    #
+    # # for PageRank
+    # title = "PageRank"
+    # firstAppName = "PageRank-0.5"
+    # secondAppName = "PageRank-1.0"
+    # plotApp(title, firstAppName, secondAppName, withMax, sharedy)
 

@@ -38,11 +38,11 @@ class BoxPlotStatistics:
             stat = self.G1
 
         executorType = ''
-        if fileName.lower().find("1-7g") != -1:
+        if fileName.lower().find("1-6656m") != -1:
             executorType = 'E-1'
-        elif fileName.lower().find("2-14g") != -1:
+        elif fileName.lower().find("2-13g") != -1:
             executorType = 'E-2'
-        elif fileName.lower().find("4-28g") != -1:
+        elif fileName.lower().find("4-26g") != -1:
             executorType = 'E-4'
 
         stat[executorType]['label'] = executorType

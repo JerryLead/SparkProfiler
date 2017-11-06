@@ -160,8 +160,22 @@ public class SparkAppProfiler {
         analyzer.analyzeAppStatistics(stageIdsToMerge);
         analyzer.outputStatistics(appJsonDir + File.separatorChar + "Statistics");
         analyzer.outputTaskInStage(appJsonDir, "TaskInfo", selectedStageIds);
-        analyzer.outputSlowestTask(appJsonDir, "Abnormal", selectedStageIds);
+        // analyzer.outputSlowestTask(appJsonDir, "Abnormal", selectedStageIds);
         // analyzer.outputSlowestTask(appJsonDir, "Abnormal-json", selectedStageIds);
+
+        /*
+        apps.sort(new Comparator<Application>() {
+            @Override
+            public int compare(Application app1, Application app2) {
+                return (int) (app1.getDuration() - app2.getDuration());
+            }
+        });
+
+        Application medianApp = apps.get(apps.size() / 2);
+        return medianApp;
+        */
+        // System.out.println("[Median] appName = " + medianApp.getName() + ", appId = " + medianApp.getAppId() + ", duration = " + medianApp.getDuration());
+        // System.out.println("[Min] appName = " + apps.get(0).getName() + ", appId = " + apps.get(0).getAppId() + ", duration = " + apps.get(0).getDuration());
     }
 
     public static void main(String args[]) {
@@ -170,24 +184,27 @@ public class SparkAppProfiler {
         // 2. If useAppList, all the applications in the appJsonDir will be profiled.
         boolean useAppList = false;
         // Users need to specify the appIds to be profiled
-        String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments/applists/appList.txt";
+        String appIdsFile = "/Users/xulijie/Documents/GCResearch/NewExperiments/applists/appList.txt";
 
-        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/";
 
+        /*
         String app = "GroupBy";
         int[] selectedStageIds = new int[]{1};
         String appJsonDir = appJsonRootDir + "GroupByRDD-0.5-2";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "GroupByRDD-1.0-2";
         profile(app, appJsonDir, selectedStageIds);
+        */
 
-        app = "Join";
-        selectedStageIds = new int[]{2};
-        appJsonDir = appJsonRootDir + "RDDJoin-0.5-2";
+        String app = "Join";
+        int[] selectedStageIds = new int[]{2};
+        String appJsonDir = appJsonRootDir + "RDDJoin-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "RDDJoin-1.0";
         profile(app, appJsonDir, selectedStageIds);
 
+        /*
         app = "SVM";
         selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
         appJsonDir = appJsonRootDir + "SVM-0.5";
@@ -201,7 +218,7 @@ public class SparkAppProfiler {
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "PageRank-1.0";
         profile(app, appJsonDir, selectedStageIds);
-
+        */
     }
 
 }

@@ -28,6 +28,9 @@ package appinfo;
 
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Executor {
 
     private String id; // n or driver
@@ -49,13 +52,16 @@ public class Executor {
     private long totalShuffleWrite;
     private long maxMemory;
 
+    private double maxCPUusage = 0;
+    private double maxMemoryUsage = 0; // GB
+
     private boolean hasFailedTasks = false;
 
     private GCMetrics gcMetrics = new GCMetrics();
 
     private GCeasyMetrics gCeasyMetrics = new GCeasyMetrics();
 
-    private ResourceMetrics resourceMetrics = new ResourceMetrics();
+    private List<TopMetrics> topMetricsList = new ArrayList<TopMetrics>();
 
     public Executor(JsonObject executorJson) {
         id = executorJson.get("id").getAsString();
@@ -91,6 +97,21 @@ public class Executor {
             gcMetrics.set(name, value.replace(",", ""));
         else
             gcMetrics.set(name, "-1");
+    }
+
+    public void addTopMetrics(List<String> topMetricsLines) {
+        for (String line : topMetricsLines) {
+            String time = line.substring(1, line.indexOf(']'));
+            double cpu = Double.parseDouble(line.substring(line.indexOf('=') + 2, line.indexOf(',')));
+            double memory = Double.parseDouble(line.substring(line.lastIndexOf('=') + 2));
+            TopMetrics topMetrics = new TopMetrics(time, cpu, memory);
+            topMetricsList.add(topMetrics);
+
+            if (cpu > maxCPUusage)
+                maxCPUusage = cpu;
+            if (memory > maxMemoryUsage)
+                maxMemoryUsage = memory;
+        }
     }
 
     public void addGCeasyMetric(String json) {
@@ -177,10 +198,25 @@ public class Executor {
         return gCeasyMetrics;
     }
 
+    public List<TopMetrics> getTopMetricsList() {
+        return topMetricsList;
+    }
+
+    public double getMaxMemoryUsage() {
+        return maxMemoryUsage;
+    }
+
+    public double getMaxCPUusage() {
+        return maxCPUusage;
+    }
+
     @Override
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
+
+        sb.append("[executor.maxCPUUsage] " + maxCPUusage + "\n");
+        sb.append("[executor.maxMemoryUsage] " + maxMemoryUsage + "\n");
 
         sb.append("[executor.rddBlocks] " + rddBlocks + "\n");
         sb.append("[executor.memoryUsed] " + memoryUsed + "\n");
@@ -270,4 +306,6 @@ public class Executor {
         sb.append("[gceasy.tipsToReduceGCTime] " + gCeasyMetrics.getTipsToReduceGCTime() + "\n");
         return sb.toString();
     }
+
+
 }

@@ -22,6 +22,9 @@ public class SparkAppsAnalyzer {
     public SparkAppsAnalyzer(List<Application> profiledApps) {
         for (Application app : profiledApps) {
             String appName = app.getName();
+            if (appName.contains("-n")) {
+                appName = appName.substring(0, appName.indexOf("-n"));
+            }
 
             if (!appNameToIdsMap.containsKey(appName)) {
                 List<Application> appList = new ArrayList<Application>();

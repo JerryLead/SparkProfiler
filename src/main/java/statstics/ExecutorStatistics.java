@@ -92,6 +92,9 @@ public class ExecutorStatistics {
     private Statistics gcStatistics_fullGCIntervalAvgTime; // 2 min 19 sec 104 ms
     private Statistics throughputPercentage;
 
+    private Statistics maxCPUusage;
+    private Statistics maxMemoryUsage;
+
     // In general, we run each application 5 times and each application has N executors,
     // so the length of executorList is 5N
     public ExecutorStatistics(List<Executor> executorList) {
@@ -192,6 +195,8 @@ public class ExecutorStatistics {
 
         throughputPercentage = new Statistics(executorObjs, "getgCeasyMetrics", "getThroughputPercentage");
 
+        maxCPUusage = new Statistics(executorObjs, "getMaxCPUusage");
+        maxMemoryUsage = new Statistics(executorObjs, "getMaxMemoryUsage");
     }
 
 
@@ -199,6 +204,9 @@ public class ExecutorStatistics {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
+
+        sb.append("[executor.maxCPUUsage] " + maxCPUusage + "\n");
+        sb.append("[executor.maxMemoryUsage] " + maxMemoryUsage + "\n");
 
         sb.append("[executor.rddBlocks] " + rddBlocks + "\n");
         sb.append("[executor.memoryUsed] " + memoryUsed + "\n");

@@ -37,6 +37,62 @@ public class SparkAppsAnalyzer {
         }
     }
 
+    public void outputMedianApp(String medianAppDir) {
+
+        List<Application> medianApps = new ArrayList<Application>();
+
+        for (Map.Entry<String, List<Application>> app : appNameToIdsMap.entrySet()) {
+            String appName = app.getKey();
+            List<Application> apps = app.getValue();
+
+            apps.sort(new Comparator<Application>() {
+                @Override
+                public int compare(Application app1, Application app2) {
+                    return (int) (app1.getDuration() - app2.getDuration());
+                }
+            });
+
+            Application medianApp = apps.get(apps.size() / 2);
+            medianApps.add(medianApp);
+        }
+
+        medianApps.sort(new Comparator<Application>() {
+            @Override
+            public int compare(Application app1, Application app2) {
+                return app1.getName().compareTo(app2.getName());
+            }
+        });
+
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Application app : medianApps) {
+            String appName = app.getName();
+            String mode = "E1";
+            String collector = "Parallel";
+
+            if (appName.contains("-2-"))
+                mode = "E2";
+            else if (appName.contains("-4-"))
+                mode = "E4";
+            if (appName.contains("CMS"))
+                collector = "CMS";
+            else if (appName.contains("G1"))
+                collector = "G1";
+
+            sb.append("[appName = " + app.getName() + "_" + app.getAppId() + "] "
+                    + " [" + collector + "-" + mode + "] duration = "
+                    + String.format("%.1f", (double) app.getDuration() / 1000 / 60) + " m"
+                    + ", Memory = " + String.format("%.1f", app.getMaxMemoryUsage() / 6.5)
+                    + ", CPU = " + app.getMaxCPUUsage() + " [" + collector + "-" + mode + " "
+                    + "${" + String.format("%.1f", (double) app.getDuration() / 1000 / 60) + "}_"
+                    + "{(" + String.format("%.1f", app.getMaxMemoryUsage() / 6.5) + ")}$]\n"
+                   );
+        }
+
+        FileTextWriter.write(medianAppDir + File.separatorChar + "medianAppMetrics.txt", sb.toString());
+    }
+
     public void analyzeAppStatistics(Integer[] stageIdsToMerge) {
         for (Map.Entry<String, List<Application>> app : appNameToIdsMap.entrySet()) {
             ApplicationStatistics appStatistics = new ApplicationStatistics(app.getValue(), stageIdsToMerge);
@@ -109,7 +165,7 @@ public class SparkAppsAnalyzer {
                 }
                 Executor executor = appWithSlowestTask.getExecutor(executorId + "");
 
-                String stderr = appDir + File.separatorChar + appName + "_" + appId + File.separatorChar +
+                String stderr = appDir + File.separatorChar + appWithSlowestTask.getName() + "_" + appId + File.separatorChar +
                         "executors" + File.separatorChar + executorId + File.separatorChar + "stderr";
                 String excutorLog = JsonFileReader.readFile(stderr);
 

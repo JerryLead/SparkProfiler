@@ -53,7 +53,8 @@ class BoxPlotStatistics:
             metricValue = float(metric.split('=')[1]) / self.unit
 
             if(metricName == 'mean'):
-                stat[executorType]['mean'] = metricValue
+                # stat[executorType]['mean'] = metricValue
+                pass
             elif(metricName == 'median'):
                 stat[executorType]['med'] = metricValue
             elif(metricName == 'min'):
@@ -77,7 +78,7 @@ class BoxPlotStatistics:
                     stat[executorType]['label'] = executorType
                     stat[executorType]['fliers'] = []
 
-                    stat[executorType]['mean'] = float('NaN')
+                    # stat[executorType]['mean'] = float('NaN')
                     stat[executorType]['med'] = float('NaN')
                     stat[executorType]['whislo'] = float('NaN')
                     stat[executorType]['whishi'] = float('NaN')

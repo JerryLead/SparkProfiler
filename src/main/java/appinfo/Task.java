@@ -96,8 +96,16 @@ public class Task {
             return null;
     }
 
+    public TaskAttempt getFirstTaskAttempt() {
+        return taskAttemptMap.get(0);
+    }
+
     public int getTaskId() {
         return taskId;
+    }
+
+    public int getStageId() {
+        return stageId;
     }
 }
 

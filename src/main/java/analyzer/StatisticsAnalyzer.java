@@ -41,39 +41,39 @@ public class StatisticsAnalyzer {
     }
 
     public void init() {
-        String appName = app + "-Parallel-1-7G-" + dataMode + "-stat.txt";
+        String appName = app + "-Parallel-1-6656m-" + dataMode + "-stat.txt";
         String stat = statisticsDir + File.separatorChar + appName;
         Parallel_E1_stat = new ComputedAppStatistics(appName, "Parallel", dataMode, JsonFileReader.readFileLines(stat));
 
-        appName = app + "-Parallel-2-14G-" + dataMode + "-stat.txt";
+        appName = app + "-Parallel-2-13G-" + dataMode + "-stat.txt";
         stat = statisticsDir + File.separatorChar + appName;
         Parallel_E2_stat = new ComputedAppStatistics(appName, "Parallel", dataMode, JsonFileReader.readFileLines(stat));
 
-        appName = app + "-Parallel-4-28G-" + dataMode + "-stat.txt";
+        appName = app + "-Parallel-4-26G-" + dataMode + "-stat.txt";
         stat = statisticsDir + File.separatorChar + appName;
         Parallel_E4_stat = new ComputedAppStatistics(appName, "Parallel", dataMode, JsonFileReader.readFileLines(stat));
 
-        appName = app + "-CMS-1-7G-" + dataMode + "-stat.txt";
+        appName = app + "-CMS-1-6656m-" + dataMode + "-stat.txt";
         stat = statisticsDir + File.separatorChar + appName;
         CMS_E1_stat = new ComputedAppStatistics(appName, "CMS", dataMode, JsonFileReader.readFileLines(stat));
 
-        appName = app + "-CMS-2-14G-" + dataMode + "-stat.txt";
+        appName = app + "-CMS-2-13G-" + dataMode + "-stat.txt";
         stat = statisticsDir + File.separatorChar + appName;
         CMS_E2_stat = new ComputedAppStatistics(appName, "CMS", dataMode, JsonFileReader.readFileLines(stat));
 
-        appName = app + "-CMS-4-28G-" + dataMode + "-stat.txt";
+        appName = app + "-CMS-4-26G-" + dataMode + "-stat.txt";
         stat = statisticsDir + File.separatorChar + appName;
         CMS_E4_stat = new ComputedAppStatistics(appName, "CMS", dataMode, JsonFileReader.readFileLines(stat));
 
-        appName = app + "-G1-1-7G-" + dataMode + "-stat.txt";
+        appName = app + "-G1-1-6656m-" + dataMode + "-stat.txt";
         stat = statisticsDir + File.separatorChar + appName;
         G1_E1_stat = new ComputedAppStatistics(appName, "G1", dataMode, JsonFileReader.readFileLines(stat));
 
-        appName = app + "-G1-2-14G-" + dataMode + "-stat.txt";
+        appName = app + "-G1-2-13G-" + dataMode + "-stat.txt";
         stat = statisticsDir + File.separatorChar + appName;
         G1_E2_stat = new ComputedAppStatistics(appName, "G1", dataMode, JsonFileReader.readFileLines(stat));
 
-        appName = app + "-G1-4-28G-" + dataMode + "-stat.txt";
+        appName = app + "-G1-4-26G-" + dataMode + "-stat.txt";
         stat = statisticsDir + File.separatorChar + appName;
         G1_E4_stat = new ComputedAppStatistics(appName, "G1", dataMode, JsonFileReader.readFileLines(stat));
 
@@ -87,7 +87,7 @@ public class StatisticsAnalyzer {
 
     private void compareGCWithSameMemory() {
         String metricName = "app.duration";
-        String statName = "max";
+        String statName = "median";
 
         // compare in E1 mode
         List<ComputedAppStatistics> appList = new ArrayList<ComputedAppStatistics>();
@@ -160,33 +160,37 @@ public class StatisticsAnalyzer {
 
     public static void main(String args[]) {
 
-        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/";
 
         String app = "GroupByRDD";
         String selectedStageIds = "1";
-        String appJsonDir = appJsonRootDir + "GroupByRDD-0.5-2" + File.separatorChar + "Abnormal";
+
+        String appJsonDir = appJsonRootDir + "GroupByRDD-0.5" + File.separatorChar + "Statistics";
+
         StatisticsAnalyzer analyzer = new StatisticsAnalyzer(app, "0.5", appJsonDir, selectedStageIds);
         analyzer.init();
         analyzer.compareMetricDifference();
 
-        appJsonDir = appJsonRootDir + "GroupByRDD-1.0-2" + File.separatorChar + "Abnormal";
+        appJsonDir = appJsonRootDir + "GroupByRDD-1.0" + File.separatorChar + "Statistics";
         analyzer = new StatisticsAnalyzer(app, "1.0", appJsonDir, selectedStageIds);
         analyzer.init();
         analyzer.compareMetricDifference();
 
 
+        /*
         app = "RDDJoin";
         selectedStageIds = "2";
-        appJsonDir = appJsonRootDir + "RDDJoin-0.5-2" + File.separatorChar + "Abnormal";
-        analyzer = new StatisticsAnalyzer(app,  "0.5", appJsonDir, selectedStageIds);
+        appJsonDir = appJsonRootDir + "RDDJoin-0.5" + File.separatorChar + "Statistics";
+        StatisticsAnalyzer analyzer = new StatisticsAnalyzer(app,  "0.5", appJsonDir, selectedStageIds);
         analyzer.init();
         analyzer.compareMetricDifference();
 
-        appJsonDir = appJsonRootDir + "RDDJoin-1.0" + File.separatorChar + "Abnormal";
+        appJsonDir = appJsonRootDir + "RDDJoin-1.0" + File.separatorChar + "Statistics";
         analyzer = new StatisticsAnalyzer(app, "1.0",  appJsonDir, selectedStageIds);
         analyzer.init();
         analyzer.compareMetricDifference();
-
+        */
+/*
         app = "SVM";
         selectedStageIds = "4+6+8+10+12+14+16+18+20+22";
         appJsonDir = appJsonRootDir + "SVM-0.5" + File.separatorChar + "Statistics";
@@ -210,7 +214,7 @@ public class StatisticsAnalyzer {
         analyzer = new StatisticsAnalyzer(app,  "1.0", appJsonDir, selectedStageIds);
         analyzer.init();
         analyzer.compareMetricDifference();
-
+*/
     }
 
 

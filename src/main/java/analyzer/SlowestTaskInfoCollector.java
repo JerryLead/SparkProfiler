@@ -178,7 +178,7 @@ public class SlowestTaskInfoCollector {
 
     public static void main(String args[]) {
 
-        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/";
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/medianProfiles/";
         String[] metrics = {
           "Mode",
           "ID",
@@ -194,13 +194,13 @@ public class SlowestTaskInfoCollector {
         String app = "GroupByRDD";
         String[] app1s = {"E1-C"};
         String[] app2s = {"E1-P"};
-        String appJsonDir = appJsonRootDir + "GroupByRDD-0.5-2" + File.separatorChar + "Abnormal-json";
+        String appJsonDir = appJsonRootDir + "GroupByRDD-0.5" + File.separatorChar + "Abnormal-json";
         SlowestTaskInfoCollector collector = new SlowestTaskInfoCollector(app, "0.5", appJsonDir, metrics);
         collector.compare(app1s, app2s);
 
         app1s = new String[]{"E2-G"};
         app2s = new String[]{"E2-P"};
-        appJsonDir = appJsonRootDir + "GroupByRDD-1.0-2" + File.separatorChar + "Abnormal-json";
+        appJsonDir = appJsonRootDir + "GroupByRDD-1.0" + File.separatorChar + "Abnormal-json";
         collector = new SlowestTaskInfoCollector(app, "1.0", appJsonDir, metrics);
         collector.compare(app1s, app2s);
 
@@ -226,6 +226,7 @@ public class SlowestTaskInfoCollector {
         collector.compare(app1s, app2s);
 
 
+        /*
 
         app = "PageRank";
         app1s = new String[]{"E1-P"};
@@ -245,6 +246,7 @@ public class SlowestTaskInfoCollector {
         appJsonDir = appJsonRootDir + "PageRank-0.5" + File.separatorChar + "Abnormal-json";
         collector = new SlowestTaskInfoCollector(app, "0.5", appJsonDir, metrics);
         collector.compare(app1s, app2s);
+        */
 
     }
 

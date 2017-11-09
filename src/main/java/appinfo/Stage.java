@@ -151,6 +151,10 @@ public class Stage {
         */
     }
 
+    public StageAttempt getFirstStage() {
+        return stageAttemptMap.get(0);
+    }
+
     public int getStageId() {
         return stageId;
     }

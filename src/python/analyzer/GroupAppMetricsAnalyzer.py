@@ -75,8 +75,8 @@ class GroupAppMetricsAnalyzer:
 
 def plotApp(title, firstAppName, secondAppName, withMax, sharedy):
 
-    firstStatisticsDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/" + firstAppName + "/Statistics"
-    secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/" + secondAppName + "/Statistics"
+    firstStatisticsDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/medianProfiles/" + firstAppName + "/Statistics"
+    secondStatisticsDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/medianProfiles/" + secondAppName + "/Statistics"
 
     if (withMax == True):
         if (sharedy == True):
@@ -96,7 +96,7 @@ def plotApp(title, firstAppName, secondAppName, withMax, sharedy):
 
     # for GroupBy
     if (title == "GroupBy"):
-        firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [4, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
+        firstSucessfulAppNum = [[5, 5, 5], [5, 5, 5], [5, 5, 5]] # Parallel, CMS, G1, RDDJoin-0.5-2
         secondSucessfulAppNum = [[0, 5, 5], [0, 5, 5], [0, 5, 5]] # Parallel, CMS, G1, RDDJoin-1.0
 
     elif (title == "Join"):
@@ -192,10 +192,10 @@ if __name__ == '__main__':
     sharedy = False
 
     # for GroupBy
-    # title = "GroupBy"
-    # firstAppName = "GroupByRDD-0.5-2"
-    # secondAppName = "GroupByRDD-1.0-2"
-    # plotApp(title, firstAppName, secondAppName, withMax, sharedy)
+    title = "GroupBy"
+    firstAppName = "GroupByRDD-0.5"
+    secondAppName = "GroupByRDD-1.0"
+    plotApp(title, firstAppName, secondAppName, withMax, sharedy)
 
     # for Join
     title = "Join"

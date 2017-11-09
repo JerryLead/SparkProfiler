@@ -172,4 +172,25 @@ public class Application {
 
         return sb.toString();
     }
+
+    public double getMaxCPUUsage() {
+        double cpuUsage = 0;
+        for(Executor executor : executorMap.values()) {
+            double cpu = executor.getMaxCPUusage();
+            if (cpu > cpuUsage)
+                cpuUsage = cpu;
+        }
+        return cpuUsage;
+    }
+
+    // GB
+    public double getMaxMemoryUsage() {
+        double memoryUsage = 0;
+        for(Executor executor : executorMap.values()) {
+            double memory = executor.getMaxMemoryUsage();
+            if (memory > memoryUsage)
+                memoryUsage = memory;
+        }
+        return memoryUsage;
+    }
 }

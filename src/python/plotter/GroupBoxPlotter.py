@@ -22,7 +22,7 @@ class GroupBoxPlotter:
         for ax, stats in zip(axes[0], [Parallel, CMS, G1]):
             list = [stats['E-1'], stats['E-2'], stats['E-4']]
 
-            bplot = ax.bxp(list, showfliers=False, showmeans=True, patch_artist=True)
+            bplot = ax.bxp(list, showfliers=False, showmeans=False, patch_artist=True)
             for patch, color in zip(bplot['boxes'], colors):
                 patch.set_facecolor(color)
 
@@ -71,7 +71,7 @@ class GroupBoxPlotter:
         for ax, stats in zip(axes[1], [Parallel, CMS, G1]):
             list = [stats['E-1'], stats['E-2'], stats['E-4']]
 
-            bplot = ax.bxp(list, showfliers=False, showmeans=True, patch_artist=True)
+            bplot = ax.bxp(list, showfliers=False, showmeans=False, patch_artist=True)
             for patch, color in zip(bplot['boxes'], colors):
                 patch.set_facecolor(color)
 

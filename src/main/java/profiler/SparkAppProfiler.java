@@ -22,7 +22,7 @@ public class SparkAppProfiler {
     // app-20170622143730-0331
 
 
-    public SparkAppProfiler(boolean useAppList, String appJsonDir) {
+    private SparkAppProfiler(boolean useAppList, String appJsonDir) {
         this.useAppList = useAppList;
         this.appJsonDir = appJsonDir;
     }
@@ -145,7 +145,7 @@ public class SparkAppProfiler {
         return app;
     }
 
-    private static void profile(String app, String appJsonDir, int[] selectedStageIds) {
+    public static void profile(String app, String appJsonDir, int[] selectedStageIds) {
 
         Integer[] stageIdsToMerge = {};
         if (app.equalsIgnoreCase("SVM"))
@@ -163,6 +163,7 @@ public class SparkAppProfiler {
         // analyzer.outputSlowestTask(appJsonDir, "Abnormal", selectedStageIds);
         // analyzer.outputSlowestTask(appJsonDir, "Abnormal-json", selectedStageIds);
 
+        analyzer.outputMedianApp(appJsonDir + File.separatorChar + "MedianApp");
         /*
         apps.sort(new Comparator<Application>() {
             @Override
@@ -178,6 +179,16 @@ public class SparkAppProfiler {
         // System.out.println("[Min] appName = " + apps.get(0).getName() + ", appId = " + apps.get(0).getAppId() + ", duration = " + apps.get(0).getDuration());
     }
 
+    public static List<Application> profileMedianApps(String appJsonDir) {
+
+        SparkAppProfiler profiler = new SparkAppProfiler(false, appJsonDir);
+
+        // Profile the app based on the saved json and output the profiles
+        List<Application> apps = profiler.profileApps();
+
+        return apps;
+    }
+
     public static void main(String args[]) {
 
         // 1. Users can specify the appIds to be profiled using "useAppList = true" and "appList.txt".
@@ -186,23 +197,27 @@ public class SparkAppProfiler {
         // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/NewExperiments/applists/appList.txt";
 
-        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/";
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/medianProfiles/";
 
-        /*
+
+
         String app = "GroupBy";
         int[] selectedStageIds = new int[]{1};
-        String appJsonDir = appJsonRootDir + "GroupByRDD-0.5-2";
+        String appJsonDir = appJsonRootDir + "GroupByRDD-0.5";
         profile(app, appJsonDir, selectedStageIds);
-        appJsonDir = appJsonRootDir + "GroupByRDD-1.0-2";
+        appJsonDir = appJsonRootDir + "GroupByRDD-1.0";
         profile(app, appJsonDir, selectedStageIds);
-        */
 
+
+
+        /*
         String app = "Join";
         int[] selectedStageIds = new int[]{2};
         String appJsonDir = appJsonRootDir + "RDDJoin-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "RDDJoin-1.0";
         profile(app, appJsonDir, selectedStageIds);
+        */
 
         /*
         app = "SVM";

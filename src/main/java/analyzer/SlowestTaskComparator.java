@@ -3,11 +3,10 @@ package analyzer;
 import appinfo.Application;
 import appinfo.Executor;
 import appinfo.Task;
-import appinfo.TaskAttempt;
+import appinfo.TaskAttempt;;
 import profiler.SparkAppProfiler;
 
-import statstics.ApplicationStatistics;
-import util.FileTextWriter;
+
 import util.JsonFileReader;
 import util.RelativeDifference;
 
@@ -25,10 +24,15 @@ public class SlowestTaskComparator {
     private String appJsonDir0;
     private String appJsonDir1;
 
-    public SlowestTaskComparator(int[] selectedStageIds, String appJsonDir0, String appJsonDir1) {
+    private String[] metrics;
+    private String applicationName;
+
+    public SlowestTaskComparator(String applicationName, int[] selectedStageIds, String appJsonDir0, String appJsonDir1, String[] metrics) {
+        this.applicationName = applicationName;
         this.selectedStageIds = selectedStageIds;
         this.appJsonDir0 = appJsonDir0;
         this.appJsonDir1 = appJsonDir1;
+        this.metrics = metrics;
         List<Application> medianAppsList0 = SparkAppProfiler.profileMedianApps(appJsonDir0);
         List<Application> medianAppsList1 = SparkAppProfiler.profileMedianApps(appJsonDir1);
 
@@ -96,17 +100,24 @@ public class SlowestTaskComparator {
 
                 compareAppDuration(dataMode, mode, appList);
 
-                System.out.println("\n\n=============[" + mode + "-" + dataMode + "]============");
-                if (mode.equalsIgnoreCase("0.5"))
-                    compareSlowestTask(appList, appJsonDir0);
-                else
-                    compareSlowestTask(appList, appJsonDir1);
+                List<Application> successfulAppList = new ArrayList<Application>();
+
+                for (Application app : appList) {
+                    if (app.getStatus().equalsIgnoreCase("SUCCEEDED"))
+                        successfulAppList.add(app);
+                }
+
+                // System.out.println("\n\n=============[" + mode + "-" + dataMode + "]============");
+                if (dataMode.equalsIgnoreCase("0.5") && !successfulAppList.isEmpty())
+                    compareSlowestTask(dataMode, mode, successfulAppList, appJsonDir0);
+                else if (dataMode.equalsIgnoreCase("1.0") && !successfulAppList.isEmpty())
+                    compareSlowestTask(dataMode, mode, successfulAppList, appJsonDir1);
             }
         }
     }
 
     // /Users/xulijie/Documents/GCResearch/NewExperiments/medianProfiles/GroupByRDD-0.5
-    private void compareSlowestTask(List<Application> appList, String appJsonDir) {
+    private void compareSlowestTask(String dataMode, String mode, List<Application> appList, String appJsonDir) {
         Application slowestApp = appList.get(appList.size() - 1);
 
         List<Task> tasksInSelectedStages = new ArrayList<Task>();
@@ -114,6 +125,7 @@ public class SlowestTaskComparator {
         for (int id : selectedStageIds) {
             tasksInSelectedStages.addAll(slowestApp.getStage(id).getFirstStage().getTaskMap().values());
         }
+
 
         tasksInSelectedStages.sort(new Comparator<Task>() {
             @Override
@@ -125,19 +137,71 @@ public class SlowestTaskComparator {
 
         Task slowestTask = tasksInSelectedStages.get(0);
         int slowestStageId = slowestTask.getStageId();
-        int slowestTaskId = slowestTask.getFirstTaskAttempt().getTaskAttemptId();
 
-        System.out.println("------------[" + getGCName(slowestApp) + "]------------");
-        System.out.println(slowestTask.getFirstTaskAttempt());
+        String collector = getGCName(slowestApp);
+
+
+        System.out.println("\n\t" + getTaskInfo(dataMode, mode, collector, slowestTask.getFirstTaskAttempt(), appJsonDir));
 
         for (int i = appList.size() - 2; i >= 0; i--) {
             Application app = appList.get(i);
             Task task = app.getStage(slowestStageId).getFirstStage().getTaskMap()
                     .get(slowestTask.getTaskId());
-            System.out.println("------------[" + getGCName(app) + "]------------");
-            System.out.println(task.getFirstTaskAttempt());
+            // System.out.println("------------[" + getGCName(app) + "]------------");
+            collector = getGCName(app);
+            System.out.println("\n\t" + getTaskInfo(dataMode, mode, collector, task.getFirstTaskAttempt(), appJsonDir));
+        }
+    }
+
+    private int getSpillTime(Application app, TaskAttempt task, String appJsonDir) {
+
+        int executorId = task.getExecutorId();
+
+        Executor executor = app.getExecutor(executorId + "");
+
+        String stderr = appJsonDir + File.separatorChar + app.getName() + "_" + app.getAppId() + File.separatorChar +
+                "executors" + File.separatorChar + executorId + File.separatorChar + "stderr";
+        List<String> excutorLogLines = JsonFileReader.readFileLines(stderr);
+
+        int spillTime = 0;
+        int taskId = task.getTaskId();
+        for (String line : excutorLogLines) {
+            if (line.contains("[Task " + taskId + " SpillMetrics]")) {
+                int writeTime = Integer.parseInt(line.substring(line.indexOf("writeTime") + 12, line.indexOf(" s,")));
+                long recordsWritten = Integer.parseInt(line.substring(line.indexOf("recordsWritten") + 17, line.indexOf(", bytesWritten")));
+                spillTime += writeTime;
+            }
         }
 
+        return spillTime;
+    }
+
+    private String getTaskInfo(String dataMode, String mode, String collector, TaskAttempt task, String appJsonDir) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(applicationName + "-" + mode + "-" + dataMode + " & ");
+
+        for (String metric: metrics) {
+            if (metric.equalsIgnoreCase("Mode"))
+                sb.append(collector + " & ");
+            else if (metric.equalsIgnoreCase("ID"))
+                sb.append(task.getIndex() + " & ");
+            else if (metric.equalsIgnoreCase("Duration"))
+                sb.append(task.getDuration() / 1000 + " s & ");
+            else if (metric.equalsIgnoreCase("CPU Time"))
+                sb.append(String.format("%.0f", (double) task.getExecutorCpuTime() / 1000 / 1000 / 1000) + " s & ");
+            else if (metric.equalsIgnoreCase("GC Time"))
+                sb.append(String.format("%.0f", (double) task.getJvmGcTime() / 1000) + " s & ");
+            else if (metric.equalsIgnoreCase("Shuffled Size/Records"))
+                sb.append(task.getShuffleReadMetrics_recordsRead() + " / " + task.getShuffleReadMetrics_bytesRead() / 1024 / 1024 + " MB & ");
+            else if (metric.equalsIgnoreCase("Memory Spill"))
+                sb.append(String.format("%.1f", (double)  task.getMemoryBytesSpilled() / 1024 / 1024 / 1024) + " GB & ");
+            else if (metric.equalsIgnoreCase("Output Size/Records"))
+                sb.append(task.getOutputMetrics_recordsWritten() + " / " + task.getOutputMetrics_bytesWritten() / 1024 / 1024 + " MB");
+            else if (metric.equalsIgnoreCase("Spill Time"))
+                sb.append(getSpillTime(appMap.get(mode + "-" + collector + "-" + dataMode), task, appJsonDir) + " s & "); // E1-Parallel-0.5
+        }
+
+        return sb.toString() + " \\\\ \\hline";
     }
 
     // <E1-Parallel-0.5, E1-CMS-0.5, E1-G1-0.5>
@@ -191,9 +255,9 @@ public class SlowestTaskComparator {
         String collector = "";
 
         if (appName.contains("Parallel"))
-            collector = "P";
+            collector = "Parallel";
         else if (app.getName().contains("CMS"))
-            collector = "C";
+            collector = "CMS";
         else if (app.getName().contains("G1"))
             collector = "G1";
 
@@ -205,12 +269,23 @@ public class SlowestTaskComparator {
 
         String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/medianProfiles/";
 
-        String app = "GroupBy";
+        String[] metrics = {
+                "Mode",
+                "ID",
+                "Duration",
+                "GC Time",
+                "Spill Time",
+                "Memory Spill",
+                "Shuffled Size/Records",
+                "Output Size/Records"
+        };
+
+        String applicationName = "GroupBy";
         int[] selectedStageIds = new int[]{1};
 
         String appJsonDir0 = appJsonRootDir + "GroupByRDD-0.5";
         String appJsonDir1 = appJsonRootDir + "GroupByRDD-1.0";
-        SlowestTaskComparator comparator = new SlowestTaskComparator(selectedStageIds, appJsonDir0, appJsonDir1);
+        SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
         comparator.computeRelativeDifference();
 
 

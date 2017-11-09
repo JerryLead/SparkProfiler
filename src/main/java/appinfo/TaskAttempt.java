@@ -12,6 +12,7 @@ public class TaskAttempt {
     private String appName;
     private int stageId;
 
+    private int taskId;
     private int index;
     private int attempt;
     private String launchTime;
@@ -67,6 +68,7 @@ public class TaskAttempt {
 
     public void parseTaskAttempt(JsonObject taskAttemptObject) {
         this.taskAttempObject = taskAttemptObject;
+        this.taskId = taskAttemptObject.get("taskId").getAsInt();
         this.index = taskAttemptObject.get("index").getAsInt();
         this.attempt = taskAttemptObject.get("attempt").getAsInt();
         this.launchTime = taskAttemptObject.get("launchTime").getAsString();
@@ -118,6 +120,10 @@ public class TaskAttempt {
         this.shuffleWriteMetrics_recordsWritten = shuffleWriteMetricsObj.get("recordsWritten").getAsLong();
 
         this.duration = executorRunTime;
+    }
+
+    public int getTaskId() {
+        return taskId;
     }
 
     public int getIndex() {

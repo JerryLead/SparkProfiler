@@ -137,6 +137,7 @@ public class SlowestTaskComparator {
 
         Task slowestTask = tasksInSelectedStages.get(0);
         int slowestStageId = slowestTask.getStageId();
+        System.out.println("SlowestStageID = " + slowestStageId);
 
         String collector = getGCName(slowestApp);
 
@@ -147,6 +148,18 @@ public class SlowestTaskComparator {
             Application app = appList.get(i);
             Task task = app.getStage(slowestStageId).getFirstStage().getTaskMap()
                     .get(slowestTask.getTaskId());
+
+            if (slowestTask.getFirstTaskAttempt().getIndex() != task.getFirstTaskAttempt().getIndex()) {
+                for (Task t : app.getStage(slowestStageId).getFirstStage().getTaskMap().values()) {
+                    TaskAttempt ta = t.getFirstCompletedTask();
+                    TaskAttempt slowestTa = slowestTask.getFirstCompletedTask();
+
+                    if (ta.getShuffleWriteMetrics_recordsWritten() == slowestTa.getShuffleWriteMetrics_recordsWritten() &&
+                        ta.getOutputMetrics_recordsWritten() == slowestTa.getOutputMetrics_recordsWritten()) {
+                        task = t;
+                    }
+                }
+            }
             // System.out.println("------------[" + getGCName(app) + "]------------");
             collector = getGCName(app);
             System.out.println("\n\t" + getTaskInfo(dataMode, mode, collector, task.getFirstTaskAttempt(), appJsonDir));
@@ -176,9 +189,16 @@ public class SlowestTaskComparator {
         return spillTime;
     }
 
+    private Executor getExecutor(Application app, TaskAttempt task) {
+        int executorId = task.getExecutorId();
+        return app.getExecutor(executorId + "");
+    }
+
     private String getTaskInfo(String dataMode, String mode, String collector, TaskAttempt task, String appJsonDir) {
         StringBuilder sb = new StringBuilder();
-        sb.append(applicationName + "-" + mode + "-" + dataMode + " & ");
+        sb.append(applicationName + "-" + dataMode + "-" + mode + " & ");
+        Application app = appMap.get(mode + "-" + collector + "-" + dataMode);
+        Executor executor = getExecutor(app, task);
 
         for (String metric: metrics) {
             if (metric.equalsIgnoreCase("Mode"))
@@ -196,9 +216,34 @@ public class SlowestTaskComparator {
             else if (metric.equalsIgnoreCase("Memory Spill"))
                 sb.append(String.format("%.1f", (double)  task.getMemoryBytesSpilled() / 1024 / 1024 / 1024) + " GB & ");
             else if (metric.equalsIgnoreCase("Output Size/Records"))
-                sb.append(task.getOutputMetrics_recordsWritten() + " / " + task.getOutputMetrics_bytesWritten() / 1024 / 1024 + " MB");
+                sb.append(task.getOutputMetrics_recordsWritten() + " / " + task.getOutputMetrics_bytesWritten() / 1024 / 1024 + " MB & ");
             else if (metric.equalsIgnoreCase("Spill Time"))
-                sb.append(getSpillTime(appMap.get(mode + "-" + collector + "-" + dataMode), task, appJsonDir) + " s & "); // E1-Parallel-0.5
+                sb.append(getSpillTime(app, task, appJsonDir) + " s & "); // E1-Parallel-0.5
+            else if (metric.equalsIgnoreCase("Executor CPU"))
+                sb.append(executor.getMaxCPUusage() + " \\% & ");
+            else if (metric.equalsIgnoreCase("Executor Memory"))
+                sb.append(String.format("%.1f", executor.getMaxMemoryUsage()) + " GB & ");
+            else if (metric.equalsIgnoreCase("Executor YoungGC"))
+                sb.append((long) executor.getgCeasyMetrics().getGcStatistics_minorGCTotalTime() + " s & ");
+            else if (metric.equalsIgnoreCase("Executor FullGC"))
+                sb.append((long) executor.getgCeasyMetrics().getGcStatistics_fullGCTotalTime() + " s & ");
+            else if (metric.equalsIgnoreCase("Executor GCCause"))
+                sb.append(executor.getgCeasyMetrics().getGcCauses() + " & ");
+            else if (metric.equalsIgnoreCase("Executor GCTips"))
+                sb.append(executor.getgCeasyMetrics().getTipsToReduceGCTime() + " & ");
+            else if (metric.equalsIgnoreCase("Executor GCpause"))
+                sb.append((long) executor.getGcMetrics().getAccumPause() + " s & ");
+            else if (metric.equalsIgnoreCase("Executor FullGCPause"))
+                sb.append((long) executor.getGcMetrics().getFullGCPause() + " s & ");
+            else if (metric.equalsIgnoreCase("Executor ID & "))
+                sb.append(executor.getId());
+            else if (metric.equalsIgnoreCase("Input Size/Records"))
+                sb.append(task.getInputMetrics_recordsRead() + " / " + task.getInputMetrics_bytesRead() / 1024 / 1024 + " MB & ");
+            else if (metric.equalsIgnoreCase("Shuffle Write Size / Records"))
+                sb.append(task.getShuffleWriteMetrics_recordsWritten() + " / " + task.getShuffleWriteMetrics_bytesWritten() / 1024 / 1024 + " MB & ");
+
+
+
         }
 
         return sb.toString() + " \\\\ \\hline";
@@ -276,10 +321,24 @@ public class SlowestTaskComparator {
                 "GC Time",
                 "Spill Time",
                 "Memory Spill",
+                "Executor CPU",
+                "Executor Memory",
+                "Executor YoungGC",
+                "Executor FullGC",
+                "Executor GCCause",
+//                "Executor GCTips",
+//                "Executor GCpause",
+//                "Executor FullGCPause",
+                "Executor ID",
                 "Shuffled Size/Records",
-                "Output Size/Records"
+                "Output Size/Records",
+                "Input Size/Records",
+                "Shuffle Write Size / Records"
         };
 
+
+
+        /*
         String applicationName = "GroupBy";
         int[] selectedStageIds = new int[]{1};
 
@@ -287,33 +346,34 @@ public class SlowestTaskComparator {
         String appJsonDir1 = appJsonRootDir + "GroupByRDD-1.0";
         SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
         comparator.computeRelativeDifference();
-
-
-
-
-        /*
-        String app = "Join";
-        int[] selectedStageIds = new int[]{2};
-        String appJsonDir = appJsonRootDir + "RDDJoin-0.5";
-        profile(app, appJsonDir, selectedStageIds);
-        appJsonDir = appJsonRootDir + "RDDJoin-1.0";
-        profile(app, appJsonDir, selectedStageIds);
         */
 
-        /*
-        app = "SVM";
-        selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
-        appJsonDir = appJsonRootDir + "SVM-0.5";
-        profile(app, appJsonDir, selectedStageIds);
-        appJsonDir = appJsonRootDir + "SVM-1.0";
-        profile(app, appJsonDir, selectedStageIds);
 
-        app = "PageRank";
-        selectedStageIds = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        appJsonDir = appJsonRootDir + "PageRank-0.5";
-        profile(app, appJsonDir, selectedStageIds);
-        appJsonDir = appJsonRootDir + "PageRank-1.0";
-        profile(app, appJsonDir, selectedStageIds);
+        /*
+        String applicationName = "Join";
+        int[] selectedStageIds = new int[]{2};
+        String appJsonDir0 = appJsonRootDir + "RDDJoin-0.5";
+        String appJsonDir1 = appJsonRootDir + "RDDJoin-1.0";
+        SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
+        comparator.computeRelativeDifference();
+        */
+
+
+
+        String applicationName = "SVM";
+        int[] selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
+        String appJsonDir0 = appJsonRootDir + "SVM-0.5";
+        String appJsonDir1 = appJsonRootDir + "SVM-1.0";
+        SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
+        comparator.computeRelativeDifference();
+
+        /*
+        String applicationName = "PageRank";
+        int[] selectedStageIds = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        String appJsonDir0 = appJsonRootDir + "PageRank-0.5";
+        String appJsonDir1 = appJsonRootDir + "PageRank-1.0";
+        SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
+        comparator.computeRelativeDifference();
         */
     }
 }

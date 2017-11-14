@@ -56,6 +56,17 @@ public class Statistics {
         median = stats.getPercentile(50);
     }
 
+    public Statistics(double[] doubleValues) {
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+
+        for (double value : doubleValues)
+            stats.addValue(value);
+
+        mean = stats.getMean();
+        stdVar = stats.getStandardDeviation();
+        median = stats.getPercentile(50);
+    }
+
     public Statistics(Object[] objects, String methodName) {
         DescriptiveStatistics stats = new DescriptiveStatistics();
 

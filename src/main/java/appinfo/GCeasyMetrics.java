@@ -316,6 +316,8 @@ public class GCeasyMetrics {
                 seconds += Double.parseDouble(times[i - 1]) * 60;
             else if (unit.equalsIgnoreCase("hrs"))
                 seconds += Double.parseDouble(times[i - 1]) * 60 * 60;
+            else if (unit.equalsIgnoreCase("hr"))
+                seconds += Double.parseDouble(times[i - 1]) * 60 * 60;
             i--;
         }
 

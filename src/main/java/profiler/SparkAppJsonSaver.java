@@ -142,7 +142,7 @@ public class SparkAppJsonSaver {
 
                             String gcMetricsFile = executorDir.getAbsolutePath() + File.separatorChar + "gcMetrics-" + executorId + ".json";
                             if (FileChecker.isGCFile(gcLogFile)) {
-                                // ExecutorGCLogParser.parseExecutorGCLog(gcLogFile, exportCVSFile, chartPNGFile);
+                                ExecutorGCLogParser.parseExecutorGCLog(gcLogFile, exportCVSFile, chartPNGFile);
                                 ExecutorGCLogParserWithGCeasy.parseExecutorGCLog(gcLogFile, gcMetricsFile);
                             }
 
@@ -310,8 +310,8 @@ public class SparkAppJsonSaver {
         //       app-20170623113111-0009
         //       app-20170623112547-0008
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/NewExperiments/applists/appList.txt";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/GroupByRDD-1.0/";
-        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/GroupByRDD-1.0-6.5G";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/SVM-0.5/";
+        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/SVM-0.5-6.5G";
 
         // The executor log files are stored on each slave node
         String executorLogFile = "/dataDisk/spark-2.1.4.19-bin-2.7.1/worker";

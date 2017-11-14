@@ -197,17 +197,17 @@ public class SparkAppProfiler {
         // Users need to specify the appIds to be profiled
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/NewExperiments/applists/appList.txt";
 
-        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/medianProfiles/";
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/";
 
 
-
+        /*
         String app = "GroupBy";
         int[] selectedStageIds = new int[]{1};
         String appJsonDir = appJsonRootDir + "GroupByRDD-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "GroupByRDD-1.0";
         profile(app, appJsonDir, selectedStageIds);
-
+        */
 
 
         /*
@@ -219,21 +219,24 @@ public class SparkAppProfiler {
         profile(app, appJsonDir, selectedStageIds);
         */
 
-        /*
-        app = "SVM";
-        selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
-        appJsonDir = appJsonRootDir + "SVM-0.5";
+
+        String  app = "SVM";
+        int[] selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
+        String appJsonDir = appJsonRootDir + "SVM-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "SVM-1.0";
         profile(app, appJsonDir, selectedStageIds);
 
-        app = "PageRank";
-        selectedStageIds = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        appJsonDir = appJsonRootDir + "PageRank-0.5";
+
+        /*
+        String app = "PageRank";
+        int[] selectedStageIds = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        String appJsonDir = appJsonRootDir + "PageRank-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "PageRank-1.0";
         profile(app, appJsonDir, selectedStageIds);
         */
+
     }
 
 }

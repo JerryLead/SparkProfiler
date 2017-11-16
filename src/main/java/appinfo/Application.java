@@ -193,4 +193,14 @@ public class Application {
         }
         return memoryUsage;
     }
+
+    public double getMaxAllocatedMemory() {
+        double memoryUsage = 0;
+        for(Executor executor : executorMap.values()) {
+            double memory = executor.getgCeasyMetrics().getJvmHeapSize_total_allocatedSize();
+            if (memory > memoryUsage)
+                memoryUsage = memory;
+        }
+        return memoryUsage;
+    }
 }

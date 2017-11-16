@@ -67,6 +67,26 @@ public class ComputeStatistics {
         values = new double[]{36.5, 31.8, 38.0};
         computeMean("PageRank-G1-0.5", values);
 
+
+        values = new double[]{6.2, 5.8, 6.0};
+        computeMean("SVM-Parallel-0.5", values);
+
+        values = new double[]{6.0, 5.9, 6.1};
+        computeMean("SVM-CMS-0.5", values);
+
+        values = new double[]{6.1, 5.8, 5.7};
+        computeMean("SVM-G1-0.5", values);
+
+        values = new double[]{15.2, 14.2, 14.0};
+        computeMean("SVM-Parallel-1.0", values);
+
+        values = new double[]{14.7, 14.6, 14.3};
+        computeMean("SVM-CMS-1.0", values);
+
+        values = new double[]{13.9, 13.6};
+        computeMean("SVM-G1-1.0", values);
+
+
         double[] doubles = new double[]{2.3, 1.9, 1.8};
         compareAppDuration(doubles);
 
@@ -80,6 +100,9 @@ public class ComputeStatistics {
         compareAppDuration(doubles);
 
         doubles = new double[]{20.7, 21.3, 35.4};
+        compareAppDuration(doubles);
+
+        doubles = new double[]{14.5, 14.5, 13.8};
         compareAppDuration(doubles);
 
     }

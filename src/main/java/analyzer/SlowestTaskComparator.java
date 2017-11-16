@@ -49,9 +49,9 @@ public class SlowestTaskComparator {
                 mode = "E4";
 
             if (appName.contains("Parallel"))
-                collector = "Parallel";
+                collector = "P";
             else if (app.getName().contains("CMS"))
-                collector = "CMS";
+                collector = "C";
             else if (app.getName().contains("G1"))
                 collector = "G1";
 
@@ -71,9 +71,9 @@ public class SlowestTaskComparator {
                 mode = "E4";
 
             if (appName.contains("Parallel"))
-                collector = "Parallel";
+                collector = "P";
             else if (app.getName().contains("CMS"))
-                collector = "CMS";
+                collector = "C";
             else if (app.getName().contains("G1"))
                 collector = "G1";
 
@@ -84,7 +84,9 @@ public class SlowestTaskComparator {
     private void computeRelativeDifference() {
         String[] dataModes = {"0.5", "1.0"};
         String[] modes = {"E1", "E2", "E4"};
-        String[] collectors = {"Parallel", "CMS", "G1"};
+        String[] collectors = {"P", "C", "G1"};
+
+        Map<String, String> latexTable = new HashMap<String, String>();
 
         for (String dataMode : dataModes) {
             for (String mode : modes) {
@@ -98,7 +100,13 @@ public class SlowestTaskComparator {
                     appList.add(app);
                 }
 
-                compareAppDuration(dataMode, mode, appList);
+                String latex = compareAppDuration(dataMode, mode, appList);
+
+                if (latexTable.get(mode) == null) {
+                    latexTable.put(mode, latex);
+                } else {
+                    latexTable.put(mode, latexTable.get(mode) + latex);
+                }
 
                 List<Application> successfulAppList = new ArrayList<Application>();
 
@@ -114,6 +122,14 @@ public class SlowestTaskComparator {
                     compareSlowestTask(dataMode, mode, successfulAppList, appJsonDir1);
             }
         }
+
+        System.out.println("\n===========================================================================\n");
+
+        System.out.println(latexTable.get("E1"));
+        System.out.println(latexTable.get("E2"));
+        System.out.println(latexTable.get("E4"));
+
+
     }
 
     // /Users/xulijie/Documents/GCResearch/NewExperiments/medianProfiles/GroupByRDD-0.5
@@ -250,7 +266,7 @@ public class SlowestTaskComparator {
     }
 
     // <E1-Parallel-0.5, E1-CMS-0.5, E1-G1-0.5>
-    private void compareAppDuration(String dataMode, String mode, List<Application> appList) {
+    private String compareAppDuration(String dataMode, String mode, List<Application> appList) {
         appList.sort(new Comparator<Application>() {
             @Override
             public int compare(Application app1, Application app2) {
@@ -261,6 +277,10 @@ public class SlowestTaskComparator {
         long initDuration = 0;
         StringBuilder sb = new StringBuilder();
         boolean first = true;
+
+        double parallel = 0;
+        double cms = 0;
+        double g1 = 0;
 
         System.out.println("[" + mode + "-" + dataMode + "]");
         for (Application app : appList) {
@@ -281,18 +301,43 @@ public class SlowestTaskComparator {
             else
                 label = "!";
 
-            System.out.println("\t" + getGCName(app) + " = " + duration / 1000);
+            String gcName = getGCName(app);
+            System.out.println("\t" + gcName + " = " + duration / 1000);
+
+            if (gcName.equals("P"))
+                parallel = (double) duration / 1000 / 60; // min
+            else if (gcName.equals("C"))
+                cms = (double) duration / 1000 / 60;
+            else if (gcName.equals("G1"))
+                g1 = (double) duration / 1000 / 60;
+
             initDuration = duration;
             if (first) {
                 sb.append(getGCName(app));
                 first = false;
             } else {
-                sb.append(label + getGCName(app) + "(" + (int) relativeDiff + ")");
+                sb.append(label + getGCName(app));
+                // sb.append(label + getGCName(app) + "(" + (int) relativeDiff + ")");
             }
         }
 
         System.out.println("\t" + sb.toString());
 
+        // & E1 & ${3.4}$  &  ${2.5}$ & ${2.6}$  & $ [C, G1] \ll P$
+        String latex = " & " + " $" + String.format("%.1f", parallel) + "$ & $"
+                + String.format("%.1f", cms) + "$ & $"
+                + String.format("%.1f", g1) + "$ & $ "
+                + sb.toString() + " $ ";
+
+        if (dataMode.equals("1.0"))
+            latex = latex + "\\\\ \\cline{2-10}";
+        else
+            latex = " & " + mode + latex;
+
+        if (mode.equals("E1") && dataMode.equals("0.5"))
+            latex = applicationName + latex;
+
+        return latex;
     }
 
     private String getGCName(Application app) {
@@ -300,9 +345,9 @@ public class SlowestTaskComparator {
         String collector = "";
 
         if (appName.contains("Parallel"))
-            collector = "Parallel";
+            collector = "P";
         else if (app.getName().contains("CMS"))
-            collector = "CMS";
+            collector = "C";
         else if (app.getName().contains("G1"))
             collector = "G1";
 

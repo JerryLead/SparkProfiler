@@ -267,9 +267,11 @@ public class GCeasyMetrics {
         this.responseId = root.get("responseId").getAsString();
         this.graphURL = root.get("graphURL").getAsString();
 
+        /*
         if (isProblem) {
             System.err.println("[Executor.isProblem=true] " + root);
         }
+        */
     }
 
     // return MB
@@ -302,7 +304,7 @@ public class GCeasyMetrics {
         String[] times = timeStr.trim().split("\\s+");
         double seconds = 0;
         if (times.length < 2) {
-            System.err.println("[Error] while parsing parseTimeString " + timeStr);
+            // System.err.println("[Error] while parsing parseTimeString " + timeStr);
             return seconds;
         }
 

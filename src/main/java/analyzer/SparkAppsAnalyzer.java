@@ -66,6 +66,8 @@ public class SparkAppsAnalyzer {
 
         StringBuilder sb = new StringBuilder();
 
+
+
         for (Application app : medianApps) {
             String appName = app.getName();
             String mode = "E1";
@@ -84,10 +86,18 @@ public class SparkAppsAnalyzer {
                     + " [" + collector + "-" + mode + "] duration = "
                     + String.format("%.1f", (double) app.getDuration() / 1000 / 60) + " m"
                     + ", Memory = " + String.format("%.1f", app.getMaxMemoryUsage() / 6.5)
+                    + ", CPU = " + app.getMaxCPUUsage());
+
+            /*
+            sb.append("[appName = " + app.getName() + "_" + app.getAppId() + "] "
+                    + " [" + collector + "-" + mode + "] duration = "
+                    + String.format("%.1f", (double) app.getDuration() / 1000 / 60) + " m"
+                    + ", Memory = " + String.format("%.1f", app.getMaxMemoryUsage() / 6.5)
                     + ", CPU = " + app.getMaxCPUUsage() + " [" + collector + "-" + mode + " "
                     + "${" + String.format("%.1f", (double) app.getDuration() / 1000 / 60) + "}_"
                     + "{(" + String.format("%.1f", app.getMaxMemoryUsage() / 6.5) + ")}$]\n"
-                   );
+            );
+            */
         }
 
         FileTextWriter.write(medianAppDir + File.separatorChar + "medianAppMetrics.txt", sb.toString());

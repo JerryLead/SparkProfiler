@@ -90,7 +90,57 @@ public class ExecutorMemoryComparator {
 
         System.out.println("[" + mode + "-" + dataMode + "]");
         for (Application app : appList) {
+            // double maxMemory = app.getMaxMemoryUsage();
             double maxMemory = app.getMaxMemoryUsage();
+
+            /*
+            if (!app.getStatus().equalsIgnoreCase("SUCCEEDED")) {
+                maxMemory = -1;
+            }
+            */
+
+            double relativeDiff = RelativeDifference.getRelativeDifference(initMaxMemory, maxMemory) * 100;
+            String label = "";
+            if (relativeDiff > 20)
+                label = "<<";
+            else if (relativeDiff > 10)
+                label = "<";
+            else if (relativeDiff >= 0)
+                label = "~";
+            else
+                label = "!";
+
+            System.out.println("\t" + getGCName(app) + " = " + String.format("%.1f", maxMemory));
+            initMaxMemory = maxMemory;
+            if (first) {
+                sb.append(getGCName(app));
+                first = false;
+            } else {
+                sb.append(label + getGCName(app) + "(" + (int) relativeDiff + ")");
+            }
+        }
+
+        System.out.println("\t" + sb.toString());
+
+    }
+
+    // <E1-Parallel-0.5, E1-CMS-0.5, E1-G1-0.5>
+    private void compareAppMaxAllocatedMemory(String dataMode, String mode, List<Application> appList) {
+        appList.sort(new Comparator<Application>() {
+            @Override
+            public int compare(Application app1, Application app2) {
+                return (int) (app1.getMaxAllocatedMemory() - app2.getMaxAllocatedMemory());
+            }
+        });
+
+        double initMaxMemory = 0;
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+
+        System.out.println("[" + mode + "-" + dataMode + "]");
+        for (Application app : appList) {
+            // double maxMemory = app.getMaxMemoryUsage();
+            double maxMemory = app.getMaxAllocatedMemory();
 
             /*
             if (!app.getStatus().equalsIgnoreCase("SUCCEEDED")) {
@@ -154,7 +204,9 @@ public class ExecutorMemoryComparator {
                     appList.add(app);
                 }
 
-                compareAppMaxMemory(dataMode, mode, appList);
+                // compareAppMaxMemory(dataMode, mode, appList);
+                compareAppMaxAllocatedMemory(dataMode, mode, appList);
+
 
                 List<Application> successfulAppList = new ArrayList<Application>();
 
@@ -260,6 +312,10 @@ public class ExecutorMemoryComparator {
                 sb.append((long) executor.getGcMetrics().getFullGCPause() + " s & ");
             else if (metric.equalsIgnoreCase("Footprint"))
                 sb.append(String.format("%.1f", (double) executor.getGcMetrics().getFootprint() / 1024) + " GB & ");
+            else if (metric.equalsIgnoreCase("YGCT"))
+                sb.append((long) executor.getGcMetrics().getGcPause() + " s & ");
+            else if (metric.equalsIgnoreCase("FGCT"))
+                sb.append((long) executor.getGcMetrics().getFullGCPause() + " s & ");
 
         }
 
@@ -277,10 +333,14 @@ public class ExecutorMemoryComparator {
                 "ID",
                 "Duration",
                 "TaskNum",
-                "GC Time",
-                "Memory",
+
                 "Allocated",
-                "Peak"
+                "Peak",
+                "YoungGC",
+                "FullGC",
+                "GC Time",
+                "YGCT",
+                "FGCT"
 
         };
 

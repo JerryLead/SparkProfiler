@@ -106,9 +106,9 @@ public class SparkAppJsonSaver {
         // /Users/xulijie/Documents/GCResearch/Experiments/profiles/*_app-20170623114155-0011/executors/
         String rsync = "rsync -av --exclude *.jar --exclude *.hprof " + userName + "@";
 
-        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(8);
+        ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         for (String slaveIP : slavesIP) {
-            fixedThreadPool.execute(new Runnable() {
+            cachedThreadPool.execute(new Runnable() {
                 public void run() {
                     for (String appId : appIdList) {
                         // /dataDisk/spark-2.1.4.19-bin-2.7.1/worker/appId/executorID/{stdout, stderr}
@@ -179,10 +179,10 @@ public class SparkAppJsonSaver {
         // /Users/xulijie/Documents/GCResearch/NewExperiments/profiles/RDDJoin-0.5/topMetrics/slavex/*.top
         String rsync = "rsync -av " + userName + "@";
 
-        /*
-        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(8);
+
+        ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         for (String slaveIP : slavesIP) {
-            fixedThreadPool.execute(new Runnable() {
+            cachedThreadPool.execute(new Runnable() {
                 public void run() {
                     String logFile = sparkTopLogDir + "/*.txt";
                     String outputFile = outputDir + "topMetrics/" + slaveIP;
@@ -195,8 +195,9 @@ public class SparkAppJsonSaver {
                 }
             });
         }
-        */
 
+
+        /*
         for (String slaveIP : slavesIP) {
             String logFile = sparkTopLogDir + "/*.txt";
             String outputFile = outputDir + "topMetrics/" + slaveIP;
@@ -207,6 +208,7 @@ public class SparkAppJsonSaver {
                 file.mkdirs();
             CommandRunner.exec(cmd);
         }
+        */
     }
 
     // outputDir = /Users/xulijie/Documents/GCResearch/NewExperiments/profiles/RDDJoin-0.5
@@ -361,15 +363,15 @@ public class SparkAppJsonSaver {
         saver.parseAppIdList(appIdsFile);
 
         // Save the app's jsons info into the outputDir
-        saver.saveAppJsonInfo(outputDir);
+        // saver.saveAppJsonInfo(outputDir);
 
         saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
 
         saver.saveTopMetrics(userName, slavesIP, sparkTopLogDir, outputDir);
 
-        saver.parseExecutorGCInfo(outputDir, false);
+        // saver.parseExecutorGCInfo(outputDir, false);
 
-        saver.parseTopMetrics(outputDir);
+        // saver.parseTopMetrics(outputDir);
     }
 
 

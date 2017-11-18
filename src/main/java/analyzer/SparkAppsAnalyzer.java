@@ -86,7 +86,7 @@ public class SparkAppsAnalyzer {
                     + " [" + collector + "-" + mode + "] duration = "
                     + String.format("%.1f", (double) app.getDuration() / 1000 / 60) + " m"
                     + ", Memory = " + String.format("%.1f", app.getMaxMemoryUsage() / 6.5)
-                    + ", CPU = " + app.getMaxCPUUsage());
+                    + ", CPU = " + app.getMaxCPUUsage() + "\n");
 
             /*
             sb.append("[appName = " + app.getName() + "_" + app.getAppId() + "] "

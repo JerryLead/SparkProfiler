@@ -357,7 +357,7 @@ public class SlowestTaskComparator {
 
     public static void main(String args[]) {
 
-        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/medianProfiles/";
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/medianProfiles/";
 
         String[] metrics = {
                 "Mode",
@@ -404,21 +404,22 @@ public class SlowestTaskComparator {
         */
 
 
-
+        /*
         String applicationName = "SVM";
         int[] selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
         String appJsonDir0 = appJsonRootDir + "SVM-0.5";
         String appJsonDir1 = appJsonRootDir + "SVM-1.0";
         SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
         comparator.computeRelativeDifference();
+        */
 
-        /*
+
         String applicationName = "PageRank";
         int[] selectedStageIds = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         String appJsonDir0 = appJsonRootDir + "PageRank-0.5";
         String appJsonDir1 = appJsonRootDir + "PageRank-1.0";
         SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
         comparator.computeRelativeDifference();
-        */
+
     }
 }

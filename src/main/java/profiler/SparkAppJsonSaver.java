@@ -13,6 +13,8 @@ import util.JsonFileReader;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class SparkAppJsonSaver {
@@ -104,6 +106,22 @@ public class SparkAppJsonSaver {
         // /Users/xulijie/Documents/GCResearch/Experiments/profiles/*_app-20170623114155-0011/executors/
         String rsync = "rsync -av --exclude *.jar --exclude *.hprof " + userName + "@";
 
+        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(8);
+        for (String slaveIP : slavesIP) {
+            fixedThreadPool.execute(new Runnable() {
+                public void run() {
+                    for (String appId : appIdList) {
+                        // /dataDisk/spark-2.1.4.19-bin-2.7.1/worker/appId/executorID/{stdout, stderr}
+                        String logFile = executorLogFile + "/" + appId + "/*";
+                        String outputFile = outputDir + File.separatorChar + appIdtoName.get(appId) + File.separatorChar + "executors";
+                        String cmd = rsync + slaveIP + ":" + logFile + " " + outputFile;
+                        CommandRunner.exec(cmd);
+                    }
+                }
+            });
+        }
+
+        /*
         for (String slaveIP : slavesIP) {
             for (String appId : appIdList) {
                 // /dataDisk/spark-2.1.4.19-bin-2.7.1/worker/appId/executorID/{stdout, stderr}
@@ -113,6 +131,7 @@ public class SparkAppJsonSaver {
                 CommandRunner.exec(cmd);
             }
         }
+        */
     }
 
     private void parseExecutorGCInfo(String outputDir, boolean useAppList) {
@@ -159,6 +178,24 @@ public class SparkAppJsonSaver {
         // rsync -av root@aliSlave2:/dataDisk/GCTest/SparkTopLogs/RDDJoinTest-0.5-6.5G/*.top
         // /Users/xulijie/Documents/GCResearch/NewExperiments/profiles/RDDJoin-0.5/topMetrics/slavex/*.top
         String rsync = "rsync -av " + userName + "@";
+
+        /*
+        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(8);
+        for (String slaveIP : slavesIP) {
+            fixedThreadPool.execute(new Runnable() {
+                public void run() {
+                    String logFile = sparkTopLogDir + "/*.txt";
+                    String outputFile = outputDir + "topMetrics/" + slaveIP;
+                    String cmd = rsync + slaveIP + ":" + logFile + " " + outputFile;
+
+                    File file = new File(outputFile);
+                    if (!file.exists())
+                        file.mkdirs();
+                    CommandRunner.exec(cmd);
+                }
+            });
+        }
+        */
 
         for (String slaveIP : slavesIP) {
             String logFile = sparkTopLogDir + "/*.txt";
@@ -309,9 +346,9 @@ public class SparkAppJsonSaver {
         // e.g., app-20170623113634-0010
         //       app-20170623113111-0009
         //       app-20170623112547-0008
-        String appIdsFile = "/Users/xulijie/Documents/GCResearch/NewExperiments/applists/appList.txt";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/SVM-1.0-G1-E1-d/";
-        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/SVM-1.0-6.5G-G1-E1";
+        String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/applists/appList.txt";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/profiles/SVM-0.5/";
+        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/SVM-0.5-6.5G";
 
         // The executor log files are stored on each slave node
         String executorLogFile = "/dataDisk/spark-2.1.4.19-bin-2.7.1/worker";
@@ -320,7 +357,7 @@ public class SparkAppJsonSaver {
 
         SparkAppJsonSaver saver = new SparkAppJsonSaver(masterIP);
 
-        // Obtain the appIds from the file (a list of appIds)
+        // Obtain the appIds from the file (a list of appIds)app-20171117095258-0045
         saver.parseAppIdList(appIdsFile);
 
         // Save the app's jsons info into the outputDir

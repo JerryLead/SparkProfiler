@@ -187,7 +187,7 @@ public class Application {
     public double getMaxMemoryUsage() {
         double memoryUsage = 0;
         for(Executor executor : executorMap.values()) {
-            double memory = executor.getMaxMemoryUsage();
+            double memory = Math.max(executor.getMaxMemoryUsage(), executor.getgCeasyMetrics().getJvmHeapSize_total_allocatedSize() / 1024);
             if (memory > memoryUsage)
                 memoryUsage = memory;
         }
@@ -198,6 +198,16 @@ public class Application {
         double memoryUsage = 0;
         for(Executor executor : executorMap.values()) {
             double memory = executor.getgCeasyMetrics().getJvmHeapSize_total_allocatedSize();
+            if (memory > memoryUsage)
+                memoryUsage = memory;
+        }
+        return memoryUsage;
+    }
+
+    public double getHeapPeakUsage() {
+        double memoryUsage = 0;
+        for(Executor executor : executorMap.values()) {
+            double memory = executor.getgCeasyMetrics().getJvmHeapSize_total_peakSize();
             if (memory > memoryUsage)
                 memoryUsage = memory;
         }

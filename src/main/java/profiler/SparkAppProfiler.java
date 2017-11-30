@@ -11,6 +11,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import static sun.misc.Version.println;
+
 public class SparkAppProfiler {
 
     private boolean useAppList;
@@ -196,7 +198,7 @@ public class SparkAppProfiler {
         // Users need to specify the appIds to be profiled
 
         String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/profiles/";
-
+        // String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/";
 
         /*
         String app = "GroupBy";
@@ -217,6 +219,7 @@ public class SparkAppProfiler {
         profile(app, appJsonDir, selectedStageIds);
         */
 
+
         /*
         String  app = "SVM";
         int[] selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
@@ -233,6 +236,7 @@ public class SparkAppProfiler {
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "PageRank-1.0";
         profile(app, appJsonDir, selectedStageIds);
+
 
 
     }

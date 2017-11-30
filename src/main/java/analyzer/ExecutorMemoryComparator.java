@@ -43,9 +43,9 @@ public class ExecutorMemoryComparator {
                 mode = "E4";
 
             if (appName.contains("Parallel"))
-                collector = "Parallel";
+                collector = "P";
             else if (app.getName().contains("CMS"))
-                collector = "CMS";
+                collector = "C";
             else if (app.getName().contains("G1"))
                 collector = "G1";
 
@@ -65,9 +65,9 @@ public class ExecutorMemoryComparator {
                 mode = "E4";
 
             if (appName.contains("Parallel"))
-                collector = "Parallel";
+                collector = "P";
             else if (app.getName().contains("CMS"))
-                collector = "CMS";
+                collector = "C";
             else if (app.getName().contains("G1"))
                 collector = "G1";
 
@@ -76,10 +76,11 @@ public class ExecutorMemoryComparator {
     }
 
     // <E1-Parallel-0.5, E1-CMS-0.5, E1-G1-0.5>
-    private void compareAppMaxMemory(String dataMode, String mode, List<Application> appList) {
+    private String compareAppMaxAllocatedMemory(String dataMode, String mode, List<Application> appList) {
         appList.sort(new Comparator<Application>() {
             @Override
             public int compare(Application app1, Application app2) {
+                // return (int) (app1.getMaxAllocatedMemory() - app2.getMaxAllocatedMemory());
                 return (int) (app1.getMaxMemoryUsage() - app2.getMaxMemoryUsage());
             }
         });
@@ -88,16 +89,22 @@ public class ExecutorMemoryComparator {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
 
+        double parallel = 0;
+        double cms = 0;
+        double g1 = 0;
+
         System.out.println("[" + mode + "-" + dataMode + "]");
         for (Application app : appList) {
-            // double maxMemory = app.getMaxMemoryUsage();
-            double maxMemory = app.getMaxMemoryUsage();
+            double maxMemory = app.getMaxMemoryUsage() / 6.5;
+            // double maxMemory = app.getMaxAllocatedMemory();
 
             /*
+
             if (!app.getStatus().equalsIgnoreCase("SUCCEEDED")) {
                 maxMemory = -1;
             }
             */
+
 
             double relativeDiff = RelativeDifference.getRelativeDifference(initMaxMemory, maxMemory) * 100;
             String label = "";
@@ -110,26 +117,52 @@ public class ExecutorMemoryComparator {
             else
                 label = "!";
 
-            System.out.println("\t" + getGCName(app) + " = " + String.format("%.1f", maxMemory));
+            String gcName = getGCName(app);
+            System.out.println("\t" + gcName + " = " + String.format("%.1f", maxMemory));
+
+            if (gcName.equals("P"))
+                parallel = maxMemory; // GB
+            else if (gcName.equals("C"))
+                cms = maxMemory;
+            else if (gcName.equals("G1"))
+                g1 = maxMemory;
+
             initMaxMemory = maxMemory;
             if (first) {
                 sb.append(getGCName(app));
                 first = false;
             } else {
-                sb.append(label + getGCName(app) + "(" + (int) relativeDiff + ")");
+                sb.append(label + getGCName(app));
             }
         }
 
         System.out.println("\t" + sb.toString());
 
+        // & E1 & ${3.4}$  &  ${2.5}$ & ${2.6}$  & $ [C, G1] \ll P$
+        String latex = " & " + " $" + String.format("%.1f", parallel) + "$ & $"
+                + String.format("%.1f", cms) + "$ & $"
+                + String.format("%.1f", g1) + "$ & $ "
+                + sb.toString() + " $ ";
+
+        if (dataMode.equals("1.0"))
+            latex = latex + "\\\\ \\cline{2-10}";
+        else
+            latex = " & " + mode + latex;
+
+        if (mode.equals("E1") && dataMode.equals("0.5"))
+            latex = applicationName + latex;
+
+        return latex;
+
     }
 
     // <E1-Parallel-0.5, E1-CMS-0.5, E1-G1-0.5>
-    private void compareAppMaxAllocatedMemory(String dataMode, String mode, List<Application> appList) {
+    private String compareAppHeapPeakUsage(String dataMode, String mode, List<Application> appList) {
         appList.sort(new Comparator<Application>() {
             @Override
             public int compare(Application app1, Application app2) {
-                return (int) (app1.getMaxAllocatedMemory() - app2.getMaxAllocatedMemory());
+                // return (int) (app1.getMaxAllocatedMemory() - app2.getMaxAllocatedMemory());
+                return (int) (app1.getHeapPeakUsage() - app2.getHeapPeakUsage());
             }
         });
 
@@ -137,12 +170,17 @@ public class ExecutorMemoryComparator {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
 
+        String parallel = "";
+        String cms = "";
+        String g1 = "";
+
         System.out.println("[" + mode + "-" + dataMode + "]");
         for (Application app : appList) {
-            // double maxMemory = app.getMaxMemoryUsage();
-            double maxMemory = app.getMaxAllocatedMemory();
+            double maxMemory = app.getHeapPeakUsage() / 1024 / 6.5;
+            // double maxMemory = app.getMaxAllocatedMemory();
 
             /*
+
             if (!app.getStatus().equalsIgnoreCase("SUCCEEDED")) {
                 maxMemory = -1;
             }
@@ -159,17 +197,45 @@ public class ExecutorMemoryComparator {
             else
                 label = "!";
 
-            System.out.println("\t" + getGCName(app) + " = " + String.format("%.1f", maxMemory));
+            String gcName = getGCName(app);
+            System.out.println("\t" + gcName + " = " + String.format("%.1f", maxMemory));
+
+            String memory = "{" + String.format("%.1f", maxMemory) + "}_{(" +
+                    String.format("%.1f", app.getMaxMemoryUsage() / 6.5) + ")}";
+
+            if (gcName.equals("P"))
+                parallel = memory; // GB
+            else if (gcName.equals("C"))
+                cms = memory;
+            else if (gcName.equals("G1"))
+                g1 = memory;
+
             initMaxMemory = maxMemory;
             if (first) {
                 sb.append(getGCName(app));
                 first = false;
             } else {
-                sb.append(label + getGCName(app) + "(" + (int) relativeDiff + ")");
+                sb.append(label + getGCName(app));
             }
         }
 
         System.out.println("\t" + sb.toString());
+
+        // & E1 & ${3.4}$  &  ${2.5}$ & ${2.6}$  & $ [C, G1] \ll P$
+        String latex = " & " + " $" + parallel + "$ & $"
+                + cms + "$ & $"
+                + g1 + "$ & $ "
+                + sb.toString() + " $ ";
+
+        if (dataMode.equals("1.0"))
+            latex = latex + "\\\\ \\cline{2-10}";
+        else
+            latex = " & " + mode + latex;
+
+        if (mode.equals("E1") && dataMode.equals("0.5"))
+            latex = applicationName + latex;
+
+        return latex;
 
     }
 
@@ -178,9 +244,9 @@ public class ExecutorMemoryComparator {
         String collector = "";
 
         if (appName.contains("Parallel"))
-            collector = "Parallel";
+            collector = "P";
         else if (app.getName().contains("CMS"))
-            collector = "CMS";
+            collector = "C";
         else if (app.getName().contains("G1"))
             collector = "G1";
 
@@ -190,7 +256,9 @@ public class ExecutorMemoryComparator {
     private void computeRelativeDifference() {
         String[] dataModes = {"0.5", "1.0"};
         String[] modes = {"E1", "E2", "E4"};
-        String[] collectors = {"Parallel", "CMS", "G1"};
+        String[] collectors = {"P", "C", "G1"};
+
+        Map<String, String> latexTable = new HashMap<String, String>();
 
         for (String dataMode : dataModes) {
             for (String mode : modes) {
@@ -205,8 +273,16 @@ public class ExecutorMemoryComparator {
                 }
 
                 // compareAppMaxMemory(dataMode, mode, appList);
-                compareAppMaxAllocatedMemory(dataMode, mode, appList);
+                // String latex = compareAppMaxAllocatedMemory(dataMode, mode, appList);
+                String latex = compareAppHeapPeakUsage(dataMode, mode, appList);
 
+
+
+                if (latexTable.get(mode) == null) {
+                    latexTable.put(mode, latex);
+                } else {
+                    latexTable.put(mode, latexTable.get(mode) + latex);
+                }
 
                 List<Application> successfulAppList = new ArrayList<Application>();
 
@@ -221,6 +297,12 @@ public class ExecutorMemoryComparator {
 
             }
         }
+
+        System.out.println("\n===========================================================================\n");
+
+        System.out.println(latexTable.get("E1"));
+        System.out.println(latexTable.get("E2"));
+        System.out.println(latexTable.get("E4"));
     }
 
 
@@ -234,13 +316,16 @@ public class ExecutorMemoryComparator {
             double maxMemory = 0;
             Executor maxMemoryExecutor = null;
             for (Executor executor : app.getExecutors()) {
-                if (executor.getMaxMemoryUsage() > maxMemory) {
-                    maxMemory = executor.getMaxMemoryUsage();
+                if (executor.getgCeasyMetrics().getJvmHeapSize_total_allocatedSize() > maxMemory) {
+                    maxMemory = executor.getgCeasyMetrics().getJvmHeapSize_total_allocatedSize();
                     maxMemoryExecutor = executor;
                 }
             }
 
-            maxMemoryExecutors.add(maxMemoryExecutor);
+            if (maxMemoryExecutor == null)
+                System.err.println("[WARN]" + app.getName() + "_" + app.getAppId() + " does not have available executor");
+            else
+                maxMemoryExecutors.add(maxMemoryExecutor);
         }
 
         for (String metric : metrics) {
@@ -326,14 +411,13 @@ public class ExecutorMemoryComparator {
 
     public static void main(String args[]) {
 
-        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/medianProfiles/";
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/medianProfiles/";
 
         String[] metrics = {
                 "Mode",
                 "ID",
                 "Duration",
                 "TaskNum",
-
                 "Allocated",
                 "Peak",
                 "YoungGC",
@@ -344,7 +428,7 @@ public class ExecutorMemoryComparator {
 
         };
 
-
+        /*
         String applicationName = "GroupBy";
         int[] selectedStageIds = new int[]{1};
 
@@ -352,7 +436,7 @@ public class ExecutorMemoryComparator {
         String appJsonDir1 = appJsonRootDir + "GroupByRDD-1.0";
         ExecutorMemoryComparator comparator = new ExecutorMemoryComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
         comparator.computeRelativeDifference();
-
+        */
 
 
         /*
@@ -360,7 +444,7 @@ public class ExecutorMemoryComparator {
         int[] selectedStageIds = new int[]{2};
         String appJsonDir0 = appJsonRootDir + "RDDJoin-0.5";
         String appJsonDir1 = appJsonRootDir + "RDDJoin-1.0";
-        SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
+        ExecutorMemoryComparator comparator = new ExecutorMemoryComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
         comparator.computeRelativeDifference();
         */
 
@@ -370,17 +454,18 @@ public class ExecutorMemoryComparator {
         int[] selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
         String appJsonDir0 = appJsonRootDir + "SVM-0.5";
         String appJsonDir1 = appJsonRootDir + "SVM-1.0";
-        SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
+        ExecutorMemoryComparator comparator = new ExecutorMemoryComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
         comparator.computeRelativeDifference();
         */
 
-        /*
+
         String applicationName = "PageRank";
         int[] selectedStageIds = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         String appJsonDir0 = appJsonRootDir + "PageRank-0.5";
         String appJsonDir1 = appJsonRootDir + "PageRank-1.0";
-        SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
+        ExecutorMemoryComparator comparator = new ExecutorMemoryComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
         comparator.computeRelativeDifference();
-        */
+
+
     }
 }

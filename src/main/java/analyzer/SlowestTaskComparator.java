@@ -1,12 +1,14 @@
 package analyzer;
 
-import appinfo.Application;
-import appinfo.Executor;
-import appinfo.Task;
-import appinfo.TaskAttempt;;
+import appinfo.*;
+;
+import com.google.gson.*;
+import jdk.nashorn.internal.objects.DataPropertyDescriptor;
 import profiler.SparkAppProfiler;
 
 
+import util.DateParser;
+import util.FileTextWriter;
 import util.JsonFileReader;
 import util.RelativeDifference;
 
@@ -158,7 +160,9 @@ public class SlowestTaskComparator {
         String collector = getGCName(slowestApp);
 
 
+
         System.out.println("\n\t" + getTaskInfo(dataMode, mode, collector, slowestTask.getFirstTaskAttempt(), appJsonDir));
+        outputTaskAndExecutorResourceUsage(dataMode, mode, collector, slowestTask.getFirstTaskAttempt(), appJsonDir);
 
         for (int i = appList.size() - 2; i >= 0; i--) {
             Application app = appList.get(i);
@@ -179,7 +183,140 @@ public class SlowestTaskComparator {
             // System.out.println("------------[" + getGCName(app) + "]------------");
             collector = getGCName(app);
             System.out.println("\n\t" + getTaskInfo(dataMode, mode, collector, task.getFirstTaskAttempt(), appJsonDir));
+            outputTaskAndExecutorResourceUsage(dataMode, mode, collector, task.getFirstTaskAttempt(), appJsonDir);
         }
+    }
+
+    private void outputTaskAndExecutorResourceUsage(String dataMode, String mode, String collector, TaskAttempt task, String appJsonDir) {
+        // String filePath = appJsonDir +
+
+        // "launchTime" : "2017-11-24T19:31:22.897GMT",
+        String startTime = task.getLaunchTime();
+        long endMS = DateParser.parseDate(startTime) + task.getDuration();
+
+        // HH:mm:ss
+        startTime = DateParser.getDate(DateParser.parseDate(startTime));
+        String endTime = DateParser.getDate(endMS);
+
+        System.out.println("[start = " + startTime + ", end = " + endTime + "]");
+
+        int startTimeValue = DateParser.getTimeValue(startTime);
+        int endTimeValue = DateParser.getTimeValue(endTime);
+
+
+        Application app = appMap.get(mode + "-" + collector + "-" + dataMode);
+        Executor executor = getExecutor(app, task);
+
+        List<TopMetrics> list = executor.getTopMetricsList();
+
+        List<TopMetrics> filteredExecutorMetrics = new ArrayList<TopMetrics>();
+
+        int initValue = 0;
+        boolean update24 = false;
+
+        for (TopMetrics topMetrics : list) {
+            String time = topMetrics.getTime();
+            int timeValue = DateParser.getTimeValue(time);
+
+            if (timeValue < initValue) {
+                timeValue += 24 * 60 * 60;
+                if (update24 == false) {
+                    if (startTime.startsWith("0"))
+                        startTimeValue += 24 * 60 * 60;
+                    if (endTime.startsWith("0"))
+                        endTimeValue += 24 * 60 * 60;
+                    update24 = true;
+                }
+            }
+
+            if (filteredExecutorMetrics.isEmpty()) {
+                if (timeValue > startTimeValue - 5) {
+                    filteredExecutorMetrics.add(topMetrics);
+                }
+            } else {
+                if (timeValue < endTimeValue + 5)
+                    filteredExecutorMetrics.add(topMetrics);
+            }
+
+            initValue = timeValue;
+        }
+
+        System.out.println("[Executor Top Metrics]");
+        for (TopMetrics topMetrics : filteredExecutorMetrics)
+            System.out.println(topMetrics);
+
+        String stderrFile = appJsonDir + File.separatorChar + app.getName() + "_" + app.getAppId() + File.separatorChar +
+                "executors" + File.separatorChar + executor.getId() + File.separatorChar + "stderr";
+
+        List<String> lines = JsonFileReader.readFileLines(stderrFile);
+
+        String slave = "";
+        if (!lines.isEmpty()) {
+            // 17/11/02 11:17:44 INFO CoarseGrainedExecutorBackend: Started daemon with process name: 14388@slave7
+            String line = lines.get(0);
+            String pid = line.substring(line.lastIndexOf(':') + 2, line.lastIndexOf('@'));
+            slave = line.substring(line.lastIndexOf('@') + 1);
+        }
+
+        slave = slave.replace("s", "aliS");
+
+        String slaveTopMetricsPath = appJsonDir.replace("medianProfiles", "profiles");
+        slaveTopMetricsPath += File.separatorChar + "topMetrics" + File.separatorChar + slave
+                + File.separatorChar + app.getName() + ".txt";
+
+        List<TopMetrics> executorMetricsList = analyzeSlaveTopMetrics(slaveTopMetricsPath);
+        List<TopMetrics> filteredSlaveMetricsList = new ArrayList<TopMetrics>();
+
+        initValue = 0;
+        for (TopMetrics topMetrics : executorMetricsList) {
+            String time = topMetrics.getTime();
+            int timeValue = DateParser.getTimeValue(time);
+
+            if (timeValue < initValue) {
+                timeValue += 24 * 60 * 60;
+            }
+
+            if (filteredSlaveMetricsList.isEmpty()) {
+                if (timeValue > startTimeValue - 5) {
+                    filteredSlaveMetricsList.add(topMetrics);
+                }
+            } else {
+                if (timeValue < endTimeValue + 5)
+                    filteredSlaveMetricsList.add(topMetrics);
+            }
+
+            initValue = timeValue;
+        }
+
+        System.out.println("[Slave Top Metrics]");
+        for (TopMetrics topMetrics : filteredSlaveMetricsList)
+            System.out.println(topMetrics);
+
+    }
+
+    private List<TopMetrics> analyzeSlaveTopMetrics(String executorTopMetricsPath) {
+        // key = appName_slaveName_PID
+        List<TopMetrics> slaveTopMetrics = new ArrayList<TopMetrics>();
+
+        List<String> topMetricsLines = JsonFileReader.readFileLines(executorTopMetricsPath);
+        String time = "";
+        double cpu = 0;
+        double memory = 0;
+
+        for (String line : topMetricsLines) {
+            if (line.startsWith("top"))
+                time = line.substring(line.indexOf("-") + 2, line.indexOf("up") - 1);
+            // %Cpu(s): 54.2 us,  2.0 sy,  0.0 ni, 34.6 id,  8.7 wa,  0.0 hi,  0.6 si,  0.0 st
+            // KiB Mem : 32947020 total, 28891956 free,  2518352 used,  1536712 buff/cache
+            if (line.startsWith("%Cpu"))
+                cpu = 100 - Double.parseDouble(line.substring(line.indexOf("ni") + 4, line.indexOf("id") - 1));
+            if (line.startsWith("KiB Mem")) {
+                memory = Double.parseDouble(line.substring(line.indexOf("free") + 5, line.indexOf("used") - 1).trim());
+                slaveTopMetrics.add(new TopMetrics(time, cpu, memory / 1024 / 1024));
+            }
+        }
+
+        return slaveTopMetrics;
     }
 
     private int getSpillTime(Application app, TaskAttempt task, String appJsonDir) {
@@ -220,7 +357,7 @@ public class SlowestTaskComparator {
             if (metric.equalsIgnoreCase("Mode"))
                 sb.append(collector + " & ");
             else if (metric.equalsIgnoreCase("ID"))
-                sb.append(task.getIndex() + " & ");
+                sb.append(task.getIndex() + "-" + task.getTaskId() + " & ");
             else if (metric.equalsIgnoreCase("Duration"))
                 sb.append(task.getDuration() / 1000 + " s & ");
             else if (metric.equalsIgnoreCase("CPU Time"))
@@ -239,20 +376,30 @@ public class SlowestTaskComparator {
                 sb.append(executor.getMaxCPUusage() + " \\% & ");
             else if (metric.equalsIgnoreCase("Executor Memory"))
                 sb.append(String.format("%.1f", executor.getMaxMemoryUsage()) + " GB & ");
+            else if (metric.equalsIgnoreCase("Executor Allocated"))
+                sb.append(String.format("%.1f", executor.getgCeasyMetrics().getJvmHeapSize_total_allocatedSize() / 1024) + " GB & ");
+            else if (metric.equalsIgnoreCase("Executor Peak"))
+                sb.append(String.format("%.1f", executor.getgCeasyMetrics().getJvmHeapSize_total_peakSize() / 1024) + " GB & ");
+            else if (metric.equalsIgnoreCase("Executor Old Peak"))
+                sb.append(String.format("%.1f", executor.getgCeasyMetrics().getJvmHeapSize_oldGen_peakSize() / 1024) + " GB & ");
             else if (metric.equalsIgnoreCase("Executor YoungGC"))
-                sb.append((long) executor.getgCeasyMetrics().getGcStatistics_minorGCTotalTime() + " s & ");
+                sb.append((long) executor.getgCeasyMetrics().getGcStatistics_minorGCTotalTime() + " s (" +
+                        executor.getgCeasyMetrics().getGcStatistics_minorGCCount() + ") & ");
             else if (metric.equalsIgnoreCase("Executor FullGC"))
-                sb.append((long) executor.getgCeasyMetrics().getGcStatistics_fullGCTotalTime() + " s & ");
+                sb.append(executor.getgCeasyMetrics().getGcStatistics_fullGCTotalTime() + " s (" +
+                        executor.getgCeasyMetrics().getGcStatistics_fullGCCount() + ", " +
+                        (long) executor.getgCeasyMetrics().getGcStatistics_fullGCMaxTime() + " s)" +
+                        " & ");
             else if (metric.equalsIgnoreCase("Executor GCCause"))
-                sb.append(executor.getgCeasyMetrics().getGcCauses() + " & ");
+                sb.append(simpleGCCause(executor.getgCeasyMetrics().getGcCauses()) + " & ");
             else if (metric.equalsIgnoreCase("Executor GCTips"))
                 sb.append(executor.getgCeasyMetrics().getTipsToReduceGCTime() + " & ");
             else if (metric.equalsIgnoreCase("Executor GCpause"))
                 sb.append((long) executor.getGcMetrics().getAccumPause() + " s & ");
             else if (metric.equalsIgnoreCase("Executor FullGCPause"))
                 sb.append((long) executor.getGcMetrics().getFullGCPause() + " s & ");
-            else if (metric.equalsIgnoreCase("Executor ID & "))
-                sb.append(executor.getId());
+            else if (metric.equalsIgnoreCase("Executor ID"))
+                sb.append(executor.getId() + " & ");
             else if (metric.equalsIgnoreCase("Input Size/Records"))
                 sb.append(task.getInputMetrics_recordsRead() + " / " + task.getInputMetrics_bytesRead() / 1024 / 1024 + " MB & ");
             else if (metric.equalsIgnoreCase("Shuffle Write Size / Records"))
@@ -278,9 +425,9 @@ public class SlowestTaskComparator {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
 
-        double parallel = 0;
-        double cms = 0;
-        double g1 = 0;
+        String parallel = "";
+        String cms = "";
+        String g1 = "";
 
         System.out.println("[" + mode + "-" + dataMode + "]");
         for (Application app : appList) {
@@ -302,14 +449,28 @@ public class SlowestTaskComparator {
                 label = "!";
 
             String gcName = getGCName(app);
-            System.out.println("\t" + gcName + " = " + duration / 1000);
+
+            double durationMin = (double) duration / 1000 / 60;
+            double slowestStageDuration = 0;
+
+            if (!app.getStatus().equalsIgnoreCase("SUCCEEDED")) {
+                slowestStageDuration = -1;
+            } else {
+                for (int id : selectedStageIds)
+                    slowestStageDuration += (double) app.getStage(id).getFirstStage().getDuration();
+                slowestStageDuration = slowestStageDuration / 1000 / 60;
+            }
+
+            System.out.println("\t" + gcName + " = " + durationMin);
+
+            String durationMetrics = "{" + String.format("%.1f", durationMin) + "}_{(" + String.format("%.1f", slowestStageDuration) + ")}";
 
             if (gcName.equals("P"))
-                parallel = (double) duration / 1000 / 60; // min
+                parallel = durationMetrics; // min
             else if (gcName.equals("C"))
-                cms = (double) duration / 1000 / 60;
+                cms = durationMetrics;
             else if (gcName.equals("G1"))
-                g1 = (double) duration / 1000 / 60;
+                g1 = durationMetrics;
 
             initDuration = duration;
             if (first) {
@@ -324,9 +485,9 @@ public class SlowestTaskComparator {
         System.out.println("\t" + sb.toString());
 
         // & E1 & ${3.4}$  &  ${2.5}$ & ${2.6}$  & $ [C, G1] \ll P$
-        String latex = " & " + " $" + String.format("%.1f", parallel) + "$ & $"
-                + String.format("%.1f", cms) + "$ & $"
-                + String.format("%.1f", g1) + "$ & $ "
+        String latex = " & " + " $" + parallel + "$ & $"
+                + cms + "$ & $"
+                + g1 + "$ & $ "
                 + sb.toString() + " $ ";
 
         if (dataMode.equals("1.0"))
@@ -354,6 +515,43 @@ public class SlowestTaskComparator {
         return collector;
     }
 
+    private String simpleGCCause(String cause) {
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            JsonParser parser = new JsonParser();
+            JsonElement el = parser.parse(cause);
+            JsonArray gcCauseJsonArray = null;
+
+            if (el.isJsonArray())
+                gcCauseJsonArray = el.getAsJsonArray();
+            else {
+                System.err.println("Error in parsing the jobs json!");
+                System.exit(1);
+            }
+
+            for (JsonElement gcCauseElem : gcCauseJsonArray) {
+                JsonObject gcCauseObject = gcCauseElem.getAsJsonObject();
+                sb.append(gcCauseObject.get("cause") + " (");
+                sb.append(gcCauseObject.get("count") + "), ");
+            }
+
+            String simpleCause = sb.toString().replaceAll("\"", "").trim();
+
+            if (!simpleCause.isEmpty())
+                simpleCause = simpleCause.substring(0, simpleCause.length() - 1);
+
+            return simpleCause;
+
+        } catch (JsonIOException e) {
+            e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
 
     public static void main(String args[]) {
 
@@ -362,19 +560,20 @@ public class SlowestTaskComparator {
         String[] metrics = {
                 "Mode",
                 "ID",
+                "Executor ID",
                 "Duration",
                 "GC Time",
                 "Spill Time",
                 "Memory Spill",
-                "Executor CPU",
-                "Executor Memory",
+                "Executor Peak",
+                "Executor Old Peak",
                 "Executor YoungGC",
                 "Executor FullGC",
+                "Executor CPU",
                 "Executor GCCause",
 //                "Executor GCTips",
 //                "Executor GCpause",
 //                "Executor FullGCPause",
-                "Executor ID",
                 "Shuffled Size/Records",
                 "Output Size/Records",
                 "Input Size/Records",
@@ -407,11 +606,13 @@ public class SlowestTaskComparator {
         /*
         String applicationName = "SVM";
         int[] selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
+        // int[] selectedStageIds = new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22};
         String appJsonDir0 = appJsonRootDir + "SVM-0.5";
         String appJsonDir1 = appJsonRootDir + "SVM-1.0";
         SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
         comparator.computeRelativeDifference();
         */
+
 
 
         String applicationName = "PageRank";
@@ -420,6 +621,7 @@ public class SlowestTaskComparator {
         String appJsonDir1 = appJsonRootDir + "PageRank-1.0";
         SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics);
         comparator.computeRelativeDifference();
+
 
     }
 }

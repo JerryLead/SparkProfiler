@@ -15,8 +15,23 @@ public class TopMetrics {
         this.memoryUsage = memoryUsage;
     }
 
+    public String getTime() {
+        return time;
+    }
+
+    public double getCPUusage() {
+        return CPUusage;
+    }
+
+    public double getMemoryUsage() {
+        return memoryUsage;
+    }
+
     @Override
     public String toString() {
-        return "[" + time + "] CPU = " + CPUusage + ", Memory = " + memoryUsage;
+        return "[" + time + "] CPU = "
+                + String.format("%.2f", CPUusage)
+                + ", Memory = "
+                + String.format("%.2f", memoryUsage);
     }
 }

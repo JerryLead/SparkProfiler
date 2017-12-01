@@ -13,6 +13,7 @@ import util.JsonFileReader;
 import util.RelativeDifference;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.util.*;
 
 /**
@@ -188,7 +189,8 @@ public class SlowestTaskComparator {
     }
 
     private void outputTaskAndExecutorResourceUsage(String dataMode, String mode, String collector, TaskAttempt task, String appJsonDir) {
-        // String filePath = appJsonDir +
+        String filePath = appJsonDir + File.separatorChar + "slowestTasks";
+        StringBuilder sb = new StringBuilder();
 
         // "launchTime" : "2017-11-24T19:31:22.897GMT",
         String startTime = task.getLaunchTime();
@@ -198,14 +200,26 @@ public class SlowestTaskComparator {
         startTime = DateParser.getDate(DateParser.parseDate(startTime));
         String endTime = DateParser.getDate(endMS);
 
-        System.out.println("[start = " + startTime + ", end = " + endTime + "]");
+        sb.append("[Task][Id = " + task.getTaskId() + "][Index = " + task.getIndex() + "]\n");
+        sb.append(task + "\n");
 
         int startTimeValue = DateParser.getTimeValue(startTime);
         int endTimeValue = DateParser.getTimeValue(endTime);
 
-
         Application app = appMap.get(mode + "-" + collector + "-" + dataMode);
+        String appName = app.getName().substring(0, app.getName().indexOf("-"));
+
         Executor executor = getExecutor(app, task);
+
+        sb.append("[Executor][Id = " + executor.getId() + "]\n");
+        sb.append(executor + "\n\n");
+
+        sb.append("[TopMetrics][start = " + startTime + ", end = " + endTime + "]\n");
+
+        filePath += File.separatorChar + appName + "-" + dataMode + "-" + mode + "-" + collector;
+
+        String filename = appName + "-" + dataMode + "-" + mode + "-" + collector + "-" + task.getTaskId()
+                + "-" + task.getIndex() + "-e" + executor.getId() + ".txt";
 
         List<TopMetrics> list = executor.getTopMetricsList();
 
@@ -241,9 +255,9 @@ public class SlowestTaskComparator {
             initValue = timeValue;
         }
 
-        System.out.println("[Executor Top Metrics]");
+        sb.append("\n[Top Metrics][Executor " + executor.getId() + "]\n");
         for (TopMetrics topMetrics : filteredExecutorMetrics)
-            System.out.println(topMetrics);
+            sb.append(topMetrics + "\n");
 
         String stderrFile = appJsonDir + File.separatorChar + app.getName() + "_" + app.getAppId() + File.separatorChar +
                 "executors" + File.separatorChar + executor.getId() + File.separatorChar + "stderr";
@@ -288,9 +302,11 @@ public class SlowestTaskComparator {
             initValue = timeValue;
         }
 
-        System.out.println("[Slave Top Metrics]");
+        sb.append("\n[Top Metrics][" + slave + "]\n");
         for (TopMetrics topMetrics : filteredSlaveMetricsList)
-            System.out.println(topMetrics);
+            sb.append(topMetrics + "\n");
+
+        FileTextWriter.write(filePath + File.separatorChar + filename, sb.toString());
 
     }
 

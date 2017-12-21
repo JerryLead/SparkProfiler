@@ -51,7 +51,7 @@ public class TaskAttempt {
     private long shuffleWriteMetrics_writeTime;
     private long shuffleWriteMetrics_recordsWritten;
 
-    private String errorMessage = "";
+    private String errorMessage = null;
     private JsonObject taskAttempObject;
 
 

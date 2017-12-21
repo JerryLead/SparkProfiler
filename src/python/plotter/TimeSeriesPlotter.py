@@ -38,7 +38,7 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
         elif(isExecutorMetric == True and line.strip() != ""):
             time = line[line.find('[') + 1: line.find(']')]
             cpu = line[line.find('=') + 2: line.find(',')]
-            memory = line[line.find('Memory') + 9]
+            memory = line[line.find('Memory') + 9:]
             executorTime.append(datetime.strptime(time, '%H:%M:%S'))
             executorCPU.append(float(cpu))
             executorMemory.append(float(memory))
@@ -98,10 +98,30 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
 if __name__ == '__main__':
 
     dir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/medianProfiles/"
+    taskDir = "/slowestTasks"
+    taskDir = "/failedTasks"
 
-    # for PageRank
-    appName = "PageRank-0.5"
-    plotExecutorAndWorkerUsage(appName, dir + appName + "/slowestTasks")
+    # # for GroupByRDD
+    # appName = "GroupByRDD-0.5"
+    # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
+    # appName = "GroupByRDD-1.0"
+    # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
+    #
+    # # for RDDJoin
+    # appName = "RDDJoin-0.5"
+    # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
+    # appName = "RDDJoin-1.0"
+    # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
+    #
+    # # for SVM
+    # appName = "SVM-0.5"
+    # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
+    # appName = "SVM-1.0"
+    # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
+    # #
+    # # # for PageRank
+    # appName = "PageRank-0.5"
+    # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
     appName = "PageRank-1.0"
-    plotExecutorAndWorkerUsage(appName, dir + appName + "/slowestTasks")
+    plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
 

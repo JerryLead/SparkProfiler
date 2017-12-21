@@ -349,8 +349,8 @@ public class SparkAppJsonSaver {
         //       app-20170623113111-0009
         //       app-20170623112547-0008
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/applists/appList.txt";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/profiles-G1/RDDJoin-1.0-G1/";
-        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/RDDJoinTest-1.0-6.5G-G1";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/profiles-G1/SVM-1.0/";
+        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/SVM-1.0-6.5G-G1";
 
         // The executor log files are stored on each slave node
         String executorLogFile = "/dataDisk/spark-2.1.4.19-bin-2.7.1/worker";
@@ -363,15 +363,15 @@ public class SparkAppJsonSaver {
         saver.parseAppIdList(appIdsFile);
 
         // Save the app's jsons info into the outputDir
-        // saver.saveAppJsonInfo(outputDir);
+        saver.saveAppJsonInfo(outputDir);
 
-        // saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
+        saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
 
-        // saver.saveTopMetrics(userName, slavesIP, sparkTopLogDir, outputDir);
+        saver.saveTopMetrics(userName, slavesIP, sparkTopLogDir, outputDir);
 
-        saver.parseExecutorGCInfo(outputDir, false);
+        //saver.parseExecutorGCInfo(outputDir, false);
 
-        saver.parseTopMetrics(outputDir);
+        //saver.parseTopMetrics(outputDir);
     }
 
 

@@ -86,11 +86,20 @@ public class Task {
 
     }
 
+    public TaskAttempt getFailedTask() {
+        for (TaskAttempt taskAttempt : taskAttemptMap.values()) {
+            if (taskAttempt.getErrorMessage() != null)
+                return taskAttempt;
+        }
+
+        return null;
+    }
+
     public TaskAttempt getFirstCompletedTask() {
         TaskAttempt attempt0 = taskAttemptMap.get(0);
 
         // only consider the taskAttempt with attemptId = 0
-        if (attempt0 != null && attempt0.getErrorMessage().trim().isEmpty())
+        if (attempt0 != null && attempt0.getErrorMessage() == null)
             return attempt0;
         else
             return null;

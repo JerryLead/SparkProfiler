@@ -151,6 +151,15 @@ public class Stage {
         */
     }
 
+    public StageAttempt getFailedStage() {
+        for (StageAttempt stageAttempt : stageAttemptMap.values()) {
+            if (stageAttempt.getStatus().equals("FAILED"))
+                return stageAttempt;
+        }
+
+        return null;
+    }
+
     public StageAttempt getFirstStage() {
         return stageAttemptMap.get(0);
     }

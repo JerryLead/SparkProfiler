@@ -8,6 +8,7 @@ import java.util.List;
  * Created by xulijie on 17-12-21.
  */
 public class ParallelGCLogParser {
+    private HeapUsage usage = new HeapUsage();
 
     public void parse(String logFile) {
         List<String> lines = JsonFileReader.readFileLines(logFile);
@@ -48,14 +49,17 @@ public class ParallelGCLogParser {
 
             double ygcSeconds = Double.parseDouble(gcRecord.substring(gcRecord.indexOf(", ") + 2, gcRecord.indexOf(" secs")));
 
-            System.out.println(gcRecord);
-            System.out.println("[PSYoungGen: " + yBeforeMB + "M->" + yAfterMB + "M(" + youngMB + "M)] " +
-                    heapBeforeMB + "M->" + heapAfterMB + "M(" + heapMB + "M), " + ygcSeconds + " secs]");
+            // System.out.println(gcRecord);
+            // System.out.println("[PSYoungGen: " + yBeforeMB + "M->" + yAfterMB + "M(" + youngMB + "M)] " +
+            //        heapBeforeMB + "M->" + heapAfterMB + "M(" + heapMB + "M), " + ygcSeconds + " secs]");
+
+            usage.addYoungUsage(offsetTime, yBeforeMB, youngMB, "YGC");
+            usage.addYoungUsage(offsetTime, yAfterMB, youngMB, "YGC");
         }
         // Full GC
         // gcRecord = [PSYoungGen: 21483K->0K(150528K)] [ParOldGen: 17561K->38895K(226304K)] 39044K->38895K(376832K), [Metaspace: 20872K->20872K(1067008K)], 0.0736694 secs] [Times: user=0.13 sys=0.01, real=0.08 secs]
         else {
-            System.out.println(gcRecord);
+            // System.out.println(gcRecord);
             // PSYoungGen: 21483K->0K(150528K)
             String PSYoungGen = gcRecord.substring(gcRecord.indexOf(":") + 2, gcRecord.indexOf(']'));
             double yBeforeMB = computeMB(PSYoungGen.substring(0, PSYoungGen.indexOf('K')));
@@ -82,11 +86,20 @@ public class ParallelGCLogParser {
             gcRecord = gcRecord.substring(gcRecord.indexOf("["));
             double fgcSeconds = Double.parseDouble(gcRecord.substring(gcRecord.indexOf(", ") + 2, gcRecord.indexOf(" secs")));
 
-            System.out.println("[PSYoungGen: " + yBeforeMB + "M->" + yAfterMB + "M(" + youngMB + "M)] [ParOldGen: "
-                    + oBeforeMB + "M->" + oAfterMB + "M(" + oldMB + "M)] " + heapBeforeMB + "M->" + heapAfterMB + "M(" + heapMB
-                    + "M), [Metaspace: " + metaBeforeMB + "M->" + metaAfterMB + "M(" + metaMB + "M)], " + fgcSeconds + " secs]");
+            //System.out.println("[PSYoungGen: " + yBeforeMB + "M->" + yAfterMB + "M(" + youngMB + "M)] [ParOldGen: "
+            //        + oBeforeMB + "M->" + oAfterMB + "M(" + oldMB + "M)] " + heapBeforeMB + "M->" + heapAfterMB + "M(" + heapMB
+            //        + "M), [Metaspace: " + metaBeforeMB + "M->" + metaAfterMB + "M(" + metaMB + "M)], " + fgcSeconds + " secs]");
+            usage.addYoungUsage(offsetTime, yBeforeMB, youngMB, "FGC");
+            usage.addYoungUsage(offsetTime, yAfterMB, youngMB, "FGC");
+            usage.addOldUsage(offsetTime, oBeforeMB, oldMB, "FGC");
+            usage.addOldUsage(offsetTime, oAfterMB, oldMB, "FGC");
+            usage.addMetaUsage(offsetTime, metaBeforeMB, metaMB, "FGC");
+            usage.addMetaUsage(offsetTime, metaAfterMB, metaMB, "FGC");
         }
+    }
 
+    private void outputUsage() {
+        usage.display();
     }
 
     public double computeMB(String KB) {
@@ -98,7 +111,6 @@ public class ParallelGCLogParser {
         String outputFile = "src/test/gclogs/ParsedParallelLog.txt";
         ParallelGCLogParser parser = new ParallelGCLogParser();
         parser.parse(logFile);
+        parser.outputUsage();
     }
-
-
 }

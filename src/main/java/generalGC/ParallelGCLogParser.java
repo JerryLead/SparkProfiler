@@ -1,5 +1,6 @@
 package generalGC;
 
+import util.FileTextWriter;
 import util.JsonFileReader;
 
 import java.util.List;
@@ -98,8 +99,8 @@ public class ParallelGCLogParser {
         }
     }
 
-    private void outputUsage() {
-        usage.display();
+    private void outputUsage(String outputFile) {
+        FileTextWriter.write(outputFile, usage.toString());
     }
 
     public double computeMB(String KB) {
@@ -111,6 +112,6 @@ public class ParallelGCLogParser {
         String outputFile = "src/test/gclogs/ParsedParallelLog.txt";
         ParallelGCLogParser parser = new ParallelGCLogParser();
         parser.parse(logFile);
-        parser.outputUsage();
+        parser.outputUsage(outputFile);
     }
 }

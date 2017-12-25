@@ -55,7 +55,7 @@ public class ParallelGCLogParser {
             //        heapBeforeMB + "M->" + heapAfterMB + "M(" + heapMB + "M), " + ygcSeconds + " secs]");
 
             usage.addYoungUsage(offsetTime, yBeforeMB, youngMB, "YGC");
-            usage.addYoungUsage(offsetTime, yAfterMB, youngMB, "YGC");
+            usage.addYoungUsage(offsetTime, yAfterMB, youngMB, "");
         }
         // Full GC
         // gcRecord = [PSYoungGen: 21483K->0K(150528K)] [ParOldGen: 17561K->38895K(226304K)] 39044K->38895K(376832K), [Metaspace: 20872K->20872K(1067008K)], 0.0736694 secs] [Times: user=0.13 sys=0.01, real=0.08 secs]
@@ -91,11 +91,11 @@ public class ParallelGCLogParser {
             //        + oBeforeMB + "M->" + oAfterMB + "M(" + oldMB + "M)] " + heapBeforeMB + "M->" + heapAfterMB + "M(" + heapMB
             //        + "M), [Metaspace: " + metaBeforeMB + "M->" + metaAfterMB + "M(" + metaMB + "M)], " + fgcSeconds + " secs]");
             usage.addYoungUsage(offsetTime, yBeforeMB, youngMB, "FGC");
-            usage.addYoungUsage(offsetTime, yAfterMB, youngMB, "FGC");
+            usage.addYoungUsage(offsetTime, yAfterMB, youngMB, "");
             usage.addOldUsage(offsetTime, oBeforeMB, oldMB, "FGC");
-            usage.addOldUsage(offsetTime, oAfterMB, oldMB, "FGC");
+            usage.addOldUsage(offsetTime, oAfterMB, oldMB, "");
             usage.addMetaUsage(offsetTime, metaBeforeMB, metaMB, "FGC");
-            usage.addMetaUsage(offsetTime, metaAfterMB, metaMB, "FGC");
+            usage.addMetaUsage(offsetTime, metaAfterMB, metaMB, "");
         }
     }
 

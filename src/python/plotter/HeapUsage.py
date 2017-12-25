@@ -36,8 +36,9 @@ class HeapUsage:
         time = float(line[line.find('time') + 7: line.find(',')])
         usage = float(line[line.find('usage') + 8: line.rfind(',')])
         allocated = float(line[line.find('allocated') + 12: ])
+        gc = line[line.find('(') + 1: line.find(')')]
 
-        return Usage(time, usage, allocated, "")
+        return Usage(time, usage, allocated, gc)
 
     def initHeapUsage(self, gclogFile):
         fileLines = FileReader.readLines(gclogFile)
@@ -90,6 +91,22 @@ class HeapUsage:
             genTime.append(usage.getTime())
         return genTime
 
+    def getGC(self, genLabel, gcLabel):
+        if (genLabel == "Young"):
+            gen = self.youngGen
+        elif (genLabel == "Old"):
+            gen = self.oldGen
+        elif (genLabel == "Metaspace"):
+            gen = self.metaGen
+
+        genTime = []
+        genUsage = []
+        for usage in gen:
+            if (usage.gc == gcLabel):
+                genTime.append(usage.getTime())
+                genUsage.append(usage.getUsage())
+        return (genTime, genUsage)
+
 
 def plotHeapUsage(appName, gclogFile):
 
@@ -101,19 +118,30 @@ def plotHeapUsage(appName, gclogFile):
     axes[0].set_ylabel("Young Gen (MB)")
     axes[1].set_ylabel("Old Gen (MB)")
 
-    # axes[0].set_ylim(0, 840)  # The ceil
-    # axes[1].set_ylim(0, 105)  # The ceil
+    axes[0].set_ylim(0, 1500)  # The ceil
+    axes[1].set_ylim(0, 5000)  # The ceil
+    axes[0].set_xlim(0, 5000)
 
-    # plt.legend()
 
+    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenUsage("Young"), '-', label='Usage', linewidth=0.5, markersize=0.8)
+    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenAllocated("Young"), '-', label='Allocated')
+    (YGCTime, YGCUsage) = heapUsage.getGC("Young", "YGC")
+    (FGCTime, FGCUsage) = heapUsage.getGC("Young", "FGC")
+    axes[0].plot(YGCTime, YGCUsage, 'o', markersize=0.8, label='YGC')
+    axes[0].plot(FGCTime, FGCUsage, 'x', markersize=0.8, label='FGC')
 
-    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenUsage("Young"), '-xb', label='usage')
-    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenAllocated("Young"), '-r', label='allocated')
+    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenUsage("Old"), '-', label='Usage', linewidth=0.8, markersize=1)
+    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenAllocated("Old"), '-', label='Allocated')
+    (YGCTime, YGCUsage) = heapUsage.getGC("Old", "YGC")
+    (FGCTime, FGCUsage) = heapUsage.getGC("Old", "FGC")
+    axes[1].plot(YGCTime, YGCUsage, 'o', markersize=0.8, label='YGC')
+    axes[1].plot(FGCTime, FGCUsage, 'x', markersize=0.8, label='FGC')
 
-    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenUsage("Old"), '-xb', label='usage')
-    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenAllocated("Old"), '-r', label='allocated')
-
+    axes[0].grid(True)
+    axes[1].grid(True)
     plt.suptitle(appName)
+    plt.legend(loc='lower right')
+
     plt.show()
 
     # outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")

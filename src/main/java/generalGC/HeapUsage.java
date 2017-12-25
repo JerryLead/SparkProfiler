@@ -14,16 +14,23 @@ public class HeapUsage {
 
     public void addYoungUsage(double time, double usage, double allocated, String gc) {
         Usage yUsage = new Usage(time, usage, allocated, gc, "Young");
+
+        if (!youngGen.isEmpty() && youngGen.get(youngGen.size() - 1).allocated != allocated)
+            youngGen.add(new Usage(time, usage, youngGen.get(youngGen.size() - 1).allocated, gc, "Young"));
         youngGen.add(yUsage);
     }
 
     public void addOldUsage(double time, double usage, double allocated, String gc) {
         Usage oUsage = new Usage(time, usage, allocated, gc, "Old");
+        if (!oldGen.isEmpty() && oldGen.get(oldGen.size() - 1).allocated != allocated)
+            oldGen.add(new Usage(time, usage, oldGen.get(oldGen.size() - 1).allocated, gc, "Old"));
         oldGen.add(oUsage);
     }
 
     public void addMetaUsage(double time, double usage, double allocated, String gc) {
         Usage mUsage = new Usage(time, usage, allocated, gc, "Metaspace");
+        if (!metaGen.isEmpty() && metaGen.get(metaGen.size() - 1).allocated != allocated)
+            metaGen.add(new Usage(time, usage, metaGen.get(metaGen.size() - 1).allocated, gc, "Metaspace"));
         metaGen.add(mUsage);
     }
 
@@ -73,6 +80,6 @@ class Usage {
     }
 
     public String toString() {
-        return "[" + gen + "] time = " + time + ", usage = " + usage + ", allocated = " + allocated;
+        return "[" + gen + "](" + gc + ") time = " + time + ", usage = " + usage + ", allocated = " + allocated;
     }
 }

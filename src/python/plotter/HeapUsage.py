@@ -118,24 +118,25 @@ def plotHeapUsage(appName, gclogFile):
     axes[0].set_ylabel("Young Gen (MB)")
     axes[1].set_ylabel("Old Gen (MB)")
 
-    axes[0].set_ylim(0, 1500)  # The ceil
-    axes[1].set_ylim(0, 5000)  # The ceil
-    axes[0].set_xlim(0, 5000)
+    # axes[0].set_ylim(0, 1500)  # The ceil
+    # axes[1].set_ylim(0, 5000)  # The ceil
+    # axes[0].set_xlim(0, 5000)
 
+    colors = [u'#1f77b4', u'#ff7f0e', u'#2ca02c', u'#d62728', u'#9467bd', u'#8c564b', u'#e377c2', u'#7f7f7f', u'#bcbd22', u'#17becf']
 
-    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenUsage("Young"), '-', label='Usage', linewidth=0.5, markersize=0.8)
-    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenAllocated("Young"), '-', label='Allocated')
+    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenUsage("Young"), '-', label='Used', linewidth=0.5, markersize=0.8, color=colors[0])
+    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenAllocated("Young"), '-', label='Allocated', color=colors[1])
     (YGCTime, YGCUsage) = heapUsage.getGC("Young", "YGC")
     (FGCTime, FGCUsage) = heapUsage.getGC("Young", "FGC")
-    axes[0].plot(YGCTime, YGCUsage, 'o', markersize=0.8, label='YGC')
-    axes[0].plot(FGCTime, FGCUsage, 'x', markersize=0.8, label='FGC')
+    axes[0].plot(YGCTime, YGCUsage, 'o', markersize=0.8, label='YGC', color=colors[0])
+    axes[0].plot(FGCTime, FGCUsage, '*', markersize=0.8, label='FGC', color=colors[3])
 
-    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenUsage("Old"), '-', label='Usage', linewidth=0.8, markersize=1)
-    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenAllocated("Old"), '-', label='Allocated')
+    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenUsage("Old"), '-', label='Usage', linewidth=0.8, markersize=1, color=colors[0])
+    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenAllocated("Old"), '-', label='Allocated', color=colors[1])
     (YGCTime, YGCUsage) = heapUsage.getGC("Old", "YGC")
     (FGCTime, FGCUsage) = heapUsage.getGC("Old", "FGC")
-    axes[1].plot(YGCTime, YGCUsage, 'o', markersize=0.8, label='YGC')
-    axes[1].plot(FGCTime, FGCUsage, 'x', markersize=0.8, label='FGC')
+    axes[1].plot(YGCTime, YGCUsage, 'o', markersize=0.8, label='YGC', color=colors[0])
+    axes[1].plot(FGCTime, FGCUsage, '*', markersize=2, label='FGC', color=colors[3])
 
     axes[0].grid(True)
     axes[1].grid(True)
@@ -161,5 +162,8 @@ if __name__ == '__main__':
 
     fileName = "ParsedParallelLog.txt"
     appName = "Join-1.0-E1-Parallel"
+
+    # fileName = "ParsedCMSLog.txt"
+    # appName = "Join-1.0-E1-CMS"
     plotHeapUsage(appName, dir + fileName)
 

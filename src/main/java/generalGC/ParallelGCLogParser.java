@@ -48,6 +48,10 @@ public class ParallelGCLogParser {
             double heapAfterMB = computeMB(heapUsage.substring(heapUsage.indexOf('>') + 1, heapUsage.indexOf("K(")));
             double heapMB = computeMB(heapUsage.substring(heapUsage.indexOf('(') + 1, heapUsage.indexOf("K)")));
 
+            double oldBeforeMB = heapBeforeMB - yBeforeMB;
+            double oldAfterMB = heapAfterMB - yAfterMB;
+            double oldMB = heapMB - youngMB;
+
             double ygcSeconds = Double.parseDouble(gcRecord.substring(gcRecord.indexOf(", ") + 2, gcRecord.indexOf(" secs")));
 
             // System.out.println(gcRecord);
@@ -56,6 +60,11 @@ public class ParallelGCLogParser {
 
             usage.addYoungUsage(offsetTime, yBeforeMB, youngMB, "YGC");
             usage.addYoungUsage(offsetTime, yAfterMB, youngMB, "");
+
+            if (oldAfterMB != oldBeforeMB) {
+                //usage.addOldUsage(offsetTime, oldBeforeMB, oldMB, "YGC");
+                //usage.addOldUsage(offsetTime, oldAfterMB, oldMB, "");
+            }
         }
         // Full GC
         // gcRecord = [PSYoungGen: 21483K->0K(150528K)] [ParOldGen: 17561K->38895K(226304K)] 39044K->38895K(376832K), [Metaspace: 20872K->20872K(1067008K)], 0.0736694 secs] [Times: user=0.13 sys=0.01, real=0.08 secs]

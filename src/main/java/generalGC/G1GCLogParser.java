@@ -1,5 +1,6 @@
 package generalGC;
 
+import util.FileTextWriter;
 import util.JsonFileReader;
 
 import java.util.List;
@@ -9,22 +10,42 @@ import java.util.List;
  */
 public class G1GCLogParser {
 
+    private HeapUsage usage = new HeapUsage();
+
     public void parse(String logFile) {
         List<String> lines = JsonFileReader.readFileLines(logFile);
 
         String timestamp = "";
 
+        String gcCause = null;
+
         for (String line : lines) {
             line = line.trim();
 
-            if (line.startsWith("2017-"))
+            if (line.startsWith("2017-")) {
                 timestamp = line.substring(0, line.indexOf(':', line.indexOf(": ") + 1));
+                timestamp = timestamp.substring(timestamp.lastIndexOf(':') + 2);
+            }
+
+            if (line.contains("[GC pause") && line.contains("(young)")) {
+                gcCause = "YGC";
+            }
+
+            if (line.contains("[Full GC")
+                    || line.contains("(young) (initial-mark)")
+                    || line.contains("[GC cleanup")
+                    || line.contains("[GC remark")
+                    || line.contains("[GC concurrent")
+                    || line.contains("(mixed)")) {
+                gcCause = "FGC";
+            }
+
             if (line.startsWith("[Eden"))
-                parseGCRecord(timestamp, line);
+                parseGCRecord(Double.parseDouble(timestamp), line, gcCause);
         }
     }
 
-    private void parseGCRecord(String timestamp, String line) {
+    private void parseGCRecord(double timestamp, String line, String gcCause) {
 
         // [Eden: 25.0M(25.0M)->0.0B(35.0M) Survivors: 0.0B->4096.0K Heap: 25.0M(504.0M)->5192.0K(504.0M)]
 
@@ -51,6 +72,37 @@ public class G1GCLogParser {
         double heapAfterMB = computeMB(Heap.substring(0, Heap.indexOf('(')));
         double heapAfterTotalMB = computeMB(Heap.substring(Heap.indexOf('(') + 1, Heap.indexOf(')')));
 
+
+        double yBeforeMB = edenBeforeMB + survivorBeforeMB;
+        double yAfterMB = edenAfterMB + survivorAfterMB;
+        double youngBeforeMB = edenBeforeTotalMB + survivorBeforeMB;
+        double youngAfterMB = edenAfterTotalMB + survivorAfterMB;
+        // System.out.println(PSYoungGen);
+        // System.out.println(" yBeforeMB = " + yBeforeMB + ", yAfterMB = " + yAfterMB + ", youngMB = " + youngMB);
+
+        // 129024K->15319K(494592K)
+        double oldBeforeMB = heapBeforeMB - yBeforeMB;
+        double oldAfterMB = heapAfterMB - yAfterMB;
+        double oldBeforeTotalMB = heapBeforeTotalMB - youngBeforeMB;
+        double oldAfterTotalMB = heapAfterTotalMB - youngAfterMB;
+
+
+        if (gcCause.equals("YGC")) {
+            usage.addYoungUsage(timestamp, yBeforeMB, youngBeforeMB, gcCause);
+            usage.addYoungUsage(timestamp, yAfterMB, youngAfterMB, "");
+
+            if (oldAfterMB != oldBeforeMB) {
+                usage.addOldUsage(timestamp, oldBeforeMB, oldBeforeTotalMB, gcCause);
+                usage.addOldUsage(timestamp, oldAfterMB, oldAfterTotalMB, "");
+            }
+        } else if (gcCause.equals("FGC")){
+            usage.addYoungUsage(timestamp, yBeforeMB, youngBeforeMB, gcCause);
+            usage.addYoungUsage(timestamp, yAfterMB, youngAfterMB, "");
+
+            usage.addOldUsage(timestamp, oldBeforeMB, oldBeforeTotalMB, gcCause);
+            usage.addOldUsage(timestamp, oldAfterMB, oldAfterTotalMB, "");
+        }
+
     }
 
     /*
@@ -70,10 +122,15 @@ public class G1GCLogParser {
         return mb;
     }
 
+    private void outputUsage(String outputFile) {
+        FileTextWriter.write(outputFile, usage.toString());
+    }
+
     public static void main(String[] args) {
         String logFile = "src/test/gclogs/G1Log.txt";
-        String outputFile = "src/test/gclogs/ParsedG1lLog.txt";
+        String outputFile = "src/test/gclogs/ParsedG1Log.txt";
         G1GCLogParser parser = new G1GCLogParser();
         parser.parse(logFile);
+        parser.outputUsage(outputFile);
     }
 }

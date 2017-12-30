@@ -34,8 +34,22 @@ public class ExecutorGCLogParser {
         }
     }
 
+    /*
+    public static void parseExecutorGCLogToSummary(String gcLogFile) {
+
+        try {
+            System.out.println("[GCLogParsing] " + gcLogFile);
+            gcViewerNoneGUI.doMain(new String[]{gcLogFile, exportCVSFile, chartPNGFile});
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    */
     public static void main(String[] args) {
 
+        /*
         String executorFile = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/RDDJoin-Parallel-4-28G-0.5_app-20170623112547-0008/executors/";
 
         String gcLogFile1 = executorFile + File.separatorChar + "0" + File.separatorChar + "stdout";
@@ -55,6 +69,9 @@ public class ExecutorGCLogParser {
         parseExecutorGCLog(gcLogFile1, exportCVSFile1, chartPNGFile1);
 
         parseExecutorGCLog(gcLogFile2, exportCVSFile2, chartPNGFile2);
+        */
+
+
 
     }
 }

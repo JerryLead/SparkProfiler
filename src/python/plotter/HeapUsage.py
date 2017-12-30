@@ -160,10 +160,13 @@ if __name__ == '__main__':
     dir = "/Users/xulijie/dev/IdeaProjects/SparkProfiler/src/test/gclogs/"
     #fileName = "Join-1.0-E1-P-12-23.txt"
 
-    fileName = "ParsedParallelLog.txt"
-    appName = "Join-1.0-E1-Parallel"
+    # fileName = "ParsedParallelLog.txt"
+    # appName = "Join-1.0-E1-Parallel"
 
     # fileName = "ParsedCMSLog.txt"
     # appName = "Join-1.0-E1-CMS"
+
+    fileName = "ParsedG1Log.txt"
+    appName = "Join-1.0-E1-G1"
     plotHeapUsage(appName, dir + fileName)
 

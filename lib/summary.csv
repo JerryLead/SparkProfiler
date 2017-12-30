@@ -1,0 +1,268 @@
+Timestamp(unix/#),Used(K),Total(K),Pause(sec),GC-Type
+1511315599,25600,516096,0.018168,GC pause (G1 Evacuation Pause) (young)
+1511315599,41062,516096,0.0290524,GC pause (G1 Evacuation Pause) (young)
+1511315600,115814,516096,0.0298121,GC pause (Metadata GC Threshold) (young) (initial-mark)
+1511315600,0,0,0.0060619,GC remark
+1511315600,52224,516096,0.0020783,GC cleanup
+1511315602,266138,516096,0.0646601,GC pause (Metadata GC Threshold) (young) (initial-mark)
+1511315602,0,0,0.0285679,GC remark
+1511315602,104448,516096,0.0013909,GC cleanup
+1511315604,390656,516096,0.0525992,GC pause (G1 Evacuation Pause) (young)
+1511315606,390656,516096,0.0254828,GC pause (G1 Evacuation Pause) (young)
+1511315607,391168,516096,0.012716,GC pause (G1 Evacuation Pause) (young)
+1511315609,390656,516096,0.0126412,GC pause (G1 Evacuation Pause) (young)
+1511315611,391168,516096,0.0338368,GC pause (G1 Evacuation Pause) (young)
+1511315612,391168,516096,0.032581,GC pause (G1 Evacuation Pause) (young)
+1511315614,391168,516096,0.0332025,GC pause (G1 Evacuation Pause) (young)
+1511315616,391168,516096,0.0128135,GC pause (G1 Evacuation Pause) (young)
+1511315618,391168,516096,0.0142892,GC pause (G1 Evacuation Pause) (young)
+1511315620,390656,516096,0.0145052,GC pause (G1 Evacuation Pause) (young)
+1511315622,390656,516096,0.0128651,GC pause (G1 Evacuation Pause) (young)
+1511315624,391168,516096,0.0372568,GC pause (G1 Evacuation Pause) (young)
+1511315625,392192,516096,0.0133155,GC pause (G1 Evacuation Pause) (young)
+1511315627,392704,516096,0.0099243,GC pause (G1 Evacuation Pause) (young)
+1511315630,395981,516096,0.0281991,GC pause (G1 Evacuation Pause) (young)
+1511315631,400794,516096,0.0057089,GC pause (G1 Evacuation Pause) (young)
+1511315632,403763,516096,0.0056772,GC pause (G1 Evacuation Pause) (young)
+1511315633,404070,516096,0.0088949,GC pause (G1 Evacuation Pause) (young)
+1511315634,404070,516096,0.0052291,GC pause (G1 Evacuation Pause) (young)
+1511315635,404070,516096,0.003596,GC pause (G1 Evacuation Pause) (young)
+1511315642,404070,516096,0.004392,GC pause (G1 Evacuation Pause) (young)
+1511315643,404582,516096,0.0055633,GC pause (G1 Evacuation Pause) (young)
+1511315644,404582,516096,0.0261226,GC pause (G1 Evacuation Pause) (young)
+1511315645,404787,516096,0.0033202,GC pause (G1 Evacuation Pause) (young)
+1511315646,404275,516096,0.0031222,GC pause (G1 Evacuation Pause) (young)
+1511315647,404275,516096,0.0037704,GC pause (G1 Evacuation Pause) (young)
+1511315648,404275,516096,0.0035288,GC pause (G1 Evacuation Pause) (young)
+1511315653,404275,516096,0.0033422,GC pause (G1 Evacuation Pause) (young)
+1511315654,421171,516096,0.0042863,GC pause (G1 Evacuation Pause) (young)
+1511315655,420659,516096,0.004146,GC pause (G1 Evacuation Pause) (young)
+1511315656,421171,516096,0.0046795,GC pause (G1 Evacuation Pause) (young)
+1511315657,420659,516096,0.004058,GC pause (G1 Evacuation Pause) (young)
+1511315658,420659,516096,0.0039439,GC pause (G1 Evacuation Pause) (young)
+1511315659,420762,516096,0.0041246,GC pause (G1 Evacuation Pause) (young)
+1511315660,421274,516096,0.0038571,GC pause (G1 Evacuation Pause) (young)
+1511315663,420762,516096,0.0035383,GC pause (G1 Evacuation Pause) (young)
+1511315665,420762,516096,0.0039195,GC pause (G1 Evacuation Pause) (young)
+1511315666,421274,516096,0.0046914,GC pause (G1 Evacuation Pause) (young)
+1511315667,421274,516096,0.0051599,GC pause (G1 Evacuation Pause) (young)
+1511315668,421274,516096,0.0057482,GC pause (G1 Evacuation Pause) (young)
+1511315669,421274,516096,0.0040472,GC pause (G1 Evacuation Pause) (young)
+1511315670,420762,516096,0.0045259,GC pause (G1 Evacuation Pause) (young)
+1511315671,421274,516096,0.0056784,GC pause (G1 Evacuation Pause) (young)
+1511315683,421171,516096,0.0639669,GC pause (G1 Evacuation Pause) (young)
+1511315684,273613,516096,0.256636,GC pause (G1 Evacuation Pause) (young)
+1511315685,217702,516096,0.1099479,GC pause (G1 Evacuation Pause) (young)
+1511315685,271360,516096,0.1289668,GC pause (G1 Evacuation Pause) (young)
+1511315686,289792,516096,0.1655583,GC pause (G1 Evacuation Pause) (young)
+1511315686,309248,516096,0.1609178,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315687,320000,516096,0.1771639,GC pause (G1 Evacuation Pause) (young)
+1511315687,327168,516096,0.125522,GC pause (G1 Evacuation Pause) (young)
+1511315687,0,0,0.0233768,GC remark
+1511315687,322560,516096,0.0047682,GC cleanup
+1511315688,343040,516096,0.1661779,GC pause (G1 Evacuation Pause) (young)
+1511315688,357888,516096,0.0910306,GC pause (G1 Evacuation Pause) (young)
+1511315688,410624,516096,0.1691785,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315689,429568,1032192,0.1129669,GC pause (G1 Evacuation Pause) (young)
+1511315689,0,0,0.0196385,GC remark
+1511315689,445440,1032192,0.0075958,GC cleanup
+1511315689,447488,2064384,0.1327204,GC pause (G1 Evacuation Pause) (young)
+1511315690,509440,3014656,0.163866,GC pause (G1 Evacuation Pause) (young)
+1511315691,592384,3775488,0.331662,GC pause (G1 Evacuation Pause) (young)
+1511315692,695808,4383744,0.3497942,GC pause (G1 Evacuation Pause) (young)
+1511315694,790016,4870144,0.5181632,GC pause (G1 Evacuation Pause) (young)
+1511315696,887296,5259264,0.5782208,GC pause (G1 Evacuation Pause) (young)
+1511315698,989184,5570560,0.4006016,GC pause (G1 Evacuation Pause) (young)
+1511315701,1095680,5820416,0.5059224,GC pause (G1 Evacuation Pause) (young)
+1511315704,1203712,6020096,0.5079161,GC pause (G1 Evacuation Pause) (young)
+1511315706,1311232,6179840,0.5504139,GC pause (G1 Evacuation Pause) (young)
+1511315709,1420800,6307840,0.6521889,GC pause (G1 Evacuation Pause) (young)
+1511315712,1531904,6410240,0.5909685,GC pause (G1 Evacuation Pause) (young)
+1511315716,1642496,6492160,0.650532,GC pause (G1 Evacuation Pause) (young)
+1511315719,1753600,6557696,0.6219578,GC pause (G1 Evacuation Pause) (young)
+1511315722,1865216,6609920,0.5330611,GC pause (G1 Evacuation Pause) (young)
+1511315724,1980416,6651904,0.593378,GC pause (G1 Evacuation Pause) (young)
+1511315727,2105856,6684672,0.4649362,GC pause (G1 Evacuation Pause) (young)
+1511315729,2232832,6711296,0.4999099,GC pause (G1 Evacuation Pause) (young)
+1511315732,2359808,6732800,0.4166185,GC pause (G1 Evacuation Pause) (young)
+1511315734,2488320,6750208,0.6548992,GC pause (G1 Evacuation Pause) (young)
+1511315737,2617344,6763520,0.6783288,GC pause (G1 Evacuation Pause) (young)
+1511315740,2746368,6774784,0.5231244,GC pause (G1 Evacuation Pause) (young)
+1511315743,2874880,6782976,0.8176125,GC pause (G1 Evacuation Pause) (young)
+1511315745,3004928,6790144,0.9190478,GC pause (G1 Evacuation Pause) (young)
+1511315748,3133440,6795264,0.7103188,GC pause (G1 Evacuation Pause) (young)
+1511315750,3261952,6799360,0.7819721,GC pause (G1 Evacuation Pause) (young)
+1511315753,3393024,6803456,0.8325179,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315756,3523072,6806528,0.9659491,GC pause (G1 Evacuation Pause) (young)
+1511315760,3653120,6808576,0.9344622,GC pause (G1 Evacuation Pause) (young)
+1511315763,3783680,6810624,1.0724286,GC pause (G1 Evacuation Pause) (young)
+1511315767,3913728,6811648,0.4949805,GC pause (G1 Evacuation Pause) (young)
+1511315770,4042240,6812672,0.817244,GC pause (G1 Evacuation Pause) (young)
+1511315774,4172288,6813696,1.0195609,GC pause (G1 Evacuation Pause) (young)
+1511315778,0,0,0.112025,GC remark
+1511315778,4239360,6813696,0.0962102,GC cleanup
+1511315778,4294656,6814720,0.8458624,GC pause (G1 Evacuation Pause) (young)
+1511315781,4424704,6815744,0.8896909,GC pause (G1 Evacuation Pause) (young)
+1511315784,4553216,6815744,0.6114739,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315787,4681216,6815744,0.8086761,GC pause (G1 Evacuation Pause) (young)
+1511315791,4810752,6815744,0.5751065,GC pause (G1 Evacuation Pause) (young)
+1511315792,4914176,6815744,0.559798,GC pause (G1 Evacuation Pause) (young)
+1511315794,4959744,6815744,0.1150843,GC pause (G1 Evacuation Pause) (young)
+1511315794,4959744,6815744,0.0270061,GC pause (G1 Evacuation Pause) (young)
+1511315794,4959437,6815744,0.0185128,GC pause (G1 Evacuation Pause) (young)
+1511315795,4959027,6815744,0.0353805,GC pause (G1 Evacuation Pause) (young)
+1511315796,4959027,6815744,0.016342,GC pause (G1 Evacuation Pause) (young)
+1511315798,6093619,6815744,0.0107048,GC pause (G1 Evacuation Pause) (young)
+1511315800,6100787,6815744,0.0226598,GC pause (G1 Evacuation Pause) (young)
+1511315803,6105907,6815744,0.0167724,GC pause (G1 Evacuation Pause) (young)
+1511315804,0,0,0.0430921,GC remark
+1511315804,5028864,6815744,0.0295031,GC cleanup
+1511315807,6108058,6815744,0.0075825,GC pause (G1 Evacuation Pause) (young)
+1511315810,6109901,6815744,0.0210213,GC pause (G1 Evacuation Pause) (young)
+1511315813,6112666,6815744,0.0215642,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315818,6112870,6815744,0.0309308,GC pause (G1 Evacuation Pause) (young)
+1511315822,6114816,6815744,0.0181172,GC pause (G1 Evacuation Pause) (young)
+1511315823,0,0,0.0493601,GC remark
+1511315823,4685824,6815744,0.0545715,GC cleanup
+1511315828,6114099,6815744,0.0177854,GC pause (G1 Evacuation Pause) (young)
+1511315835,6115021,6815744,0.0108134,GC pause (G1 Evacuation Pause) (young)
+1511315841,6116045,6815744,0.0149492,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315846,6116147,6815744,0.0128108,GC pause (G1 Evacuation Pause) (young)
+1511315849,0,0,0.0438313,GC remark
+1511315849,5468160,6815744,0.0339744,GC cleanup
+1511315851,6116250,6815744,0.0076466,GC pause (G1 Evacuation Pause) (young)
+1511315856,6116147,6815744,0.0061564,GC pause (G1 Evacuation Pause) (young)
+1511315862,6117376,6815744,0.0103664,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315864,6117786,6815744,0.0076471,GC pause (G1 Evacuation Pause) (young)
+1511315866,6117069,6815744,0.0147172,GC pause (G1 Evacuation Pause) (young)
+1511315868,6117171,6815744,0.0070886,GC pause (G1 Evacuation Pause) (young)
+1511315870,0,0,0.0352682,GC remark
+1511315870,6104064,6815744,0.0298923,GC cleanup
+1511315870,6119117,6815744,0.0224807,GC pause (G1 Evacuation Pause) (young)
+1511315872,6119117,6815744,0.005105,GC pause (G1 Evacuation Pause) (young)
+1511315876,6119219,6815744,0.0109349,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315881,6119117,6815744,0.0146051,GC pause (G1 Evacuation Pause) (young)
+1511315885,0,0,0.0428951,GC remark
+1511315885,5583872,6815744,0.0339884,GC cleanup
+1511315887,6118195,6815744,0.0222362,GC pause (G1 Evacuation Pause) (young)
+1511315894,6118298,6815744,0.0060841,GC pause (G1 Evacuation Pause) (young)
+1511315897,6118195,6815744,0.0073173,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315899,6118707,6815744,0.0107577,GC pause (G1 Evacuation Pause) (young)
+1511315903,6119014,6815744,0.0048032,GC pause (G1 Evacuation Pause) (young)
+1511315905,0,0,0.0250262,GC remark
+1511315905,5304320,6815744,0.0195546,GC cleanup
+1511315906,6118298,6815744,0.0220149,GC pause (G1 Evacuation Pause) (young)
+1511315910,6119117,6815744,0.0148856,GC pause (G1 Evacuation Pause) (young)
+1511315915,6119117,6815744,0.0293057,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315920,6118502,6815744,0.0065197,GC pause (G1 Evacuation Pause) (young)
+1511315923,0,0,0.030303,GC remark
+1511315923,5842944,6815744,0.0253594,GC cleanup
+1511315924,6119219,6815744,0.0081471,GC pause (G1 Evacuation Pause) (young)
+1511315927,6118298,6815744,0.0103275,GC pause (G1 Evacuation Pause) (young)
+1511315930,6118400,6815744,0.0127435,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315932,6118912,6815744,0.0111951,GC pause (G1 Evacuation Pause) (young)
+1511315936,6119014,6815744,0.0110768,GC pause (G1 Evacuation Pause) (young)
+1511315937,0,0,0.0423489,GC remark
+1511315938,5533696,6815744,0.0360393,GC cleanup
+1511315939,6119014,6815744,0.007778,GC pause (G1 Evacuation Pause) (young)
+1511315943,6119219,6815744,0.008244,GC pause (G1 Evacuation Pause) (young)
+1511315948,6117376,6815744,0.0159177,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315951,6118195,6815744,0.0098716,GC pause (G1 Evacuation Pause) (young)
+1511315952,6119424,6815744,0.0108635,GC pause (G1 Evacuation Pause) (young)
+1511315953,6120346,6815744,0.0092079,GC pause (G1 Evacuation Pause) (young)
+1511315956,6121574,6815744,0.0144563,GC pause (G1 Evacuation Pause) (young)
+1511315958,0,0,0.0803042,GC remark
+1511315958,4975616,6815744,0.0626101,GC cleanup
+1511315961,6119322,6815744,0.0146478,GC pause (G1 Evacuation Pause) (young)
+1511315967,6119424,6815744,0.0070557,GC pause (G1 Evacuation Pause) (young)
+1511315973,6120243,6815744,0.0121931,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315979,6119219,6815744,0.0069678,GC pause (G1 Evacuation Pause) (young)
+1511315981,0,0,0.0571326,GC remark
+1511315981,5358592,6815744,0.0505848,GC cleanup
+1511315983,6119219,6815744,0.0081774,GC pause (G1 Evacuation Pause) (young)
+1511315986,6118400,6815744,0.012769,GC pause (G1 Evacuation Pause) (young)
+1511315991,6118298,6815744,0.0153449,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511315994,6118195,6815744,0.026661,GC pause (G1 Evacuation Pause) (young)
+1511315998,6117274,6815744,0.0178979,GC pause (G1 Evacuation Pause) (young)
+1511316001,0,0,0.0619318,GC remark
+1511316001,5387264,6815744,0.0579763,GC cleanup
+1511316003,6117171,6815744,0.0150437,GC pause (G1 Evacuation Pause) (young)
+1511316008,6117376,6815744,0.0067064,GC pause (G1 Evacuation Pause) (young)
+1511316012,6117478,6815744,0.0093495,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316013,6119117,6815744,0.0129807,GC pause (G1 Evacuation Pause) (young)
+1511316016,6119014,6815744,0.0105513,GC pause (G1 Evacuation Pause) (young)
+1511316020,0,0,0.0544041,GC remark
+1511316020,5968896,6815744,0.0533696,GC cleanup
+1511316021,6119117,6815744,0.0096686,GC pause (G1 Evacuation Pause) (young)
+1511316023,6118707,6815744,0.0232139,GC pause (G1 Evacuation Pause) (young)
+1511316024,6119424,6815744,0.0104388,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316026,6119424,6815744,0.0069628,GC pause (G1 Evacuation Pause) (young)
+1511316030,6118298,6815744,0.0270829,GC pause (G1 Evacuation Pause) (young)
+1511316032,0,0,0.0398625,GC remark
+1511316032,4977664,6815744,0.0288994,GC cleanup
+1511316036,6118400,6815744,0.0072185,GC pause (G1 Evacuation Pause) (young)
+1511316042,6118298,6815744,0.0064699,GC pause (G1 Evacuation Pause) (young)
+1511316048,6118298,6815744,0.0076628,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316054,6118298,6815744,0.0073387,GC pause (G1 Evacuation Pause) (young)
+1511316055,0,0,0.0366463,GC remark
+1511316055,4869120,6815744,0.0281042,GC cleanup
+1511316061,6118502,6815744,0.0300606,GC pause (G1 Evacuation Pause) (young)
+1511316067,6118298,6815744,0.007469,GC pause (G1 Evacuation Pause) (young)
+1511316073,6117478,6815744,0.0095751,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316079,6119219,6815744,0.0066838,GC pause (G1 Evacuation Pause) (young)
+1511316081,0,0,0.0319502,GC remark
+1511316081,5131264,6815744,0.031251,GC cleanup
+1511316084,6119322,6815744,0.0182431,GC pause (G1 Evacuation Pause) (young)
+1511316091,6119219,6815744,0.008441,GC pause (G1 Evacuation Pause) (young)
+1511316097,6118502,6815744,0.0099613,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316103,6118400,6815744,0.0083885,GC pause (G1 Evacuation Pause) (young)
+1511316105,0,0,0.0476205,GC remark
+1511316105,4965376,6815744,0.0281458,GC cleanup
+1511316109,6118195,6815744,0.0062916,GC pause (G1 Evacuation Pause) (young)
+1511316116,6117478,6815744,0.0067719,GC pause (G1 Evacuation Pause) (young)
+1511316125,6118298,6815744,0.008923,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316130,6117376,6815744,0.0111945,GC pause (G1 Evacuation Pause) (young)
+1511316133,0,0,0.0386151,GC remark
+1511316133,5629952,6815744,0.0318347,GC cleanup
+1511316134,6117478,6815744,0.0233807,GC pause (G1 Evacuation Pause) (young)
+1511316140,6117478,6815744,0.0233462,GC pause (G1 Evacuation Pause) (young)
+1511316145,6118298,6815744,0.0172618,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316149,6117478,6815744,0.0208008,GC pause (G1 Evacuation Pause) (young)
+1511316154,6117478,6815744,0.0122452,GC pause (G1 Evacuation Pause) (young)
+1511316154,0,0,0.0547247,GC remark
+1511316154,4714496,6815744,0.0544935,GC cleanup
+1511316156,6118400,6815744,0.049009,GC pause (G1 Evacuation Pause) (young)
+1511316158,6118400,6815744,0.0067757,GC pause (G1 Evacuation Pause) (young)
+1511316160,6118810,6815744,0.0103115,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316164,6119322,6815744,0.0061307,GC pause (G1 Evacuation Pause) (young)
+1511316168,0,0,0.0502342,GC remark
+1511316168,5790720,6815744,0.0310065,GC cleanup
+1511316170,6118502,6815744,0.0081305,GC pause (G1 Evacuation Pause) (young)
+1511316176,6118605,6815744,0.0115476,GC pause (G1 Evacuation Pause) (young)
+1511316179,6117376,6815744,0.0099092,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316180,6119526,6815744,0.0112638,GC pause (G1 Evacuation Pause) (young)
+1511316181,6120653,6815744,0.0063916,GC pause (G1 Evacuation Pause) (young)
+1511316184,6121574,6815744,0.006519,GC pause (G1 Evacuation Pause) (young)
+1511316187,0,0,0.0268065,GC remark
+1511316187,5378048,6815744,0.019584,GC cleanup
+1511316189,6119629,6815744,0.0054825,GC pause (G1 Evacuation Pause) (young)
+1511316195,6119526,6815744,0.0424391,GC pause (G1 Evacuation Pause) (young)
+1511316200,6118400,6815744,0.0169864,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316205,6118502,6815744,0.0136288,GC pause (G1 Evacuation Pause) (young)
+1511316209,6119322,6815744,0.0065442,GC pause (G1 Evacuation Pause) (young)
+1511316209,0,0,0.0327559,GC remark
+1511316209,4844544,6815744,0.0278464,GC cleanup
+1511316212,6118502,6815744,0.0079732,GC pause (G1 Evacuation Pause) (young)
+1511316216,6118502,6815744,0.0185559,GC pause (G1 Evacuation Pause) (young)
+1511316223,6119322,6815744,0.0089428,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316229,6118605,6815744,0.0069735,GC pause (G1 Evacuation Pause) (young)
+1511316230,0,0,0.032874,GC remark
+1511316230,4922368,6815744,0.0237172,GC cleanup
+1511316236,6119322,6815744,0.0103732,GC pause (G1 Evacuation Pause) (young)
+1511316242,6118400,6815744,0.0236375,GC pause (G1 Evacuation Pause) (young)
+1511316248,6117478,6815744,0.0104193,GC pause (G1 Evacuation Pause) (young) (initial-mark)
+1511316252,6118400,6815744,0.0063643,GC pause (G1 Evacuation Pause) (young)
+1511316255,6117478,6815744,0.0074613,GC pause (G1 Evacuation Pause) (young)
+1511316256,0,0,0.0696155,GC remark
+1511316256,5099520,6815744,0.0720015,GC cleanup
+1511316258,6118400,6815744,0.0119866,GC pause (G1 Evacuation Pause) (young)

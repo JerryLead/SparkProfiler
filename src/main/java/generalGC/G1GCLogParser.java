@@ -127,8 +127,8 @@ public class G1GCLogParser {
     }
 
     public static void main(String[] args) {
-        String logFile = "src/test/gclogs/G1Log.txt";
-        String outputFile = "src/test/gclogs/ParsedG1Log.txt";
+        String logFile = "src/test/gclogs/SVM-1.0-E1-G1-19.txt";
+        String outputFile = "src/test/gclogs/Parsed-SVM-1.0-E1-G1-19.txt";
         G1GCLogParser parser = new G1GCLogParser();
         parser.parse(logFile);
         parser.outputUsage(outputFile);

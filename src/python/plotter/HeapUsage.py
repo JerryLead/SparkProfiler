@@ -108,12 +108,12 @@ class HeapUsage:
         return (genTime, genUsage)
 
 
-def plotHeapUsage(appName, gclogFile):
+def plotHeapUsage(appName, gclogFile, outputFile):
 
     heapUsage = HeapUsage()
     heapUsage.initHeapUsage(gclogFile)
 
-    fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True)
+    fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True) #, figsize=(8,7.6))
 
     axes[0].set_ylabel("Young Gen (MB)")
     axes[1].set_ylabel("Old Gen (MB)")
@@ -124,7 +124,7 @@ def plotHeapUsage(appName, gclogFile):
 
     colors = [u'#1f77b4', u'#ff7f0e', u'#2ca02c', u'#d62728', u'#9467bd', u'#8c564b', u'#e377c2', u'#7f7f7f', u'#bcbd22', u'#17becf']
 
-    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenUsage("Young"), '-', label='Used', linewidth=0.5, markersize=0.8, color=colors[0])
+    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenUsage("Young"), '-', label='Used', linewidth=0.0001, markersize=0.8, color=colors[0])
     axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenAllocated("Young"), '-', label='Allocated', color=colors[1])
     (YGCTime, YGCUsage) = heapUsage.getGC("Young", "YGC")
     (FGCTime, FGCUsage) = heapUsage.getGC("Young", "FGC")
@@ -138,18 +138,18 @@ def plotHeapUsage(appName, gclogFile):
     axes[1].plot(YGCTime, YGCUsage, 'o', markersize=0.8, label='YGC', color=colors[0])
     axes[1].plot(FGCTime, FGCUsage, '*', markersize=2, label='FGC', color=colors[3])
 
-    axes[0].grid(True)
-    axes[1].grid(True)
+    axes[0].grid(False)
+    axes[1].grid(False)
+    axes[0].set_ylim(ymin=0)
+    axes[1].set_ylim(ymin=0)
+    axes[0].set_xlim(xmin=0)
+    axes[1].set_xlim(xmin=0)
     plt.suptitle(appName)
     plt.legend(loc='lower right')
 
-    plt.show()
 
-    # outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")
-    # if not os.path.exists(outputDir):
-    #     os.mkdir(outputDir)
-    #     file = os.path.join(outputDir, appName + ".pdf")
-    #     plt.savefig(file, dpi=150, bbox_inches='tight')
+    # plt.show()
+    plt.savefig(outputFile, dpi=150, bbox_inches='tight')
 
 
 
@@ -158,15 +158,24 @@ if __name__ == '__main__':
 
     #dir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/Abnormal/Join-1.0-E1/gclogs"
     dir = "/Users/xulijie/dev/IdeaProjects/SparkProfiler/src/test/gclogs/"
+    #outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/SVM-1.0-E1/"
+    outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/Join-1.0-E1/"
     #fileName = "Join-1.0-E1-P-12-23.txt"
 
-    # fileName = "ParsedParallelLog.txt"
-    # appName = "Join-1.0-E1-Parallel"
+    fileName = "ParsedParallelLog.txt"
+    appName = "Join-1.0-E1-Parallel"
+    plotHeapUsage(appName, dir + fileName, outputDir + "Parallel.pdf")
 
-    # fileName = "ParsedCMSLog.txt"
-    # appName = "Join-1.0-E1-CMS"
+    fileName = "ParsedCMSLog.txt"
+    appName = "Join-1.0-E1-CMS"
+    plotHeapUsage(appName, dir + fileName, outputDir + "CMS.pdf")
 
     fileName = "ParsedG1Log.txt"
     appName = "Join-1.0-E1-G1"
-    plotHeapUsage(appName, dir + fileName)
+    plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
+
+
+    # fileName = "Parsed-SVM-1.0-E1-G1-19.txt"
+    # appName = "SVM-1.0-E1-G1"
+    # plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
 

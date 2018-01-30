@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
     dir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/medianProfiles/"
     taskDir = "/slowestTasks"
-    taskDir = "/failedTasks"
+    #taskDir = "/failedTasks"
 
     # # for GroupByRDD
     # appName = "GroupByRDD-0.5"
@@ -110,8 +110,8 @@ if __name__ == '__main__':
     # # for RDDJoin
     # appName = "RDDJoin-0.5"
     # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
-    # appName = "RDDJoin-1.0"
-    # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
+    appName = "RDDJoin-1.0"
+    plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
     #
     # # for SVM
     # appName = "SVM-0.5"
@@ -122,6 +122,6 @@ if __name__ == '__main__':
     # # # for PageRank
     # appName = "PageRank-0.5"
     # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
-    appName = "PageRank-1.0"
-    plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
+    # appName = "PageRank-1.0"
+    # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
 

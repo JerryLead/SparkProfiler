@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib import gridspec
 import matplotlib.dates as mdates
 import matplotlib as mpl
 import os, sys
@@ -115,6 +116,11 @@ def plotHeapUsage(appName, gclogFile, outputFile):
 
     fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True) #, figsize=(8,7.6))
 
+    gs = gridspec.GridSpec(3, 1)
+    axes[0] = plt.subplot(gs[0, :])
+    # identical to ax1 = plt.subplot(gs.new_subplotspec((0,0), colspan=3))
+    axes[1] = plt.subplot(gs[1:,:])
+
     axes[0].set_ylabel("Young Gen (MB)")
     axes[1].set_ylabel("Old Gen (MB)")
 
@@ -148,8 +154,8 @@ def plotHeapUsage(appName, gclogFile, outputFile):
     plt.legend(loc='lower right')
 
 
-    # plt.show()
-    plt.savefig(outputFile, dpi=150, bbox_inches='tight')
+    plt.show()
+    # plt.savefig(outputFile, dpi=150, bbox_inches='tight')
 
 
 
@@ -157,10 +163,12 @@ def plotHeapUsage(appName, gclogFile, outputFile):
 if __name__ == '__main__':
 
     #dir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/Abnormal/Join-1.0-E1/gclogs"
-    dir = "/Users/xulijie/dev/IdeaProjects/SparkProfiler/src/test/gclogs/"
+    dir = "/Users/jaxon/github/SparkProfiler/src/test/gclogs/"
+    # dir = "/Users/xulijie/dev/IdeaProjects/SparkProfiler/src/test/gclogs/"
     #outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/SVM-1.0-E1/"
     outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/Join-1.0-E1/"
     #fileName = "Join-1.0-E1-P-12-23.txt"
+# /Users/jaxon/github/SparkProfiler/src/test/gclogs/ParsedParallelLog.txt
 
     fileName = "ParsedParallelLog.txt"
     appName = "Join-1.0-E1-Parallel"

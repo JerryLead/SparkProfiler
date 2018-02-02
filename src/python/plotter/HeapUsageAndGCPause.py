@@ -193,11 +193,6 @@ def plotHeapUsage(appName, gclogFile, gcpauseFile,outputFile):
     gcTotal = heapUsageAndGCPause.getGCPauseTime()
     # x label
     gcTimeLine = heapUsageAndGCPause.getGCTimeline()
-
-    for key in gcTotal.keys():
-        print key
-        print gcTotal[key]
-
     colors2 = [u'#DDA0DD', u'#6A5ACD', u'#A9A9A9', u'#ADD8E6']
     keys = gcTotal.keys()
     axes3 = axes[1].twinx()
@@ -217,7 +212,6 @@ def plotHeapUsage(appName, gclogFile, gcpauseFile,outputFile):
     axes[1].set_xlabel(r"TimeLine/s")
     ymin, ymax = axes3.get_ylim()
     axes3.set_ylim(ymin, ymax * 2.5)
-
     lns = []
     lns.append(line1)
     lns.append(line2)

@@ -143,7 +143,7 @@ class HeapUsageAndGCPause:
         return self.gcTimeLine
 
 
-def plotHeapUsage(appName, gclogFile, gcpauseFile,outputFile):
+def plotHeapUsage(appName, gclogFile, gcpauseFile,outputFile,legend_pos,**kwargs):
 
     heapUsageAndGCPause = HeapUsageAndGCPause()
     heapUsageAndGCPause.initHeapUsageAndGCPause(gclogFile, gcpauseFile)
@@ -195,7 +195,7 @@ def plotHeapUsage(appName, gclogFile, gcpauseFile,outputFile):
     axes3 = axes[1].twinx()
     time0 = gcTimeLine["GCPause"]
     value0 = gcTotal["GCPause"]
-    bar1 = axes3.bar(time0, value0, 0.0001, color=colors2[2], label="1", edgecolor=colors2[2])
+    bar1 = axes3.bar(time0, value0, 0.00001, color=colors2[2], label="1", edgecolor=colors2[2])
     axes3.set_ylabel(r"GC Pause (sec)")
     axes[1].set_xlabel("Time (sec)")
     ymin, ymax = axes3.get_ylim()
@@ -208,7 +208,7 @@ def plotHeapUsage(appName, gclogFile, gcpauseFile,outputFile):
     lns.append(bar1)
 
     labels = ("Usage", "Allocated", "YGC", "FGC", "GC Pause")
-    axes3.legend((line1, line2, line3, line4, bar1), labels, loc='center right', fontsize=10)
+    axes3.legend((line1, line2, line3, line4, bar1), labels, loc=legend_pos, fontsize=10)
 
     fig = plt.gcf()
     plt.show()
@@ -229,20 +229,23 @@ if __name__ == '__main__':
     fileName = "ParsedParallelLog.txt"
     appName = "Join-1.0-E1-Parallel"
     dir2 = "/Users/jaxon/github/SparkProfiler/src/test/GCPause/"
+
     fileName2 = "JoinParallel.csv"
+    fileName3 = "JoinCMS.csv"
+    fileName4 = "JoinG1.csv"
 
-    plotHeapUsage(appName, dir + fileName, dir2 + fileName2, outputDir + "Parallel.pdf")
+    plotHeapUsage(appName, dir + fileName, dir2 + fileName2, outputDir + "Parallel.pdf", "center right")
 
-    # fileName = "ParsedCMSLog.txt"
-    # appName = "Join-1.0-E1-CMS"
-    # plotHeapUsage(appName, dir + fileName, outputDir + "CMS.pdf")
-    #
-    # fileName = "ParsedG1Log.txt"
-    # appName = "Join-1.0-E1-G1"
-    # plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
-    #
-    #
+    fileName = "ParsedCMSLog.txt"
+    appName = "Join-1.0-E1-CMS"
+    plotHeapUsage(appName, dir + fileName, dir2 + fileName3, outputDir + "CMS.pdf", "center right")
+
+    fileName = "ParsedG1Log.txt"
+    appName = "Join-1.0-E1-G1"
+    plotHeapUsage(appName, dir + fileName, dir2 + fileName4, outputDir + "G1.pdf", "lower right")
+
+
     # fileName = "Parsed-SVM-1.0-E1-G1-19.txt"
     # appName = "SVM-1.0-E1-G1"
-    # plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
+    # plotHeapUsage(appName, dir + fileName, dir2 + fileName4, outputDir + "G1.pdf", "lower right")
 

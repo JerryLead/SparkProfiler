@@ -156,7 +156,7 @@ def plotHeapUsage(appName, gclogFile, outputFile):
 
     fig = plt.gcf()
     plt.show()
-    fig.savefig(outputFile, dpi=300, bbox_inches='tight')
+    # fig.savefig(outputFile, dpi=300, bbox_inches='tight')
 
 
 
@@ -176,16 +176,16 @@ if __name__ == '__main__':
     appName = "Join-1.0-E1-Parallel"
     plotHeapUsage(appName, dir + fileName, outputDir + "Parallel.pdf")
 
-    # fileName = "ParsedCMSLog.txt"
-    # appName = "Join-1.0-E1-CMS"
-    # plotHeapUsage(appName, dir + fileName, outputDir + "CMS.pdf")
-    #
-    # fileName = "ParsedG1Log.txt"
-    # appName = "Join-1.0-E1-G1"
-    # plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
+    fileName = "ParsedCMSLog.txt"
+    appName = "Join-1.0-E1-CMS"
+    plotHeapUsage(appName, dir + fileName, outputDir + "CMS.pdf")
+
+    fileName = "ParsedG1Log.txt"
+    appName = "Join-1.0-E1-G1"
+    plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
 
 
-    # fileName = "Parsed-SVM-1.0-E1-G1-19.txt"
-    # appName = "SVM-1.0-E1-G1"
-    # plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
+    fileName = "Parsed-SVM-1.0-E1-G1-19.txt"
+    appName = "SVM-1.0-E1-G1"
+    plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
 

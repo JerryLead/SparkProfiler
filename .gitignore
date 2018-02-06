@@ -90,3 +90,5 @@ spark-warehouse/
 .Rproj.user
 
 .idea/
+
+*.pdf

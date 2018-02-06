@@ -70,6 +70,8 @@ class HeapUsageAndGCPause:
                     self.metaGen.append(heapUsage)
 
         fileLines2 = FileReader.readLines(gcpauseFile)
+        self.gcTotal["GCPause"] = []
+        self.gcTimeLine["GCPause"] = []
         for line in fileLines2:
             if not line[0].isdigit():
                 continue
@@ -77,12 +79,8 @@ class HeapUsageAndGCPause:
             gc_type = items[-1]
             if gc_type == "NONE":
                 continue
-            if gc_type not in self.gcTotal.keys():
-                self.gcTotal[gc_type] = []
-            self.gcTotal[gc_type].append(float(items[3]))
-            if gc_type not in self.gcTimeLine.keys():
-                self.gcTimeLine[gc_type] = []
-            self.gcTimeLine[gc_type].append(float(items[0]))
+            self.gcTotal["GCPause"].append(float(items[3]))
+            self.gcTimeLine["GCPause"].append(float(items[0]))
 
     def getGenUsage(self, genLabel):
         if (genLabel == "Young"):
@@ -194,22 +192,12 @@ def plotHeapUsage(appName, gclogFile, gcpauseFile,outputFile):
     # x label
     gcTimeLine = heapUsageAndGCPause.getGCTimeline()
     colors2 = [u'#DDA0DD', u'#6A5ACD', u'#A9A9A9', u'#ADD8E6']
-    keys = gcTotal.keys()
     axes3 = axes[1].twinx()
-    time0 = gcTimeLine[keys[0]]
-    time1 = gcTimeLine[keys[1]]
-    time2 = gcTimeLine[keys[2]]
-    time3 = gcTimeLine[keys[3]]
-    value0 = gcTotal[keys[0]]
-    value1 = gcTotal[keys[1]]
-    value2 = gcTotal[keys[2]]
-    value3 = gcTotal[keys[3]]
-    bar1 = axes3.bar(time0, value0, 0.0001, color=colors2[0], label="1", edgecolor=colors2[0])
-    bar2 = axes3.bar(time1, value1, 0.0001, color=colors2[1], label="2", edgecolor=colors2[1])
-    bar3 = axes3.bar(time2, value2, 0.0001, color=colors2[2], label="3", edgecolor=colors2[2])
-    bar4 = axes3.bar(time3, value3, 0.0001, color=colors2[3], label="4", edgecolor=colors2[3])
-    axes3.set_ylabel(r"GCPause/$u$s")
-    axes[1].set_xlabel(r"TimeLine/s")
+    time0 = gcTimeLine["GCPause"]
+    value0 = gcTotal["GCPause"]
+    bar1 = axes3.bar(time0, value0, 0.0001, color=colors2[2], label="1", edgecolor=colors2[2])
+    axes3.set_ylabel(r"GC Pause (sec)")
+    axes[1].set_xlabel("Time (sec)")
     ymin, ymax = axes3.get_ylim()
     axes3.set_ylim(ymin, ymax * 2.5)
     lns = []
@@ -218,14 +206,13 @@ def plotHeapUsage(appName, gclogFile, gcpauseFile,outputFile):
     lns.append(line3)
     lns.append(line4)
     lns.append(bar1)
-    lns.append(bar2)
-    lns.append(bar3)
-    lns.append(bar4)
-    keys = gcTotal.keys()
-    labels = ("Usage", "Allocated", "YGC", "FGC", keys[0], keys[1], keys[2], keys[3])
-    axes3.legend((line1, line2, line3, line4, bar1, bar2, bar3, bar4), labels, loc=0)
+
+    labels = ("Usage", "Allocated", "YGC", "FGC", "GC Pause")
+    axes3.legend((line1, line2, line3, line4, bar1), labels, loc='center right', fontsize=10)
+
+    fig = plt.gcf()
     plt.show()
-    plt.savefig(outputFile, dpi=150, bbox_inches='tight')
+    fig.savefig(outputFile, dpi=150, bbox_inches='tight')
 
 
 
@@ -238,7 +225,7 @@ if __name__ == '__main__':
     #outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/SVM-1.0-E1/"
     # outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/Join-1.0-E1/"
     #fileName = "Join-1.0-E1-P-12-23.txt"
-    outputDir = "/Users/jaxon/github/SparkProfiler/"
+    outputDir = "./"
     fileName = "ParsedParallelLog.txt"
     appName = "Join-1.0-E1-Parallel"
     dir2 = "/Users/jaxon/github/SparkProfiler/src/test/GCPause/"
@@ -253,8 +240,8 @@ if __name__ == '__main__':
     # fileName = "ParsedG1Log.txt"
     # appName = "Join-1.0-E1-G1"
     # plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
-
-
+    #
+    #
     # fileName = "Parsed-SVM-1.0-E1-G1-19.txt"
     # appName = "SVM-1.0-E1-G1"
     # plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")

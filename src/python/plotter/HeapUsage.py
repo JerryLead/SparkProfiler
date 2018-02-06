@@ -119,7 +119,7 @@ def plotHeapUsage(appName, gclogFile, outputFile):
     gs = gridspec.GridSpec(3, 1)
     axes[0] = plt.subplot(gs[0, :])
     # identical to ax1 = plt.subplot(gs.new_subplotspec((0,0), colspan=3))
-    axes[1] = plt.subplot(gs[1:,:])
+    axes[1] = plt.subplot(gs[1:, :])
 
     axes[0].set_ylabel("Young Gen (MB)")
     axes[1].set_ylabel("Old Gen (MB)")
@@ -142,7 +142,7 @@ def plotHeapUsage(appName, gclogFile, outputFile):
     (YGCTime, YGCUsage) = heapUsage.getGC("Old", "YGC")
     (FGCTime, FGCUsage) = heapUsage.getGC("Old", "FGC")
     axes[1].plot(YGCTime, YGCUsage, 'o', markersize=0.8, label='YGC', color=colors[0])
-    axes[1].plot(FGCTime, FGCUsage, '*', markersize=2, label='FGC', color=colors[3])
+    axes[1].plot(FGCTime, FGCUsage, '*', markersize=2.0, label='FGC', color=colors[3])
 
     axes[0].grid(False)
     axes[1].grid(False)
@@ -154,8 +154,9 @@ def plotHeapUsage(appName, gclogFile, outputFile):
     plt.suptitle(appName)
     plt.legend(loc='lower right')
 
+    fig = plt.gcf()
     plt.show()
-    # plt.savefig(outputFile, dpi=150, bbox_inches='tight')
+    fig.savefig(outputFile, dpi=300, bbox_inches='tight')
 
 
 
@@ -166,21 +167,22 @@ if __name__ == '__main__':
     dir = "/Users/jaxon/github/SparkProfiler/src/test/gclogs/"
     # dir = "/Users/xulijie/dev/IdeaProjects/SparkProfiler/src/test/gclogs/"
     #outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/SVM-1.0-E1/"
-    outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/Join-1.0-E1/"
+    # outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/Join-1.0-E1/"
     #fileName = "Join-1.0-E1-P-12-23.txt"
 # /Users/jaxon/github/SparkProfiler/src/test/gclogs/ParsedParallelLog.txt
 
+    outputDir = "/Users/jaxon/github/SparkProfiler/"
     fileName = "ParsedParallelLog.txt"
     appName = "Join-1.0-E1-Parallel"
     plotHeapUsage(appName, dir + fileName, outputDir + "Parallel.pdf")
 
-    fileName = "ParsedCMSLog.txt"
-    appName = "Join-1.0-E1-CMS"
-    plotHeapUsage(appName, dir + fileName, outputDir + "CMS.pdf")
-
-    fileName = "ParsedG1Log.txt"
-    appName = "Join-1.0-E1-G1"
-    plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
+    # fileName = "ParsedCMSLog.txt"
+    # appName = "Join-1.0-E1-CMS"
+    # plotHeapUsage(appName, dir + fileName, outputDir + "CMS.pdf")
+    #
+    # fileName = "ParsedG1Log.txt"
+    # appName = "Join-1.0-E1-G1"
+    # plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
 
 
     # fileName = "Parsed-SVM-1.0-E1-G1-19.txt"

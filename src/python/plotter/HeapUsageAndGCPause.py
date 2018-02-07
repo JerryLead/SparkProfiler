@@ -224,9 +224,8 @@ def plotHeapUsage(appName, gclogFile, gcpauseFile,outputFile):
     keys = gcTotal.keys()
     labels = ("Usage", "Allocated", "YGC", "FGC", keys[0], keys[1], keys[2], keys[3])
     axes3.legend((line1, line2, line3, line4, bar1, bar2, bar3, bar4), labels, loc=0)
-
     plt.show()
-    # plt.savefig(outputFile, dpi=150, bbox_inches='tight')
+    plt.savefig(outputFile, dpi=150, bbox_inches='tight')
 
 
 
@@ -237,9 +236,9 @@ if __name__ == '__main__':
     dir = "/Users/jaxon/github/SparkProfiler/src/test/gclogs/"
     # dir = "/Users/xulijie/dev/IdeaProjects/SparkProfiler/src/test/gclogs/"
     #outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/SVM-1.0-E1/"
-    outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/Join-1.0-E1/"
+    # outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/Join-1.0-E1/"
     #fileName = "Join-1.0-E1-P-12-23.txt"
-
+    outputDir = "/Users/jaxon/github/SparkProfiler/"
     fileName = "ParsedParallelLog.txt"
     appName = "Join-1.0-E1-Parallel"
     dir2 = "/Users/jaxon/github/SparkProfiler/src/test/GCPause/"

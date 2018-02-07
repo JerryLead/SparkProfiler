@@ -86,7 +86,6 @@ spark-warehouse/
 .Rhistory
 *.Rproj
 *.Rproj.*
-
 .Rproj.user
-
 .idea/
+*.pdf

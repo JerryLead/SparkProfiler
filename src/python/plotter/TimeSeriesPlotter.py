@@ -90,8 +90,8 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
     if not os.path.exists(outputDir):
         os.mkdir(outputDir)
     file = os.path.join(outputDir, appName + ".pdf")
-    plt.show()
-    # plt.savefig(file, dpi=150, bbox_inches='tight')
+    # plt.show()
+    plt.savefig(file, dpi=150, bbox_inches='tight')
 
 
 
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     # appName = "RDDJoin-0.5"
     # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
     appName = "RDDJoin-1.0"
-    plotExecutorAndWorkerUsage(appName, "/Users/jaxon/github/slowestTasks/")
+    plotExecutorAndWorkerUsage(appName,appName, dir + appName + taskDir)
     #
     # # for SVM
     # appName = "SVM-0.5"

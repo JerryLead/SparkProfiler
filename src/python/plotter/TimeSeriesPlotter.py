@@ -112,7 +112,7 @@ if __name__ == '__main__':
     # appName = "RDDJoin-0.5"
     # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
     appName = "RDDJoin-1.0"
-    plotExecutorAndWorkerUsage(appName,appName, dir + appName + taskDir)
+    plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
     #
     # # for SVM
     # appName = "SVM-0.5"

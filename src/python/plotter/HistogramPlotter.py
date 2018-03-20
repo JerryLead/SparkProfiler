@@ -78,6 +78,8 @@ class HistogramPlotter:
 
         # plt.ylim(0, statistics.max)  # The ceil
         # plt.legend()
-        # plt.tight_layout()
+        plt.tight_layout()
         # plt.show()
         plt.savefig(file, dpi=150)
+
+    # https://matplotlib.org/gallery/api/barchart.html#sphx-glr-gallery-api-barchart-py

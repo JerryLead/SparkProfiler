@@ -63,6 +63,7 @@ public class ApplicationStatistics {
     }
 
 
+    // Only consider successful applications
     private void computeAppStatistics() {
         Object[] appObjs = successfulApps.toArray();
         duration = new Statistics(appObjs, "getDuration");
@@ -144,8 +145,8 @@ public class ApplicationStatistics {
 
         List<Application> appList = new ArrayList<Application>();
         appList.addAll(successfulApps);
-        appList.addAll(finishedApps);
-        appList.addAll(failedApps);
+        //appList.addAll(finishedApps);
+        //appList.addAll(failedApps);
 
         for (Application app : appList) {
             List<Executor> executorsPerApp = new ArrayList<Executor>();

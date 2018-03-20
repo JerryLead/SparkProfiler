@@ -52,7 +52,7 @@ public class Statistics {
             stats.addValue(value);
 
         mean = stats.getMean();
-        stdVar = stats.getStandardDeviation();
+        stdVar = stats.getStandardDeviation() / Math.sqrt(stats.getN());
         median = stats.getPercentile(50);
     }
 
@@ -63,7 +63,7 @@ public class Statistics {
             stats.addValue(value);
 
         mean = stats.getMean();
-        stdVar = stats.getStandardDeviation();
+        stdVar = stats.getStandardDeviation() / Math.sqrt(stats.getN());
         median = stats.getPercentile(50);
     }
 
@@ -86,7 +86,7 @@ public class Statistics {
             stats.addValue(value);
         }
         mean = stats.getMean();
-        stdVar = stats.getStandardDeviation();
+        stdVar = stats.getStandardDeviation() / Math.sqrt(stats.getN());
 
         min = stats.getMin();
         quantile25 = stats.getPercentile(25);
@@ -117,7 +117,7 @@ public class Statistics {
             stats.addValue(value);
         }
         mean = stats.getMean();
-        stdVar = stats.getStandardDeviation();
+        stdVar = stats.getStandardDeviation() / Math.sqrt(stats.getN());
 
         min = stats.getMin();
         quantile25 = stats.getPercentile(25);

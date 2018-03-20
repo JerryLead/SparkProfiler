@@ -122,7 +122,7 @@ public class SlowestTaskComparator {
                 }
 
                 List<Application> successfulAppList = new ArrayList<Application>();
-                List<Application> failedAppList = new ArrayList<>();
+                List<Application> failedAppList = new ArrayList<Application>();
 
                 for (Application app : appList) {
                     if (app.getStatus().equalsIgnoreCase("SUCCEEDED"))

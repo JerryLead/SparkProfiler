@@ -136,7 +136,8 @@ public class Application {
     }
 
     public void addExecutor(Executor executor) {
-        executorMap.put(executor.getId(), executor);
+        if (executor.getId().equals("driver") == false)
+            executorMap.put(executor.getId(), executor);
     }
 
     public Executor getExecutor(String executorId) {

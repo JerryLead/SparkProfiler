@@ -1,8 +1,10 @@
 class HistogramStatistics:
 
-    def __init__(self):
-        self.name = ''
-        self.unit = ''
+    def __init__(self, metric):
+        self.name = metric[0]
+        self.ylabel = metric[1]
+        self.unit = metric[2]
+        # self.title = metric[3]
 
         self.parallel_means = [0, 0, 0]  # Executor(1-7G), Executor(2-14G), Executor(4-28G)
         self.cms_means = [0, 0, 0]
@@ -71,7 +73,7 @@ class HistogramStatistics:
 
         for metric in metrics:
             metricName = metric.split('=')[0]
-            metricValue = float(metric.split('=')[1])
+            metricValue = float(metric.split('=')[1]) / self.unit
 
             if(metricName == "mean"):
                 if(gcAlgo == "Parallel"):

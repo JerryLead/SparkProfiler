@@ -1,7 +1,7 @@
 package profiler;
 
 import analyzer.SparkAppsAnalyzer;
-import appinfo.Application;
+import appinfo.*;
 import parser.*;
 import util.JsonFileReader;
 
@@ -144,7 +144,45 @@ public class SparkAppProfiler {
         String executorsDir = dir + File.separatorChar + "executors";
         executorsJsonParser.parseExecutorGCSummary(executorsDir, app);
 
+        // Set the spill duration for each task (parsed from stderr)
+        transferSpillMetricsToTasks(app);
+
+
         return app;
+    }
+
+    private void transferSpillMetricsToTasks(Application app) {
+        // Key: taskId
+        Map<Integer, List<SpillMetrics>> spilledMetricsMap
+                = new HashMap<Integer, List<SpillMetrics>>();
+
+        for (Executor executor : app.getExecutors()) {
+            for (SpillMetrics spillMetrics : executor.getSpillMetricsList()) {
+                int taskId = spillMetrics.getTaskId();
+                double spillDuraiton = spillMetrics.getSpillDuration();
+
+                if (spilledMetricsMap.containsKey(taskId))
+                    spilledMetricsMap.get(taskId).add(spillMetrics);
+                else {
+                    List<SpillMetrics> list = new ArrayList<SpillMetrics>();
+                    list.add(spillMetrics);
+                    spilledMetricsMap.put(taskId, list);
+                }
+            }
+        }
+
+        for (Stage stage : app.getStageMap().values()) {
+            if (stage.getCompletedStage() != null) {
+                for (Task task : stage.getCompletedStage().getTaskMap().values()) {
+                    if(task.getCompletedTask() != null) {
+                        int taskId = task.getTaskId();
+                        List<SpillMetrics> spillMetricsList = spilledMetricsMap.get(taskId);
+                        if (spillMetricsList != null)
+                            task.getCompletedTask().setSpillMetricsList(spillMetricsList);
+                    }
+                }
+            }
+        }
     }
 
     public static void profile(String app, String appJsonDir, int[] selectedStageIds) {
@@ -201,14 +239,14 @@ public class SparkAppProfiler {
         // String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/";
 
 
-        /*
+
         String app = "GroupBy";
         int[] selectedStageIds = new int[]{1};
         String appJsonDir = appJsonRootDir + "GroupByRDD-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "GroupByRDD-1.0";
         profile(app, appJsonDir, selectedStageIds);
-        */
+
 
 
         /*
@@ -230,14 +268,14 @@ public class SparkAppProfiler {
         profile(app, appJsonDir, selectedStageIds);
         */
 
-
+        /*
         String app = "PageRank";
         int[] selectedStageIds = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         String appJsonDir = appJsonRootDir + "PageRank-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "PageRank-1.0";
         profile(app, appJsonDir, selectedStageIds);
-
+        */
 
 
     }

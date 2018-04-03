@@ -116,6 +116,7 @@ public class SparkAppsAnalyzer {
             ApplicationStatistics appStatistics = appEntry.getValue();
             appStatistics.setAppName(appName);
 
+
             String appStatisticsFile = statisticsDir + File.separatorChar + appName + "-stat.txt";
             FileTextWriter.write(appStatisticsFile, appStatistics.toString());
 

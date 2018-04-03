@@ -47,6 +47,8 @@ public class TaskStatistics {
     private Statistics shuffleWriteMetrics_writeTime;
     private Statistics shuffleWriteMetrics_recordsWritten;
 
+    private Statistics spillDuration;
+
     private List<TaskAttempt> slowestTasks;
 
     // In general, we run each application 5 times, and each stage has multiple tasks.
@@ -95,6 +97,8 @@ public class TaskStatistics {
         resultSize = new Statistics(taskAttemptObjs, "getResultSize");
         jvmGcTime = new Statistics(taskAttemptObjs, "getJvmGcTime");
         resultSerializationTime = new Statistics(taskAttemptObjs, "getResultSerializationTime");
+        spillDuration = new Statistics(taskAttemptObjs, "getSpillDuration");
+
         memoryBytesSpilled = new Statistics(taskAttemptObjs, "getMemoryBytesSpilled");
         diskBytesSpilled = new Statistics(taskAttemptObjs, "getDiskBytesSpilled");
 
@@ -129,6 +133,7 @@ public class TaskStatistics {
         sb.append("[" + prefix + ".task.executorRunTime] " + executorRunTime + "\n");
         sb.append("[" + prefix + ".task.executorCpuTime] " + executorCpuTime + "\n");
         sb.append("[" + prefix + ".task.resultSize] " + resultSize + "\n");
+        sb.append("[" + prefix + ".task.spillDuration] " + spillDuration + "\n");
         sb.append("[" + prefix + ".task.jvmGcTime] " + jvmGcTime + "\n");
         sb.append("[" + prefix + ".task.resultSerializationTime] " + resultSerializationTime + "\n");
         sb.append("[" + prefix + ".task.memoryBytesSpilled] " + memoryBytesSpilled + "\n");

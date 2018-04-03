@@ -62,6 +62,12 @@ public class ExecutorsJsonParser {
                             + "topMetrics.txt";
                     List<String> topMetricsLines = JsonFileReader.readFileLines(topFile);
                     app.getExecutor(executorId).addTopMetrics(topMetricsLines);
+
+                    // Parse spill metrics
+                    String stderr = executorDir.getAbsolutePath() + File.separatorChar
+                            + "stderr";
+                    List<String> stderrLines = JsonFileReader.readFileLines(stderr);
+                    app.getExecutor(executorId).addSpillMetrics(stderrLines);
                 }
             }
         }

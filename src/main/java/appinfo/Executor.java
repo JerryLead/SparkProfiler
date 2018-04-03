@@ -63,6 +63,9 @@ public class Executor {
 
     private List<TopMetrics> topMetricsList = new ArrayList<TopMetrics>();
 
+    private List<SpillMetrics> spillMetricsList = new ArrayList<SpillMetrics>();
+
+
     public Executor(JsonObject executorJson) {
         id = executorJson.get("id").getAsString();
         hostPort = executorJson.get("hostPort").getAsString();
@@ -308,4 +311,22 @@ public class Executor {
     }
 
 
+    // [Task 84 SpillMetrics] release = 3.7 GB, writeTime = 40 s, recordsWritten = 86, bytesWritten = 567.5 MB
+    public void addSpillMetrics(List<String> stderrLines) {
+        for (String line : stderrLines) {
+            if (line.contains("SpillMetrics]")) {
+                int taskId = Integer.parseInt(line.substring(line.indexOf("Task") + 5, line.indexOf("SpillMetrics") - 1));
+                double spilledMemoryGB = Double.parseDouble(line.substring(line.indexOf("release") + 10, line.indexOf("GB") - 1));
+                int writeTime = Integer.parseInt(line.substring(line.indexOf("writeTime") + 12, line.indexOf(" s,")));
+                long recordsWritten = Long.parseLong(line.substring(line.indexOf("recordsWritten") + 17, line.indexOf(", bytesWritten")));
+                double bytesWrittenMB = Double.parseDouble(line.substring(line.indexOf("bytesWritten") + 15, line.lastIndexOf("MB") - 1));
+                spillMetricsList.add(new SpillMetrics(taskId, spilledMemoryGB, writeTime, recordsWritten, bytesWrittenMB));
+
+            }
+        }
+    }
+
+    public List<SpillMetrics> getSpillMetricsList() {
+        return spillMetricsList;
+    }
 }

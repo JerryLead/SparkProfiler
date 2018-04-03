@@ -2,6 +2,9 @@ package appinfo;
 
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by xulijie on 17-7-3.
  */
@@ -53,6 +56,10 @@ public class TaskAttempt {
 
     private String errorMessage = null;
     private JsonObject taskAttempObject;
+
+    private double spillDuration = 0; // s
+    private List<SpillMetrics> spillMetricsList = new ArrayList<SpillMetrics>();
+
 
 
     public TaskAttempt(String appId, String appName, int stageId, JsonObject taskAttemptObject) {
@@ -264,6 +271,26 @@ public class TaskAttempt {
 
     public String jsonString() {
         return taskAttempObject.toString();
+    }
+
+
+    public void setSpillDuration(double spillDuration) {
+        this.spillDuration = spillDuration;
+    }
+
+    public double getSpillDuration() {
+        return spillDuration;
+    }
+
+    public void setSpillMetricsList(List<SpillMetrics> spillMetricsList) {
+        this.spillMetricsList = spillMetricsList;
+
+        for (SpillMetrics metrics : spillMetricsList)
+            spillDuration += metrics.getSpillDuration();
+    }
+
+    public List<SpillMetrics> getSpillMetricsList() {
+        return spillMetricsList;
     }
 
     public String toString() {

@@ -5,6 +5,7 @@ class HistogramStatistics:
         self.ylabel = metric[1]
         self.unit = metric[2]
         # self.title = metric[3]
+        self.legend = metric[3]
 
         self.parallel_means = [0, 0, 0]  # Executor(1-7G), Executor(2-14G), Executor(4-28G)
         self.cms_means = [0, 0, 0]

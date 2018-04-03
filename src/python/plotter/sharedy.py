@@ -8,6 +8,9 @@ directly on a new figure.
 
 import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib
+
+#matplotlib.font_manager._rebuild()
 
 # Simple data to display in various forms
 x = np.linspace(0, 2 * np.pi, 400)
@@ -15,7 +18,8 @@ y = np.sin(x ** 2)
 
 plt.close('all')
 
-
+plt.rc('font', family='Helvetica')
+#plt.rc('font', family='Arial')
 
 # Four axes, returned as a 2-d array
 f, axarr = plt.subplots(2, 2)

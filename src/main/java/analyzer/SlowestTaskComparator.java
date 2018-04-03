@@ -827,7 +827,7 @@ public class SlowestTaskComparator {
 
         boolean slowestmode = false;
 
-/*
+
         String applicationName = "GroupBy";
         int[] selectedStageIds = new int[]{1};
 
@@ -835,7 +835,7 @@ public class SlowestTaskComparator {
         String appJsonDir1 = appJsonRootDir + "GroupByRDD-1.0";
         SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics, false, slowestmode);
         comparator.computeRelativeDifference();
-*/
+
 
 /*
         String applicationName = "Join";
@@ -858,14 +858,14 @@ public class SlowestTaskComparator {
         comparator.computeRelativeDifference();
 */
 
-
+/*
         String applicationName = "PageRank";
         int[] selectedStageIds = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         String appJsonDir0 = appJsonRootDir + "PageRank-0.5";
         String appJsonDir1 = appJsonRootDir + "PageRank-1.0";
         SlowestTaskComparator comparator = new SlowestTaskComparator(applicationName, selectedStageIds, appJsonDir0, appJsonDir1, metrics, false, slowestmode);
         comparator.computeRelativeDifference();
-
+*/
 
     }
 }

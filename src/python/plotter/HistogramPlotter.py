@@ -5,6 +5,8 @@ class HistogramPlotter:
 
     @staticmethod
     def plotStatisticsByExecutor(statistics, title, ylabel, file, bar_width = 0.3):
+        plt.rc('font', family='Arial')
+
         n_groups = 3
         parallel_means = statistics.parallel_means
         cms_means = statistics.cms_means
@@ -83,3 +85,63 @@ class HistogramPlotter:
         plt.savefig(file, dpi=150)
 
     # https://matplotlib.org/gallery/api/barchart.html#sphx-glr-gallery-api-barchart-py
+    @staticmethod
+    def plotMultiStatisticsByGCAlgo(statisticsList, title, ylabel, file, bar_width=0.5):
+        plt.rc('font', family='Helvetica')
+
+        n_groups = 3
+        fig, ax = plt.subplots(figsize=(4, 3), dpi=80)
+        index = np.arange(n_groups)
+        opacity = 0.6
+        error_config = {'ecolor': '0.3'}
+        max = 0
+
+        for i in range(0, len(statisticsList)):
+            statistics = statisticsList[i]
+            exec_1_7G_means = statistics.exec_1_7G_means
+            exec_1_7G_stderr = statistics.exec_1_7G_stderr
+
+            rects1 = plt.bar(index + bar_width/2*i, exec_1_7G_means, bar_width / 2, alpha=opacity,
+                             label=statistics.legend, yerr=exec_1_7G_stderr, error_kw=error_config)
+            HistogramPlotter.autolabel(rects1, 'center')
+            for value in exec_1_7G_means:
+                if value > max:
+                    max = value
+        # plt.xlabel('Category')
+        plt.ylabel(ylabel, fontsize=12)
+        plt.title(title, fontsize=16)
+
+        # x_text=["PS-1-7G","CMS-1-7G","G1-1-7G","PS-2-14G","CMS-2-14G","G1-2-14G","PS-4-28G","CMS-4-28G","G1-4-28G"]
+        # plt.xticks(index - 0.2+ 2*bar_width, ('balde', 'bunny', 'dragon', 'happy', 'pillow'))
+        # plt.xticks(index - 0.2 + 2 * bar_width, ('balde', 'bunny', 'dragon'), fontsize = 18)
+
+        plt.yticks(fontsize=12)  # change the num axis size
+
+        plt.xticks(index + 0.5/2 * bar_width, ('Parallel', 'CMS', 'G1'), fontsize=16)
+        # print max
+        plt.ylim(0, max * 2)  # The ceil
+        plt.legend(fontsize=11, loc='upper left')
+        plt.tight_layout()
+
+        #plt.show()
+        plt.savefig(file)
+
+    @staticmethod
+    def autolabel(rects, xpos='center'):
+        """
+        Attach a text label above each bar in *rects*, displaying its height.
+
+        *xpos* indicates which side to place the text w.r.t. the center of
+        the bar. It can be one of the following {'center', 'right', 'left'}.
+        """
+
+        xpos = xpos.lower()  # normalize the case of the parameter
+        ha = {'center': 'center', 'right': 'left', 'left': 'right'}
+        offset = {'center': 0.5, 'right': 0.5, 'left': 0.5}  # x_txt = x + w*off
+
+        for rect in rects:
+            height = rect.get_height()
+            plt.text(rect.get_x() + rect.get_width()*offset[xpos], 1.05*height,
+                    '{}'.format(int(round(height))), ha=ha[xpos], va='bottom',
+                     fontsize=12)
+

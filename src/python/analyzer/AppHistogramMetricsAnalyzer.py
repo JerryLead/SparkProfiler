@@ -41,53 +41,73 @@ class AppHistogramMetricsAnalyzer:
                             self.metricsMap[metricName] = statistics
 
 
-    def plotMetrics(self, outputDir):
+    def plotMetrics(self, outputDir, metrics, title):
 
         if not os.path.exists(outputDir):
             os.mkdir(outputDir)
+        file = os.path.join(outputDir, title + ".pdf")
 
-        for metricName, statistics in self.metricsMap.items():
-            file = os.path.join(outputDir, metricName + ".pdf")
-            hplt.HistogramPlotter.plotStatisticsByGCAlgo(statistics, metricName, 'Time (s)', file)
-            print "[Done] The " + file + " has been generated!"
+        statisticsList = []
 
-
+        for metric in metrics:
+            statistics = self.metricsMap[metric[0]]
+            statisticsList.append(statistics)
+        ylabel = statisticsList[0].ylabel
+        hplt.HistogramPlotter.plotMultiStatisticsByGCAlgo(statisticsList, title, ylabel, file)
+        print "[Done] The " + file + " has been generated!"
 
 if __name__ == '__main__':
 
-    appName = "GroupByRDD-0.5"
+    appName = "PageRank-0.5"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/" + appName + "/Statistics"
     outputDir = statisticsDir + "/figures-histo"
-    metrics = [("app.duration", "Time (s)", 1000),
 
-               ("stage0.duration", "Time (s)", 1000),
-               ("stage0.jvmGCTime", "Time (s)", 1000),
-               ("stage0.task.executorRunTime", "Time (s)", 1000),
-               ("stage0.task.jvmGcTime", "Time (s)", 1000),
-               ("stage0.task.memoryBytesSpilled", "MB", 1024 * 1024),
-               ("stage0.task.diskBytesSpilled", "MB", 1024 * 1024),
+
+
+
+    metrics = [#("app.duration", "Time (s)", 1000),
+
+        #("stage0.duration", "Time (s)", 1000, "stage0.duartion"),
+               #("stage0.jvmGCTime", "Time (s)", 1000),
+               #("stage0.task.executorRunTime", "Time (s)", 1000),
+               #("stage0.task.jvmGcTime", "Time (s)", 1000),
+               #("stage0.task.memoryBytesSpilled", "MB", 1024 * 1024, "SpilledBytes"),
+               #("stage0.task.diskBytesSpilled", "MB", 1024 * 1024),
                #
-               ("stage1.duration", "Time (s)", 1000),
-               ("stage1.jvmGCTime", "Time (s)", 1000),
-               ("stage1.task.executorRunTime", "Time (s)", 1000),
-               ("stage1.task.jvmGcTime", "Time (s)", 1000),
-               ("stage1.task.memoryBytesSpilled", "MB", 1024 * 1024),
-               ("stage1.task.diskBytesSpilled", "MB", 1024 * 1024),
+        #("stage4+6+8+10+12+14+16+18+20+22.duration", "Time (s)", 1000, "stage2.duration"),
+        #("stage1+2+3+4+5+6+7+8+9+10.duration", "Time (s)", 1000, "stage1.duration"),
+        #("stage2.duration", "Time (s)", 1000),
+               #("stage1.jvmGCTime", "Time (s)", 1000),
+        #("stage2.task.duration", "Time (s)", 1000),
+        #("stage0.task.duration", "Time (s)", 1000, "task.duration"),
+               #("stage1.task.executorRunTime", "Time (s)", 1000),
+        #("stage2.task.jvmGcTime", "Time (s)", 1000),
+        #("stage1+2+3+4+5+6+7+8+9+10.task.jvmGcTime", "Time (s)", 1000, "task.jvmGcTime"),
+        ("stage1+2+3+4+5+6+7+8+9+10.task.memoryBytesSpilled", "MB", 1024 * 1024, "SpilledBytes"),
+               #("stage1.task.memoryBytesSpilled", "MB", 1024 * 1024),
+               #("stage1.task.diskBytesSpilled", "MB", 1024 * 1024),
 
                # ("executor.memoryUsed", "GB", 1024 * 1024 * 1024),
-               ("executor.totalDuration", "Time (s)", 1000),
-               ("executor.totalGCTime", "Time (s)", 1000),
-               # ("executor.maxMemory", "GB", 1024 * 1024 * 1024),
+               #("executor.totalDuration", "Time (s)", 1000),
+               #("executor.totalGCTime", "Time (s)", 1000),
+               #("executor.maxMemory", "GB", 1024 * 1024 * 1024),
+
+               #("executor.maxMemoryUsage", "GB", 1, "maxMemoryUsage"),
+               #("executor.maxCPUUsage", "100%", 100, "maxCPUUsage"),
 
                # ("executor.gc.footprint", "GB", 1024), # Maximal amount of memory allocated
                # ("executor.gc.freedMemoryByGC", "GB", 1024), # Total amount of memory that has been freed
-               # ("executor.gc.accumPause", "Time (s)", 1), # Sum of all pauses due to any kind of GC
-               # ("executor.gc.gcPause", "Time (s)", 1), # This shows all stop-the-world pauses, that are not full gc pauses.
+        #("executor.gc.accumPause", "Time (s)", 1, "totalPause"), # Sum of all pauses due to any kind of GC
+        #("executor.gc.gcPause", "Time (s)", 1, "YGCpause"), # This shows all stop-the-world pauses, that are not full gc pauses.
+        #("executor.gc.fullGCPause", "Time (s)", 1, "fullGCPause"), # This shows all stop-the-world pauses, that are
                # ("executor.gc.throughput", "%", 1), # Time percentage the application was NOT busy with GC
                # ("executor.gc.totalTime", "Time (s)", 1), # The duration of running executor
-               # ("executor.gc.gcPerformance", "MB/s", 1) # Performance of minor collections
+               #("executor.gc.gcPerformance", "MB/s", 1), # Performance of minor collections
+               #("executor.gc.fullGCPerformance", "MB/s", 1) # Performance of minor collections
                ]
     appMetricsAnalyzer = AppHistogramMetricsAnalyzer(appName, statisticsDir)
 
     appMetricsAnalyzer.analyzeMetrics(metrics)
-    appMetricsAnalyzer.plotMetrics(outputDir)
+    appMetricsAnalyzer.plotMetrics(outputDir, metrics, appName + "-" + "task-spilled")
+    #appMetricsAnalyzer.plotMetrics(outputDir, metrics, appName + "-" + "task-duration")
+    #appMetricsAnalyzer.plotMetrics(outputDir, metrics, appName + "-" + "stage-duration")

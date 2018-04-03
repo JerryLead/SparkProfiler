@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib
 
 class BoxPlotter:
     @staticmethod
@@ -39,4 +40,10 @@ class BoxPlotter:
         axes[0].set_ylabel(statistics.ylabel, fontsize=20)
         fig.suptitle(statistics.title, fontsize=22, y=1.07)
 
-        plt.savefig(file, dpi=150, bbox_inches='tight')
+
+
+        matplotlib.font_manager._rebuild()
+
+        plt.show()
+
+        #plt.savefig(file, dpi=150, bbox_inches='tight')

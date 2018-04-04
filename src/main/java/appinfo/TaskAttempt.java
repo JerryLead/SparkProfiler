@@ -282,6 +282,10 @@ public class TaskAttempt {
         return spillDuration;
     }
 
+    public double getComputationTime() {
+        return duration - spillDuration * 1000 - jvmGcTime;
+    }
+
     public void setSpillMetricsList(List<SpillMetrics> spillMetricsList) {
         this.spillMetricsList = spillMetricsList;
 

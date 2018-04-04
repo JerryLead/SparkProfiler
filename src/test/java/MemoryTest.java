@@ -6,6 +6,7 @@ import java.util.List;
  */
 public class MemoryTest {
     public static void main(String args[]) {
+
         int[] array = new int[1024];
 
         List<int[]> arrayList = new ArrayList<int[]>();

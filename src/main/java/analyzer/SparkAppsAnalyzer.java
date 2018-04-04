@@ -2,6 +2,7 @@ package analyzer;
 
 import appinfo.Application;
 import appinfo.Executor;
+import appinfo.SpillMetrics;
 import appinfo.TaskAttempt;
 import statstics.ApplicationStatistics;
 import util.FileTextWriter;
@@ -135,7 +136,16 @@ public class SparkAppsAnalyzer {
             String outputTaskInfoFile = appDir + File.separatorChar + dirName + File.separatorChar + appName + "-tasks.txt";
 
             StringBuilder sb = new StringBuilder();
-            sb.append("[appName = " + appName + "]\n");
+            sb.append("[appName = " + appName + "]\n\n");
+
+            String spilledMetrics = computeSpillMetrics(appEntry.getValue(), stageIds);
+            StringBuilder spillMetricsPrefix = new StringBuilder("[SpillMetrics][Stage");
+            for (int i : selectedStageIds) {
+                spillMetricsPrefix.append(i + "+");
+            }
+            spillMetricsPrefix.append("] ");
+
+            sb.append(spillMetricsPrefix.toString() + spilledMetrics + "\n");
 
             for (Application app : appEntry.getValue()) {
                 if (app.getStatus().equals("SUCCEEDED")) {
@@ -147,6 +157,39 @@ public class SparkAppsAnalyzer {
 
             FileTextWriter.write(outputTaskInfoFile, sb.toString());
         }
+    }
+
+    public String computeSpillMetrics(List<Application> appList, Set<Integer> stageIds) {
+
+        int totalTaskNum = 0;
+        int spilledTaskNum = 0;
+        int spillTimes = 0;
+        double spillDuration = 0;
+        double spilledMemoryGB = 0;
+
+
+        for (Application app : appList) {
+            if (app.getStatus().equals("SUCCEEDED")) {
+                for (TaskAttempt task : app.getTasksInStage(stageIds)) {
+                    totalTaskNum += 1;
+
+                    if (!task.getSpillMetricsList().isEmpty()) {
+                        spilledTaskNum += 1;
+
+                        for (SpillMetrics spillMetrics : task.getSpillMetricsList()) {
+                            spillTimes += 1;
+                            spillDuration += spillMetrics.getSpillDuration();
+                            spilledMemoryGB += spillMetrics.getSpilledMemoryGB();
+                        }
+                    }
+
+                }
+            }
+        }
+
+        String spilledMetrics = "totalTaskNum = " + totalTaskNum + ", spilledTaskNum = " + spilledTaskNum
+                + ", spillTimes = " + spillTimes + ", spillDuration = " + spillDuration + ", spilledMemoryGB = " + spilledMemoryGB;
+        return spilledMetrics;
     }
 
     public void outputSlowestTask(String appDir, String dirName, int[] selectedStageIds) {

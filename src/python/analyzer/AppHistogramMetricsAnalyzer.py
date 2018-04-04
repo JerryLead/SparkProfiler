@@ -41,11 +41,11 @@ class AppHistogramMetricsAnalyzer:
                             self.metricsMap[metricName] = statistics
 
 
-    def plotMetrics(self, outputDir, metrics, title):
+    def plotMetrics(self, outputDir, metrics, title, filename, ylim, legend, topLabel):
 
         if not os.path.exists(outputDir):
             os.mkdir(outputDir)
-        file = os.path.join(outputDir, title + ".pdf")
+        file = os.path.join(outputDir, filename + ".pdf")
 
         statisticsList = []
 
@@ -53,19 +53,47 @@ class AppHistogramMetricsAnalyzer:
             statistics = self.metricsMap[metric[0]]
             statisticsList.append(statistics)
         ylabel = statisticsList[0].ylabel
-        hplt.HistogramPlotter.plotMultiStatisticsByGCAlgo(statisticsList, title, ylabel, file)
+        hplt.HistogramPlotter.plotMultiStatisticsByGCAlgo(statisticsList, title, ylabel, file, ylim, legend, topLabel)
         print "[Done] The " + file + " has been generated!"
 
 if __name__ == '__main__':
 
-    appName = "PageRank-0.5"
+    appName = "GroupByRDD-0.5"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/" + appName + "/Statistics"
     outputDir = statisticsDir + "/figures-histo"
 
 
+    appMetricsAnalyzer = AppHistogramMetricsAnalyzer(appName, statisticsDir)
+
+    if (appName.startswith("GroupBy")):
+        title = "(a) GroupBy-0.5-stage-duration"
+        metrics = [
+            ("stage0.duration", "Average duration (s)", 1000, "map.stage"),
+            ("stage1.duration", "Average duration (s)", 1000, "reduce.stage"),
+
+        ]
+        ylim = 1.5
+        legend = "upper right"
+        topLabel = 1.05
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "stage-duration", ylim, legend, topLabel)
 
 
-    metrics = [#("app.duration", "Time (s)", 1000),
+        title = "(b) GroupBy-0.5-task-duration"
+        metrics = [
+            ("stage1.task.computationTime", "Average duration (s)", 1000, "Computation time"),
+            ("stage1.task.spillDuration", "Duration (s)", 1, "Spill time"),
+            ("stage1.task.jvmGcTime", "Duration (s)", 1000, "GC time")
+        ]
+        ylim = 2
+        topLabel = 1.1
+        legend = "upper right"
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
+
+
+
+    #metrics = [#("app.duration", "Time (s)", 1000),
 
         #("stage0.duration", "Time (s)", 1000, "stage0.duartion"),
                #("stage0.jvmGCTime", "Time (s)", 1000),
@@ -83,7 +111,7 @@ if __name__ == '__main__':
                #("stage1.task.executorRunTime", "Time (s)", 1000),
         #("stage2.task.jvmGcTime", "Time (s)", 1000),
         #("stage1+2+3+4+5+6+7+8+9+10.task.jvmGcTime", "Time (s)", 1000, "task.jvmGcTime"),
-        ("stage1+2+3+4+5+6+7+8+9+10.task.memoryBytesSpilled", "MB", 1024 * 1024, "SpilledBytes"),
+        #("stage1+2+3+4+5+6+7+8+9+10.task.memoryBytesSpilled", "MB", 1024 * 1024, "SpilledBytes"),
                #("stage1.task.memoryBytesSpilled", "MB", 1024 * 1024),
                #("stage1.task.diskBytesSpilled", "MB", 1024 * 1024),
 
@@ -104,10 +132,10 @@ if __name__ == '__main__':
                # ("executor.gc.totalTime", "Time (s)", 1), # The duration of running executor
                #("executor.gc.gcPerformance", "MB/s", 1), # Performance of minor collections
                #("executor.gc.fullGCPerformance", "MB/s", 1) # Performance of minor collections
-               ]
-    appMetricsAnalyzer = AppHistogramMetricsAnalyzer(appName, statisticsDir)
+    #           ]
+    #appMetricsAnalyzer = AppHistogramMetricsAnalyzer(appName, statisticsDir)
 
-    appMetricsAnalyzer.analyzeMetrics(metrics)
-    appMetricsAnalyzer.plotMetrics(outputDir, metrics, appName + "-" + "task-spilled")
+    #appMetricsAnalyzer.analyzeMetrics(metrics)
+    #appMetricsAnalyzer.plotMetrics(outputDir, metrics, appName + "-" + "task-spilled")
     #appMetricsAnalyzer.plotMetrics(outputDir, metrics, appName + "-" + "task-duration")
     #appMetricsAnalyzer.plotMetrics(outputDir, metrics, appName + "-" + "stage-duration")

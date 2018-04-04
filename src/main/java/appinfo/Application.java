@@ -174,6 +174,24 @@ public class Application {
         return sb.toString();
     }
 
+    public List<TaskAttempt> getTasksInStage(Set<Integer> stageIds) {
+        List<TaskAttempt> list = new ArrayList<TaskAttempt>();
+
+        for (Map.Entry<Integer, Stage> stageEntry : stageMap.entrySet()) {
+            if (stageIds.contains(stageEntry.getKey())) {
+                Stage selectedStage = stageEntry.getValue();
+                StageAttempt stageAttempt = selectedStage.getCompletedStage();
+
+                for (Task task : stageAttempt.getTaskMap().values()) {
+                    TaskAttempt taskAttempt = task.getFirstCompletedTask();
+                    list.add(taskAttempt);
+                }
+            }
+        }
+
+        return list;
+    }
+
     public double getMaxCPUUsage() {
         double cpuUsage = 0;
         for(Executor executor : executorMap.values()) {

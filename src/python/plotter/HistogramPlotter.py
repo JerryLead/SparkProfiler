@@ -86,7 +86,7 @@ class HistogramPlotter:
 
     # https://matplotlib.org/gallery/api/barchart.html#sphx-glr-gallery-api-barchart-py
     @staticmethod
-    def plotMultiStatisticsByGCAlgo(statisticsList, title, ylabel, file, bar_width=0.5):
+    def plotMultiStatisticsByGCAlgo(statisticsList, title, ylabel, file, ylim, legend, topLabel, bar_width=0.5):
         plt.rc('font', family='Helvetica')
 
         n_groups = 3
@@ -103,7 +103,7 @@ class HistogramPlotter:
 
             rects1 = plt.bar(index + bar_width/2*i, exec_1_7G_means, bar_width / 2, alpha=opacity,
                              label=statistics.legend, yerr=exec_1_7G_stderr, error_kw=error_config)
-            HistogramPlotter.autolabel(rects1, 'center')
+            HistogramPlotter.autolabel(rects1, topLabel, 'center')
             for value in exec_1_7G_means:
                 if value > max:
                     max = value
@@ -117,17 +117,20 @@ class HistogramPlotter:
 
         plt.yticks(fontsize=12)  # change the num axis size
 
-        plt.xticks(index + 0.5/2 * bar_width, ('Parallel', 'CMS', 'G1'), fontsize=16)
+        interval = 0.5/2
+        if (len(statisticsList) == 3):
+            interval = 0.5
+        plt.xticks(index + interval * bar_width, ('Parallel', 'CMS', 'G1'), fontsize=16)
         # print max
-        plt.ylim(0, max * 2)  # The ceil
-        plt.legend(fontsize=11, loc='upper left')
+        plt.ylim(0, max * ylim)  # The ceil
+        plt.legend(fontsize=12, loc=legend, frameon=False)
         plt.tight_layout()
 
         #plt.show()
         plt.savefig(file)
 
     @staticmethod
-    def autolabel(rects, xpos='center'):
+    def autolabel(rects, topLabel, xpos='center'):
         """
         Attach a text label above each bar in *rects*, displaying its height.
 
@@ -141,7 +144,7 @@ class HistogramPlotter:
 
         for rect in rects:
             height = rect.get_height()
-            plt.text(rect.get_x() + rect.get_width()*offset[xpos], 1.05*height,
+            plt.text(rect.get_x() + rect.get_width()*offset[xpos], topLabel*height,
                     '{}'.format(int(round(height))), ha=ha[xpos], va='bottom',
                      fontsize=12)
 

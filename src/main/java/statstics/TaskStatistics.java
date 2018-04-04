@@ -48,6 +48,7 @@ public class TaskStatistics {
     private Statistics shuffleWriteMetrics_recordsWritten;
 
     private Statistics spillDuration;
+    private Statistics computationTime;
 
     private List<TaskAttempt> slowestTasks;
 
@@ -98,6 +99,8 @@ public class TaskStatistics {
         jvmGcTime = new Statistics(taskAttemptObjs, "getJvmGcTime");
         resultSerializationTime = new Statistics(taskAttemptObjs, "getResultSerializationTime");
         spillDuration = new Statistics(taskAttemptObjs, "getSpillDuration");
+        computationTime = new Statistics(taskAttemptObjs, "getComputationTime");
+
 
         memoryBytesSpilled = new Statistics(taskAttemptObjs, "getMemoryBytesSpilled");
         diskBytesSpilled = new Statistics(taskAttemptObjs, "getDiskBytesSpilled");
@@ -133,6 +136,7 @@ public class TaskStatistics {
         sb.append("[" + prefix + ".task.executorRunTime] " + executorRunTime + "\n");
         sb.append("[" + prefix + ".task.executorCpuTime] " + executorCpuTime + "\n");
         sb.append("[" + prefix + ".task.resultSize] " + resultSize + "\n");
+        sb.append("[" + prefix + ".task.computationTime] " + computationTime + "\n");
         sb.append("[" + prefix + ".task.spillDuration] " + spillDuration + "\n");
         sb.append("[" + prefix + ".task.jvmGcTime] " + jvmGcTime + "\n");
         sb.append("[" + prefix + ".task.resultSerializationTime] " + resultSerializationTime + "\n");
@@ -151,6 +155,8 @@ public class TaskStatistics {
         sb.append("[" + prefix + ".task.shuffleWriteMetrics.bytesWritten] " + shuffleWriteMetrics_bytesWritten + "\n");
         sb.append("[" + prefix + ".task.shuffleWriteMetrics.writeTime] " + shuffleWriteMetrics_writeTime + "\n");
         sb.append("[" + prefix + ".task.shuffleWriteMetrics.recordsWritten] " + shuffleWriteMetrics_recordsWritten + "\n");
+
+
 
         return sb.toString();
     }

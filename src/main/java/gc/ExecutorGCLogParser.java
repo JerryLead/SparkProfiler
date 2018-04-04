@@ -1,5 +1,6 @@
 package gc;
 
+import generalGC.ParallelGCLogParser;
 import util.GCViewerNoneGUI;
 
 import java.io.File;
@@ -34,50 +35,84 @@ public class ExecutorGCLogParser {
         }
     }
 
-    /*
-    public static void parseExecutorGCLogToSummary(String gcLogFile) {
+
+    // java -jar gcviewer-1.3x.jar gc.log summary.csv [chart.png] [-t PLAIN|CSV|CSV_TS|SIMPLE|SUMMARY]
+    public static void parseExecutorGCLogToSummary(String gcLogFile, String summaryCSV, String type) {
 
         try {
             System.out.println("[GCLogParsing] " + gcLogFile);
-            gcViewerNoneGUI.doMain(new String[]{gcLogFile, exportCVSFile, chartPNGFile});
+            gcViewerNoneGUI.doMain(new String[]{gcLogFile, summaryCSV, "-t", type});
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-    */
+
+    public static void parseExecutorLogByGCViewer(String baseDir, String appName,
+                                           String medianParallelApp, String medianCMSApp, String medianG1App,
+                                           int ParallelExectuorID, int CMSExecutorID, int G1ExecutorID) {
+
+        String executorDir = baseDir + appName + File.separatorChar;
+        String ParallelGCLog = executorDir + medianParallelApp + File.separatorChar + "executors"
+                + File.separatorChar + ParallelExectuorID + File.separatorChar + "stdout";
+        String CMSG1Log = executorDir + medianCMSApp + File.separatorChar + "executors"
+                + File.separatorChar + CMSExecutorID + File.separatorChar + "stdout";
+        String G1Log = executorDir + medianG1App + File.separatorChar + "executors"
+                + File.separatorChar + G1ExecutorID + File.separatorChar + "stdout";
+
+        String outputDir = baseDir + appName + File.separatorChar + "SlowestTask";
+        String ParallelParsedLog = outputDir + File.separatorChar + "Parallel"
+                + File.separatorChar + "parallel-E" + ParallelExectuorID + ".csv";
+        String CMSParsedLog = outputDir + File.separatorChar + "CMS"
+                + File.separatorChar + "CMS-E" + CMSExecutorID + ".csv";
+        String G1ParsedLog = outputDir + File.separatorChar + "G1"
+                + File.separatorChar + "G1-E" + G1ExecutorID + ".csv";
+        File file = new File(ParallelParsedLog);
+        file = file.getParentFile();
+        if (!file.exists())
+            file.mkdirs();
+        file = new File(CMSParsedLog);
+        file = file.getParentFile();
+        if (!file.exists())
+            file.mkdirs();
+        file = new File(G1ParsedLog);
+        file = file.getParentFile();
+        if (!file.exists())
+            file.mkdirs();
+
+
+        parseExecutorGCLogToSummary(ParallelGCLog, ParallelParsedLog, "PLAIN");
+        parseExecutorGCLogToSummary(CMSG1Log, CMSParsedLog, "PLAIN");
+        parseExecutorGCLogToSummary(G1Log, G1ParsedLog, "PLAIN");
+
+        ParallelGCViewLogParser parser = new ParallelGCViewLogParser();
+        parser.parse(ParallelParsedLog);
+        String outputFile = outputDir + File.separatorChar + "Parallel"
+                + File.separatorChar + "parallel-E" + ParallelExectuorID + "-parsed.txt";
+        parser.outputUsage(outputFile);
+    }
+
     public static void main(String[] args) {
 
-        /*
-        String executorFile = "/Users/xulijie/Documents/GCResearch/Experiments/profiles/RDDJoin-Parallel-4-28G-0.5_app-20170623112547-0008/executors/";
+        String baseDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/";
 
-        String gcLogFile1 = executorFile + File.separatorChar + "0" + File.separatorChar + "stdout";
-        String gcLogFile2 = executorFile + File.separatorChar + "1" + File.separatorChar + "stdout";
+        String appName = "GroupByRDD-0.5";
+        String medianParallelApp = "GroupByRDD-Parallel-1-6656m-0.5-n1_app-20171120185427-0000";
+        String medianCMSApp = "GroupByRDD-CMS-1-6656m-0.5-n5_app-20171120195033-0019";
+        String medianG1App = "GroupByRDD-G1-1-6656m-0.5-n1_app-20171120201509-0030";
+        int ParallelExectuorID = 30;
+        int CMSExecutorID = 17;
+        int G1ExecutorID = 16;
 
-
-        // String gcLogFile = gcLogFile0 + gcLogFile1 + gcLogFile2 + gcLogFile3 + gcLogFile4 +
-        //        gcLogFile5 + gcLogFile6 + gcLogFile7;
-
-        String exportCVSFile1 = executorFile + File.separatorChar + "0/export0.csv";
-        String chartPNGFile1 = executorFile + File.separatorChar + "0/chart0.png";
-
-        String exportCVSFile2 = executorFile + File.separatorChar + "1/export1.csv";
-        String chartPNGFile2 = executorFile + File.separatorChar + "1/chart1.png";
-
-
-        parseExecutorGCLog(gcLogFile1, exportCVSFile1, chartPNGFile1);
-
-        parseExecutorGCLog(gcLogFile2, exportCVSFile2, chartPNGFile2);
-        */
-
-
+        parseExecutorLogByGCViewer(baseDir, appName, medianParallelApp, medianCMSApp, medianG1App,
+                ParallelExectuorID, CMSExecutorID, G1ExecutorID);
 
     }
 }
 
 /**
- * Max heap after full GC:
+ * Max heap after full GC:ParallelParsedLog
  * Max used heap after full gc. Indicates max live object size and can help to determine heap size.
  * <p>
  * Acc Pauses:

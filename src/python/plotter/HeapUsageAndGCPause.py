@@ -232,8 +232,8 @@ def plotHeapUsage(appName, gclogFile, gcpauseFile,outputFile):
 
 if __name__ == '__main__':
 
-    #dir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/Abnormal/Join-1.0-E1/gclogs"
-    dir = "/Users/jaxon/github/SparkProfiler/src/test/gclogs/"
+    dir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/Abnormal/Join-1.0-E1/gclogs"
+    #dir = "/Users/jaxon/github/SparkProfiler/src/test/gclogs/"
     # dir = "/Users/xulijie/dev/IdeaProjects/SparkProfiler/src/test/gclogs/"
     #outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/SVM-1.0-E1/"
     # outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/Join-1.0-E1/"

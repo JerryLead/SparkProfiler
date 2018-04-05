@@ -1,4 +1,4 @@
-package generalGC;
+package gc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class HeapUsage {
 
     // usage.addUsage("YGC", offsetTime, yBeforeMB, yAfterMB, youngMB, oldBeforeMB, oldAfterMB, oldMB, ygcSeconds, gcCause);
     public void addUsage(String gcType, double offsetTime, double yBeforeMB, double yAfterMB, double youngMB, double oldBeforeMB,
-                              double oldAfterMB, double oldMB, double gcSeconds, String gcCause) {
+                         double oldAfterMB, double oldMB, double gcSeconds, String gcCause) {
 
         Usage yUsage = new Usage("Young", gcType, offsetTime, yBeforeMB, yAfterMB, youngMB, gcSeconds, gcCause);
         youngGen.add(yUsage);

@@ -63,7 +63,7 @@ public class CMSGCLogParser {
 //                double youngMB = heapMB - oldMB;
 //
 //                usage.addYoungUsage(timestamp, yCurrentMB, youngMB, "FGC");
-                usage.addOldUsage(timestamp, oCurrentMB, oldMB, "FGC");
+                //usage.addOldUsage(timestamp, oCurrentMB, oldMB, "FGC");
 
             } else if (line.startsWith("[GC (CMS Final Remark)")) {
                 // 97189 K (154880 K)
@@ -83,8 +83,8 @@ public class CMSGCLogParser {
 
                 double fgcSeconds = Double.parseDouble(CMS_remark.substring(CMS_remark.indexOf(", ") + 2, CMS_remark.indexOf(" secs")));
 
-                usage.addYoungUsage(timestamp, yCurrentMB, youngMB, "FGC");
-                usage.addOldUsage(timestamp, oCurrentMB, oldMB, "FGC");
+                //usage.addYoungUsage(timestamp, yCurrentMB, youngMB, "FGC");
+                //usage.addOldUsage(timestamp, oCurrentMB, oldMB, "FGC");
 
             }
         }
@@ -118,12 +118,12 @@ public class CMSGCLogParser {
             double oldAfterMB = heapAfterMB - yAfterMB;
             double oldMB = heapMB - youngMB;
 
-            usage.addYoungUsage(timestamp, yBeforeMB, youngMB, "YGC");
-            usage.addYoungUsage(timestamp, yAfterMB, youngMB, "");
+            //usage.addYoungUsage(timestamp, yBeforeMB, youngMB, "YGC");
+            //usage.addYoungUsage(timestamp, yAfterMB, youngMB, "");
 
             if (oldAfterMB != oldBeforeMB) {
-                usage.addOldUsage(timestamp, oldBeforeMB, oldMB, "YGC");
-                usage.addOldUsage(timestamp, oldAfterMB, oldMB, "");
+                //usage.addOldUsage(timestamp, oldBeforeMB, oldMB, "YGC");
+                //usage.addOldUsage(timestamp, oldAfterMB, oldMB, "");
             }
 
         }

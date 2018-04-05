@@ -87,6 +87,7 @@ public class G1GCLogParser {
         double oldAfterTotalMB = heapAfterTotalMB - youngAfterMB;
 
 
+        /*
         if (gcCause.equals("YGC")) {
             usage.addYoungUsage(timestamp, yBeforeMB, youngBeforeMB, gcCause);
             usage.addYoungUsage(timestamp, yAfterMB, youngAfterMB, "");
@@ -102,7 +103,7 @@ public class G1GCLogParser {
             usage.addOldUsage(timestamp, oldBeforeMB, oldBeforeTotalMB, gcCause);
             usage.addOldUsage(timestamp, oldAfterMB, oldAfterTotalMB, "");
         }
-
+        */
     }
 
     /*

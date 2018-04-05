@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by xulijie on 18-4-4.
  */
-public class ParallelGCViewLogParser {
+public class ParallelGCViewerLogParser {
 
     private HeapUsage usage = new HeapUsage();
 
@@ -22,6 +22,8 @@ public class ParallelGCViewLogParser {
             if (line.startsWith("[2017-"))
                 parseGCRecord(line);
         }
+
+        display();
     }
 
     public void parseGCRecord(String gcRecord) {
@@ -61,16 +63,17 @@ public class ParallelGCViewLogParser {
             double ygcSeconds = Double.parseDouble(gcRecord.substring(gcRecord.lastIndexOf(", ") + 2, gcRecord.lastIndexOf(" secs")));
 
             // System.out.println(gcRecord);
-            System.out.println("[PSYoungGen: " + yBeforeMB + "M->" + yAfterMB + "M(" + youngMB + "M)] " +
-                    heapBeforeMB + "M->" + heapAfterMB + "M(" + heapMB + "M), " + ygcSeconds + " secs]");
+            // System.out.println("[PSYoungGen: " + yBeforeMB + "M->" + yAfterMB + "M(" + youngMB + "M)] " +
+            //        heapBeforeMB + "M->" + heapAfterMB + "M(" + heapMB + "M), " + ygcSeconds + " secs]");
 
-            usage.addYoungUsage(offsetTime, yBeforeMB, youngMB, "YGC");
-            usage.addYoungUsage(offsetTime, yAfterMB, youngMB, "");
+            // addYoungUsage(double time, double usage, double allocated, String gcType, String gcCause) {
+            // usage.addYoungUsage(offsetTime, yBeforeMB, youngMB, "YGC");
+            usage.addUsage("YGC", offsetTime, yBeforeMB, yAfterMB, youngMB, oldBeforeMB, oldAfterMB, oldMB, ygcSeconds, gcCause);
 
-            if (oldAfterMB != oldBeforeMB) {
+            // if (oldAfterMB != oldBeforeMB) {
                 //usage.addOldUsage(offsetTime, oldBeforeMB, oldMB, "YGC");
                 //usage.addOldUsage(offsetTime, oldAfterMB, oldMB, "");
-            }
+            // }
         }
         // Full GC
         // gcRecord = [PSYoungGen: 21483K->0K(150528K)] [ParOldGen: 17561K->38895K(226304K)] 39044K->38895K(376832K), [Metaspace: 20872K->20872K(1067008K)], 0.0736694 secs] [Times: user=0.13 sys=0.01, real=0.08 secs]
@@ -84,8 +87,8 @@ public class ParallelGCViewLogParser {
 
             int ParOldGenIndex = gcRecord.indexOf("ParOldGen") + 11;
             String ParOldGen = gcRecord.substring(ParOldGenIndex, gcRecord.indexOf(',', ParOldGenIndex));
-            double oBeforeMB = computeMB(ParOldGen.substring(0, ParOldGen.indexOf('K')));
-            double oAfterMB = computeMB(ParOldGen.substring(ParOldGen.indexOf('>') + 1, ParOldGen.indexOf("K(")));
+            double oldBeforeMB = computeMB(ParOldGen.substring(0, ParOldGen.indexOf('K')));
+            double oldAfterMB = computeMB(ParOldGen.substring(ParOldGen.indexOf('>') + 1, ParOldGen.indexOf("K(")));
             double oldMB = computeMB(ParOldGen.substring(ParOldGen.indexOf('(') + 1, ParOldGen.indexOf("K)")));
 
             int heapUsageIndex = gcRecord.lastIndexOf("] ") + 2;
@@ -102,15 +105,18 @@ public class ParallelGCViewLogParser {
 
             double fgcSeconds = Double.parseDouble(gcRecord.substring(gcRecord.lastIndexOf(", ") + 2, gcRecord.lastIndexOf(" secs")));
 
-            System.out.println("[PSYoungGen: " + yBeforeMB + "M->" + yAfterMB + "M(" + youngMB + "M)] [ParOldGen: "
-                    + oBeforeMB + "M->" + oAfterMB + "M(" + oldMB + "M)] " + heapBeforeMB + "M->" + heapAfterMB + "M(" + heapMB
-                    + "M), [Metaspace: " + metaBeforeMB + "M->" + metaAfterMB + "M(" + metaMB + "M)], " + fgcSeconds + " secs]");
+            // System.out.println("[PSYoungGen: " + yBeforeMB + "M->" + yAfterMB + "M(" + youngMB + "M)] [ParOldGen: "
+            //        + oBeforeMB + "M->" + oAfterMB + "M(" + oldMB + "M)] " + heapBeforeMB + "M->" + heapAfterMB + "M(" + heapMB
+            //        + "M), [Metaspace: " + metaBeforeMB + "M->" + metaAfterMB + "M(" + metaMB + "M)], " + fgcSeconds + " secs]");
+            /*
             usage.addYoungUsage(offsetTime, yBeforeMB, youngMB, "FGC");
             usage.addYoungUsage(offsetTime, yAfterMB, youngMB, "");
             usage.addOldUsage(offsetTime, oBeforeMB, oldMB, "FGC");
             usage.addOldUsage(offsetTime, oAfterMB, oldMB, "");
             usage.addMetaUsage(offsetTime, metaBeforeMB, metaMB, "FGC");
             usage.addMetaUsage(offsetTime, metaAfterMB, metaMB, "");
+            */
+            usage.addUsage("FGC", offsetTime, yBeforeMB, yAfterMB, youngMB, oldBeforeMB, oldAfterMB, oldMB, fgcSeconds, gcCause);
         }
     }
 
@@ -120,5 +126,10 @@ public class ParallelGCViewLogParser {
 
     public double computeMB(String KB) {
         return (double) Long.parseLong(KB) / 1024;
+    }
+
+
+    public void display() {
+        System.out.println(usage.toString());
     }
 }

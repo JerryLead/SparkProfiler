@@ -1,6 +1,5 @@
 package gc;
 
-import generalGC.ParallelGCLogParser;
 import util.GCViewerNoneGUI;
 
 import java.io.File;
@@ -86,11 +85,19 @@ public class ExecutorGCLogParser {
         parseExecutorGCLogToSummary(CMSG1Log, CMSParsedLog, "PLAIN");
         parseExecutorGCLogToSummary(G1Log, G1ParsedLog, "PLAIN");
 
-        ParallelGCViewLogParser parser = new ParallelGCViewLogParser();
-        parser.parse(ParallelParsedLog);
+
+        ParallelGCViewerLogParser parser = new ParallelGCViewerLogParser();
+        //parser.parse(ParallelParsedLog);
         String outputFile = outputDir + File.separatorChar + "Parallel"
                 + File.separatorChar + "parallel-E" + ParallelExectuorID + "-parsed.txt";
-        parser.outputUsage(outputFile);
+        //parser.outputUsage(outputFile);
+
+
+        CMSGCViewerLogParser cmsParser = new CMSGCViewerLogParser();
+        cmsParser.parse(CMSParsedLog);
+        outputFile = outputDir + File.separatorChar + "CMS"
+                + File.separatorChar + "CMS-E" + ParallelExectuorID + "-parsed.txt";
+        cmsParser.outputUsage(outputFile);
     }
 
     public static void main(String[] args) {

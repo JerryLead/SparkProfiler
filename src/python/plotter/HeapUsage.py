@@ -7,39 +7,61 @@ import os, sys
 from datetime import datetime
 from reader import FileReader
 
+
 class Usage:
-    def __init__(self, time, usage, allocated, gc):
+    def __init__(self, gcType, time, beforeGC, afterGC, allocated, gcPause, gcCause):
+        self.gcType = gcType
         self.time = time
-        self.usage = usage
+        self.beforeGC = beforeGC
+        self.afterGC = afterGC
         self.allocated = allocated
-        self.gc = gc
+        self.gcPause = gcPause
+        self.gcCause = gcCause
+
+    def getGCType(self):
+        return self.gcType;
 
     def getTime(self):
         return self.time
 
-    def getUsage(self):
-        return self.usage
+    def getBeforeGC(self):
+        return self.beforeGC
+
+    def getAfterGC(self):
+        return self.afterGC
 
     def getAllocated(self):
         return self.allocated
 
-    def getGC(self):
-        return self.gc
+    def getGCPause(self):
+        return self.gcPause
+
+    def getGCCause(self):
+        return self.gcCause
+
+
+
 
 class HeapUsage:
     def __init__(self):
         self.youngGen = []
         self.oldGen = []
-        self.metaGen = []
-
 
     def parseUsage(self, line):
-        time = float(line[line.find('time') + 7: line.find(',')])
-        usage = float(line[line.find('usage') + 8: line.rfind(',')])
-        allocated = float(line[line.find('allocated') + 12: ])
-        gc = line[line.find('(') + 1: line.find(')')]
+        gcType = line[line.find('(') + 1: line.find(')')]
+        commaIndex = line.find(',')
+        time = float(line[line.find('time') + 7: commaIndex])
+        commaIndex = line.find(',', commaIndex + 1)
+        beforeGC = float(line[line.find('beforeGC') + 11: commaIndex])
+        commaIndex = line.find(',', commaIndex + 1)
+        afterGC = float(line[line.find('afterGC') + 10: commaIndex])
+        commaIndex = line.find(',', commaIndex + 1)
+        allocated = float(line[line.find('allocated') + 12: commaIndex])
+        commaIndex = line.find(',', commaIndex + 1)
+        gcPause = float(line[line.find('gcPause') + 12: commaIndex - 1])
+        gcCause = line[line.find('gcCause') + 10: ]
 
-        return Usage(time, usage, allocated, gc)
+        return Usage(gcType, time, beforeGC, afterGC, allocated, gcPause, gcCause)
 
     def initHeapUsage(self, gclogFile):
         fileLines = FileReader.readLines(gclogFile)
@@ -50,20 +72,28 @@ class HeapUsage:
                     self.youngGen.append(heapUsage)
                 elif(line.startswith("[Old]")):
                     self.oldGen.append(heapUsage)
-                elif(line.startswith("[Metaspace]")):
-                    self.metaGen.append(heapUsage)
 
-    def getGenUsage(self, genLabel):
+
+    def getGenBeforeGC(self, genLabel):
         if (genLabel == "Young"):
             gen = self.youngGen
         elif (genLabel == "Old"):
             gen = self.oldGen
-        elif (genLabel == "Metaspace"):
-            gen = self.metaGen
 
         genUsage = []
         for usage in gen:
-            genUsage.append(usage.getUsage())
+            genUsage.append(usage.getBeforeGC())
+        return genUsage
+
+    def getGenAfterGC(self, genLabel):
+        if (genLabel == "Young"):
+            gen = self.youngGen
+        elif (genLabel == "Old"):
+            gen = self.oldGen
+
+        genUsage = []
+        for usage in gen:
+            genUsage.append(usage.getAfterGC())
         return genUsage
 
     def getGenAllocated(self, genLabel):
@@ -71,34 +101,34 @@ class HeapUsage:
             gen = self.youngGen
         elif (genLabel == "Old"):
             gen = self.oldGen
-        elif (genLabel == "Metaspace"):
-            gen = self.metaGen
 
+        genTime = []
         genAllocated = []
         for usage in gen:
+            if (len(genAllocated) > 0):
+                genTime.append(usage.getTime())
+                genAllocated.append(genAllocated[len(genAllocated) - 1])
+            genTime.append(usage.getTime())
             genAllocated.append(usage.getAllocated())
-        return genAllocated
+
+        return (genTime, genAllocated)
 
     def getGenTime(self, genLabel):
         if (genLabel == "Young"):
             gen = self.youngGen
         elif (genLabel == "Old"):
             gen = self.oldGen
-        elif (genLabel == "Metaspace"):
-            gen = self.metaGen
 
         genTime = []
         for usage in gen:
             genTime.append(usage.getTime())
         return genTime
 
-    def getGC(self, genLabel, gcLabel):
+    def getGCType(self, genLabel, gcLabel):
         if (genLabel == "Young"):
             gen = self.youngGen
         elif (genLabel == "Old"):
             gen = self.oldGen
-        elif (genLabel == "Metaspace"):
-            gen = self.metaGen
 
         genTime = []
         genUsage = []
@@ -130,19 +160,17 @@ def plotHeapUsage(appName, gclogFile, outputFile):
 
     colors = [u'#1f77b4', u'#ff7f0e', u'#2ca02c', u'#d62728', u'#9467bd', u'#8c564b', u'#e377c2', u'#7f7f7f', u'#bcbd22', u'#17becf']
 
-    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenUsage("Young"), '-', label='Used', linewidth=0.1, markersize=0.8, color=colors[0])
-    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenAllocated("Young"), '-', label='Allocated', color=colors[1])
-    (YGCTime, YGCUsage) = heapUsage.getGC("Young", "YGC")
-    (FGCTime, FGCUsage) = heapUsage.getGC("Young", "FGC")
-    axes[0].plot(YGCTime, YGCUsage, 'o', markersize=0.8, label='YGC', color=colors[0])
-    axes[0].plot(FGCTime, FGCUsage, '*', markersize=0.8, label='FGC', color=colors[3])
+    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenBeforeGC("Young"), '-o', label='BeforeGC', markersize=0.8, color=colors[0])
+    axes[0].plot(heapUsage.getGenTime("Young"), heapUsage.getGenAfterGC("Young"), '-*', label='AfterGC', color=colors[1])
+    allocated = heapUsage.getGenAllocated("Young")
+    axes[0].plot(allocated[0], allocated[1], '-', label='Allocated', color=colors[2])
 
-    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenUsage("Old"), '-', label='Usage', linewidth=0.8, markersize=1, color=colors[0])
-    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenAllocated("Old"), '-', label='Allocated', color=colors[1])
-    (YGCTime, YGCUsage) = heapUsage.getGC("Old", "YGC")
-    (FGCTime, FGCUsage) = heapUsage.getGC("Old", "FGC")
-    axes[1].plot(YGCTime, YGCUsage, 'o', markersize=0.8, label='YGC', color=colors[0])
-    axes[1].plot(FGCTime, FGCUsage, '*', markersize=2.0, label='FGC', color=colors[3])
+
+    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenBeforeGC("Old"), '-o', label='BeforeGC', markersize=1, color=colors[0])
+    axes[1].plot(heapUsage.getGenTime("Old"), heapUsage.getGenAfterGC("Old"), '-*', label='AfterGC', color=colors[1])
+    allocated = heapUsage.getGenAllocated("Old")
+    axes[1].plot(allocated[0], allocated[1], '-', label='Allocated', color=colors[2])
+
 
     axes[0].grid(False)
     axes[1].grid(False)
@@ -163,29 +191,16 @@ def plotHeapUsage(appName, gclogFile, outputFile):
 
 if __name__ == '__main__':
 
-    #dir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/Abnormal/Join-1.0-E1/gclogs"
-    dir = "/Users/jaxon/github/SparkProfiler/src/test/gclogs/"
-    # dir = "/Users/xulijie/dev/IdeaProjects/SparkProfiler/src/test/gclogs/"
-    #outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/SVM-1.0-E1/"
-    # outputDir = "/Users/xulijie/Documents/Texlipse/GC-Study/figures/Join-1.0-E1/"
-    #fileName = "Join-1.0-E1-P-12-23.txt"
-# /Users/jaxon/github/SparkProfiler/src/test/gclogs/ParsedParallelLog.txt
-
-    outputDir = "/Users/jaxon/github/SparkProfiler/"
-    fileName = "ParsedParallelLog.txt"
-    appName = "Join-1.0-E1-Parallel"
-    plotHeapUsage(appName, dir + fileName, outputDir + "Parallel.pdf")
-
-    fileName = "ParsedCMSLog.txt"
-    appName = "Join-1.0-E1-CMS"
-    plotHeapUsage(appName, dir + fileName, outputDir + "CMS.pdf")
-
-    fileName = "ParsedG1Log.txt"
-    appName = "Join-1.0-E1-G1"
-    plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
+    gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/"
+    appName = "GroupByRDD-0.5"
+    inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
+    parallelExecutorID = 30
+    cmsExecutorID = 17
+    g1ExecutorID = 16
+    #plotHeapUsage(appName, inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt",
+    #              "parallel-E" + str(parallelExecutorID) + ".pdf")
+    #plotHeapUsage(appName, inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", "CMS-E" + str(cmsExecutorID) + ".pdf")
+    plotHeapUsage(appName, inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", "G1-E" + str(g1ExecutorID) + ".pdf")
 
 
-    fileName = "Parsed-SVM-1.0-E1-G1-19.txt"
-    appName = "SVM-1.0-E1-G1"
-    plotHeapUsage(appName, dir + fileName, outputDir + "G1.pdf")
 

@@ -50,11 +50,11 @@ public class ExecutorGCLogParser {
 
     public static void parseExecutorLogByGCViewer(String baseDir, String appName,
                                            String medianParallelApp, String medianCMSApp, String medianG1App,
-                                           int ParallelExectuorID, int CMSExecutorID, int G1ExecutorID) {
+                                           int ParallelExecutorID, int CMSExecutorID, int G1ExecutorID) {
 
         String executorDir = baseDir + appName + File.separatorChar;
         String ParallelGCLog = executorDir + medianParallelApp + File.separatorChar + "executors"
-                + File.separatorChar + ParallelExectuorID + File.separatorChar + "stdout";
+                + File.separatorChar + ParallelExecutorID + File.separatorChar + "stdout";
         String CMSG1Log = executorDir + medianCMSApp + File.separatorChar + "executors"
                 + File.separatorChar + CMSExecutorID + File.separatorChar + "stdout";
         String G1Log = executorDir + medianG1App + File.separatorChar + "executors"
@@ -62,7 +62,7 @@ public class ExecutorGCLogParser {
 
         String outputDir = baseDir + appName + File.separatorChar + "SlowestTask";
         String ParallelParsedLog = outputDir + File.separatorChar + "Parallel"
-                + File.separatorChar + "parallel-E" + ParallelExectuorID + ".csv";
+                + File.separatorChar + "parallel-E" + ParallelExecutorID + ".csv";
         String CMSParsedLog = outputDir + File.separatorChar + "CMS"
                 + File.separatorChar + "CMS-E" + CMSExecutorID + ".csv";
         String G1ParsedLog = outputDir + File.separatorChar + "G1"
@@ -87,17 +87,23 @@ public class ExecutorGCLogParser {
 
 
         ParallelGCViewerLogParser parser = new ParallelGCViewerLogParser();
-        //parser.parse(ParallelParsedLog);
+        parser.parse(ParallelParsedLog);
         String outputFile = outputDir + File.separatorChar + "Parallel"
-                + File.separatorChar + "parallel-E" + ParallelExectuorID + "-parsed.txt";
-        //parser.outputUsage(outputFile);
+                + File.separatorChar + "Parallel-E" + ParallelExecutorID + "-parsed.txt";
+        parser.outputUsage(outputFile);
 
 
         CMSGCViewerLogParser cmsParser = new CMSGCViewerLogParser();
         cmsParser.parse(CMSParsedLog);
         outputFile = outputDir + File.separatorChar + "CMS"
-                + File.separatorChar + "CMS-E" + ParallelExectuorID + "-parsed.txt";
+                + File.separatorChar + "CMS-E" + CMSExecutorID + "-parsed.txt";
         cmsParser.outputUsage(outputFile);
+
+        G1GCViewerLogParser g1Parser = new G1GCViewerLogParser();
+        g1Parser.parse(G1ParsedLog);
+        outputFile = outputDir + File.separatorChar + "G1"
+                + File.separatorChar + "G1-E" + G1ExecutorID + "-parsed.txt";
+        g1Parser.outputUsage(outputFile);
     }
 
     public static void main(String[] args) {

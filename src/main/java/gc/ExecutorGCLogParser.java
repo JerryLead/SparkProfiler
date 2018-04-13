@@ -80,10 +80,14 @@ public class ExecutorGCLogParser {
         if (!file.exists())
             file.mkdirs();
 
-
+        // java -jar gcviewer-1.3x.jar gc.log summary.csv [chart.png] [-t PLAIN|CSV|CSV_TS|SIMPLE|SUMMARY]
         parseExecutorGCLogToSummary(ParallelGCLog, ParallelParsedLog, "PLAIN");
         parseExecutorGCLogToSummary(CMSG1Log, CMSParsedLog, "PLAIN");
         parseExecutorGCLogToSummary(G1Log, G1ParsedLog, "PLAIN");
+
+        //parseExecutorGCLogToSummary(ParallelGCLog, ParallelParsedLog, "CSV");
+        //parseExecutorGCLogToSummary(CMSG1Log, CMSParsedLog, "CSV");
+        //parseExecutorGCLogToSummary(G1Log, G1ParsedLog, "CSV");
 
 
         ParallelGCViewerLogParser parser = new ParallelGCViewerLogParser();
@@ -106,10 +110,27 @@ public class ExecutorGCLogParser {
         g1Parser.outputUsage(outputFile);
     }
 
+    private static void parseAllExecutorLogByGCViewer(String baseDir, String appName, String medianApp) {
+        baseDir = baseDir + appName + File.separatorChar;
+        String executorsDir = baseDir + medianApp + File.separatorChar + "executors";
+
+        for (File executorIdDir : new File(executorsDir).listFiles()) {
+            if (executorIdDir.isDirectory()) {
+                String executorId = executorIdDir.getName();
+                String gcLog = executorIdDir.getAbsolutePath() + File.separatorChar + "stdout";
+                String parsedLog = executorIdDir.getAbsolutePath() + File.separatorChar +
+                        "gcPause-E" + executorId + ".txt";
+                // java -jar gcviewer-1.3x.jar gc.log summary.csv [chart.png] [-t PLAIN|CSV|CSV_TS|SIMPLE|SUMMARY]
+                parseExecutorGCLogToSummary(gcLog, parsedLog, "PLAIN");
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
         String baseDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/";
 
+        /*
         String appName = "GroupByRDD-0.5";
         String medianParallelApp = "GroupByRDD-Parallel-1-6656m-0.5-n1_app-20171120185427-0000";
         String medianCMSApp = "GroupByRDD-CMS-1-6656m-0.5-n5_app-20171120195033-0019";
@@ -120,8 +141,57 @@ public class ExecutorGCLogParser {
 
         parseExecutorLogByGCViewer(baseDir, appName, medianParallelApp, medianCMSApp, medianG1App,
                 ParallelExectuorID, CMSExecutorID, G1ExecutorID);
+        */
+
+        /*
+        String appName = "RDDJoin-1.0";
+        String medianParallelApp = "RDDJoin-Parallel-1-6656m-1.0-n1_app-20171121172308-0000";
+        String medianCMSApp = "RDDJoin-CMS-1-6656m-1.0-n4_app-20171122070634-0018";
+        String medianG1App = "RDDJoin-G1-1-6656m-1.0-n3_app-20171122095318-0032";
+
+        int ParallelExectuorID = 14; // 12;
+        int CMSExecutorID = 23; // 25;
+        int G1ExecutorID = 28; // 13; //no spill 13
+
+        parseExecutorLogByGCViewer(baseDir, appName, medianParallelApp, medianCMSApp, medianG1App,
+                ParallelExectuorID, CMSExecutorID, G1ExecutorID);
+
+
+        parseAllExecutorLogByGCViewer(baseDir, appName, medianParallelApp);
+        parseAllExecutorLogByGCViewer(baseDir, appName, medianCMSApp);
+        parseAllExecutorLogByGCViewer(baseDir, appName, medianG1App);
+        */
+
+
+        String appName = "SVM-1.0";
+        String medianParallelApp = "SVM-Parallel-1-6656m-1.0-n1_app-20171117141140-0000";
+        String medianCMSApp = "SVM-CMS-1-6656m-1.0-n1_app-20171117175448-0015";
+        String medianG1App = "SVM-G1-1-6656m-1.0-n2_app-20171117214908-0031";
+        int ParallelExectuorID = 31;
+        int CMSExecutorID = 3;
+        int G1ExecutorID = 18; //12; // no spill 13
+
+        parseExecutorLogByGCViewer(baseDir, appName, medianParallelApp, medianCMSApp, medianG1App,
+                ParallelExectuorID, CMSExecutorID, G1ExecutorID);
+
+
+        /*
+        String appName = "PageRank-0.5";
+        String medianParallelApp = "PageRank-Parallel-1-6656m-0.5-n5_app-20171124230749-0004";
+        String medianCMSApp = "PageRank-CMS-1-6656m-0.5-n2_app-20171125032818-0016";
+        String medianG1App = "PageRank-G1-1-6656m-0.5-n2_app-20171125091857-0031";
+        int ParallelExectuorID = 28;
+        int CMSExecutorID = 14;
+        int G1ExecutorID = 27; //12; // no spill 13
+
+        parseExecutorLogByGCViewer(baseDir, appName, medianParallelApp, medianCMSApp, medianG1App,
+                ParallelExectuorID, CMSExecutorID, G1ExecutorID);
+        */
+
 
     }
+
+
 }
 
 /**

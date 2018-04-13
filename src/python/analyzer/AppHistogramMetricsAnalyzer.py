@@ -58,7 +58,10 @@ class AppHistogramMetricsAnalyzer:
 
 if __name__ == '__main__':
 
-    appName = "GroupByRDD-0.5"
+    #appName = "GroupByRDD-0.5"
+    #appName = "RDDJoin-1.0"
+    appName = "SVM-0.5"
+    #appName = "PageRank-0.5"
     statisticsDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/" + appName + "/Statistics"
     outputDir = statisticsDir + "/figures-histo"
 
@@ -66,20 +69,20 @@ if __name__ == '__main__':
     appMetricsAnalyzer = AppHistogramMetricsAnalyzer(appName, statisticsDir)
 
     if (appName.startswith("GroupBy")):
-        title = "(a) GroupBy-0.5-stage-duration"
+        title = "(a) GroupBy-0.5-task-duration"
         metrics = [
-            ("stage0.duration", "Average duration (s)", 1000, "map.stage"),
-            ("stage1.duration", "Average duration (s)", 1000, "reduce.stage"),
+            ("stage0.task.duration", "Average duration (s)", 1000, "map task duration"),
+            ("stage1.task.duration", "Average duration (s)", 1000, "reduce task duration"),
 
         ]
         ylim = 1.5
         legend = "upper right"
-        topLabel = 1.05
+        topLabel = 1.1
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "stage-duration", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
 
 
-        title = "(b) GroupBy-0.5-task-duration"
+        title = "(b) GroupBy-0.5-reduce-tasks"
         metrics = [
             ("stage1.task.computationTime", "Average duration (s)", 1000, "Computation time"),
             ("stage1.task.spillDuration", "Duration (s)", 1, "Spill time"),
@@ -89,11 +92,116 @@ if __name__ == '__main__':
         topLabel = 1.1
         legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
+
+
+    if (appName.startswith("RDDJoin")):
+        title = "(a) Join-1.0-task-duration"
+        metrics = [
+            ("stage0.task.duration", "Average duration (s)", 1000, "map1 task duration"),
+            ("stage1.task.duration", "Average duration (s)", 1000, "map2 task duration"),
+            ("stage2.task.duration", "Average duration (s)", 1000, "reduce task duration"),
+
+        ]
+        ylim = 1.5
+        legend = "upper right"
+        topLabel = 1.1
+        appMetricsAnalyzer.analyzeMetrics(metrics)
         appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
 
 
+        title = "(b) Join-1.0-reduce-tasks"
+        metrics = [
+            ("stage2.task.computationTime", "Average duration (s)", 1000, "Computation time"),
+            ("stage2.task.spillDuration", "Duration (s)", 1, "Spill time"),
+            ("stage2.task.jvmGcTime", "Duration (s)", 1000, "GC time")
+        ]
+        ylim = 2
+        topLabel = 1.1
+        legend = "upper right"
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
 
-    #metrics = [#("app.duration", "Time (s)", 1000),
+    if (appName.startswith("SVM-0.5")):
+        title = "(a) SVM-0.5-task-duration"
+        metrics = [
+            ("stage3+5+7+9+11+13+15+17+19+21.task.duration", "Average duration (s)", 1000, "iterative map tasks"),
+            ("stage4+6+8+10+12+14+16+18+20+22.task.duration", "Average duration (s)", 1000, "iterative reduce tasks"),
+
+        ]
+        ylim = 1.8
+        legend = "upper right"
+        topLabel = 1.02
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
+
+
+        title = "(b) SVM-0.5-iterative-tasks"
+        metrics = [
+            ("stage4+6+8+10+12+14+16+18+20+22.task.computationTime", "Average duration (s)", 1000, "Computation time"),
+            ("stage4+6+8+10+12+14+16+18+20+22.task.spillDuration", "Duration (s)", 1, "Spill time"),
+            ("stage4+6+8+10+12+14+16+18+20+22.task.jvmGcTime", "Duration (s)", 1000, "GC time")
+        ]
+        ylim = 2
+        topLabel = 1.02
+        legend = "upper right"
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
+
+    if (appName.startswith("SVM-1.0")):
+        title = "(a) SVM-1.0-task-duration"
+        metrics = [
+            ("stage3+5+7+9+11+13+15+17+19+21.task.duration", "Average duration (s)", 1000, "iterative map tasks"),
+            ("stage4+6+8+10+12+14+16+18+20+22.task.duration", "Average duration (s)", 1000, "iterative reduce tasks"),
+
+        ]
+        ylim = 1.8
+        legend = "upper right"
+        topLabel = 1.02
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
+
+
+        title = "(b) SVM-1.0-iterative-tasks"
+        metrics = [
+            ("stage4+6+8+10+12+14+16+18+20+22.task.computationTime", "Average duration (s)", 1000, "Computation time"),
+            ("stage4+6+8+10+12+14+16+18+20+22.task.spillDuration", "Duration (s)", 1, "Spill time"),
+            ("stage4+6+8+10+12+14+16+18+20+22.task.jvmGcTime", "Duration (s)", 1000, "GC time")
+        ]
+        ylim = 2
+        topLabel = 1.02
+        legend = "upper right"
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
+
+
+    if (appName.startswith("PageRank")):
+        title = "(a) PageRank-0.5-task-duration"
+        metrics = [
+            ("stage0.task.duration", "Average duration (s)", 1000, "map tasks"),
+            ("stage1+2+3+4+5+6+7+8+9+10.task.duration", "Average duration (s)", 1000, "iterative reduce tasks"),
+
+        ]
+        ylim = 1.5
+        legend = "upper right"
+        topLabel = 1.1
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
+
+
+        title = "(b) PageRank-0.5-iterative-tasks"
+        metrics = [
+            ("stage1+2+3+4+5+6+7+8+9+10.task.computationTime", "Average duration (s)", 1000, "Computation time"),
+            ("stage1+2+3+4+5+6+7+8+9+10.task.spillDuration", "Duration (s)", 1, "Spill time"),
+            ("stage1+2+3+4+5+6+7+8+9+10.task.jvmGcTime", "Duration (s)", 1000, "GC time")
+        ]
+        ylim = 2
+        topLabel = 1.1
+        legend = "upper right"
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
+
+        #metrics = [#("app.duration", "Time (s)", 1000),
 
         #("stage0.duration", "Time (s)", 1000, "stage0.duartion"),
                #("stage0.jvmGCTime", "Time (s)", 1000),

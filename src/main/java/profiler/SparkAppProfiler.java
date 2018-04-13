@@ -239,14 +239,14 @@ public class SparkAppProfiler {
         // String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/";
 
 
-
+        /*
         String app = "GroupBy";
         int[] selectedStageIds = new int[]{1};
         String appJsonDir = appJsonRootDir + "GroupByRDD-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "GroupByRDD-1.0";
         profile(app, appJsonDir, selectedStageIds);
-
+        */
 
 
         /*
@@ -259,14 +259,13 @@ public class SparkAppProfiler {
         */
 
 
-        /*
         String  app = "SVM";
         int[] selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};
         String appJsonDir = appJsonRootDir + "SVM-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "SVM-1.0";
         profile(app, appJsonDir, selectedStageIds);
-        */
+
 
         /*
         String app = "PageRank";

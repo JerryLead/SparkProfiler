@@ -167,6 +167,7 @@ public class SparkAppsAnalyzer {
         double spillDuration = 0;
         double spilledMemoryGB = 0;
 
+        List<Double> durationList = new ArrayList<Double>();
 
         for (Application app : appList) {
             if (app.getStatus().equals("SUCCEEDED")) {
@@ -180,6 +181,7 @@ public class SparkAppsAnalyzer {
                             spillTimes += 1;
                             spillDuration += spillMetrics.getSpillDuration();
                             spilledMemoryGB += spillMetrics.getSpilledMemoryGB();
+                            durationList.add(spillMetrics.getSpillDuration());
                         }
                     }
 
@@ -189,6 +191,21 @@ public class SparkAppsAnalyzer {
 
         String spilledMetrics = "totalTaskNum = " + totalTaskNum + ", spilledTaskNum = " + spilledTaskNum
                 + ", spillTimes = " + spillTimes + ", spillDuration = " + spillDuration + ", spilledMemoryGB = " + spilledMemoryGB;
+
+        spilledMetrics += "\n";
+        durationList.sort(new Comparator<Double>() {
+            @Override
+            public int compare(Double o1, Double o2) {
+                return (int)(o1 - o2);
+            }
+        });
+
+        spilledMetrics += "[";
+        for (double d : durationList) {
+            spilledMetrics += d + ", ";
+        }
+        spilledMetrics += "]";
+
         return spilledMetrics;
     }
 

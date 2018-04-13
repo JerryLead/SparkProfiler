@@ -72,10 +72,10 @@ public class HeapUsage {
         Usage yUsage = new Usage("Young", gcType, offsetTime, yBeforeMB, yAfterMB, youngMB, gcSeconds, gcCause);
         youngGen.add(yUsage);
 
-        if (oldBeforeMB != oldAfterMB) {
-            Usage oUsage = new Usage("Old", gcType, offsetTime, oldBeforeMB, oldAfterMB, oldMB, gcSeconds, gcCause);
-            oldGen.add(oUsage);
-        }
+        //if (oldBeforeMB != oldAfterMB) {
+        Usage oUsage = new Usage("Old", gcType, offsetTime, oldBeforeMB, oldAfterMB, oldMB, gcSeconds, gcCause);
+        oldGen.add(oUsage);
+        //}
         //    System.out.println(gcType + " " + offsetTime + " " + yBeforeMB + " " + yAfterMB + " " + youngMB + " " + gcCause);
     }
 }

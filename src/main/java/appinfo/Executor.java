@@ -317,9 +317,12 @@ public class Executor {
             if (line.contains("SpillMetrics]")) {
                 int taskId = Integer.parseInt(line.substring(line.indexOf("Task") + 5, line.indexOf("SpillMetrics") - 1));
                 double spilledMemoryGB = Double.parseDouble(line.substring(line.indexOf("release") + 10, line.indexOf("B,") - 2));
+                if (line.contains("GB"))
+                    spilledMemoryGB *= 1024;
                 int writeTime = Integer.parseInt(line.substring(line.indexOf("writeTime") + 12, line.indexOf(" s,")));
                 long recordsWritten = Long.parseLong(line.substring(line.indexOf("recordsWritten") + 17, line.indexOf(", bytesWritten")));
                 double bytesWrittenMB = Double.parseDouble(line.substring(line.indexOf("bytesWritten") + 15, line.lastIndexOf("B") - 2));
+
                 spillMetricsList.add(new SpillMetrics(taskId, spilledMemoryGB, writeTime, recordsWritten, bytesWrittenMB));
 
             }

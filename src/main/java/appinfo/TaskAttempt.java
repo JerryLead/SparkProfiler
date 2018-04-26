@@ -307,6 +307,7 @@ public class TaskAttempt {
         sb.append("[" + prefix + ".task.attemptId] " + attempt + "\n");
         sb.append("[" + prefix + ".task.executorId] " + executorId + "\n");
         sb.append("[" + prefix + ".task.duration] " + duration + "\n");
+        sb.append("[" + prefix + ".task.spillDuration] " + spillDuration + "\n");
         sb.append("[" + prefix + ".task.executorDeserializeTime] " + executorDeserializeTime + "\n");
         sb.append("[" + prefix + ".task.executorDeserializeCpuTime] " + executorDeserializeCpuTime + "\n");
         sb.append("[" + prefix + ".task.executorRunTime] " + executorRunTime + "\n");

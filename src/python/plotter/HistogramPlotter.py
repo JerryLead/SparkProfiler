@@ -145,6 +145,6 @@ class HistogramPlotter:
         for rect in rects:
             height = rect.get_height()
             plt.text(rect.get_x() + rect.get_width()*offset[xpos], topLabel*height,
-                    '{}'.format(round(height, 1)), ha=ha[xpos], va='bottom',
+                    '{}'.format(int(round(height, 1))), ha=ha[xpos], va='bottom',
                      fontsize=12)
 

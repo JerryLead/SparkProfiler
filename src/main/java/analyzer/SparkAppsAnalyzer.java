@@ -190,7 +190,8 @@ public class SparkAppsAnalyzer {
         }
 
         String spilledMetrics = "totalTaskNum = " + totalTaskNum + ", spilledTaskNum = " + spilledTaskNum
-                + ", spillTimes = " + spillTimes + ", spillDuration = " + spillDuration + ", spilledMemoryGB = " + spilledMemoryGB;
+                + ", spillTimes = " + spillTimes + ", spillDuration = " + spillDuration + ", spilledMemoryGB = " + spilledMemoryGB
+                + ", avgSpillTime = " + spillDuration / spillTimes + ", avgSpillMemoryGB = " + spilledMemoryGB / spillTimes;
 
         spilledMetrics += "\n";
         durationList.sort(new Comparator<Double>() {
@@ -200,13 +201,39 @@ public class SparkAppsAnalyzer {
             }
         });
 
+        /*
         spilledMetrics += "[";
         for (double d : durationList) {
             spilledMetrics += d + ", ";
         }
         spilledMetrics += "]";
+        */
 
-        return spilledMetrics;
+        StringBuilder sb = new StringBuilder();
+
+        for (Application app : appList) {
+            if (app.getStatus().equals("SUCCEEDED")) {
+                for (TaskAttempt task : app.getTasksInStage(stageIds)) {
+                    totalTaskNum += 1;
+
+                    if (!task.getSpillMetricsList().isEmpty()) {
+                        spilledTaskNum += 1;
+
+                        for (SpillMetrics spillMetrics : task.getSpillMetricsList()) {
+                            String taskSpillInfo = "[Task " + spillMetrics.getTaskId() + "] spillDuration = " + spillMetrics.getSpillDuration()
+                                    + ", spillMemory = " + spillMetrics.getSpilledMemoryGB() + ", spillRecords = " + spillMetrics.getRecordsWritten();
+
+                            sb.append(taskSpillInfo + "\n");
+                        }
+                    }
+
+                }
+            }
+        }
+
+        sb.append("\n");
+
+        return spilledMetrics + sb.toString();
     }
 
     public void outputSlowestTask(String appDir, String dirName, int[] selectedStageIds) {

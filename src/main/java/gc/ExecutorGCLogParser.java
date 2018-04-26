@@ -162,7 +162,7 @@ public class ExecutorGCLogParser {
         parseAllExecutorLogByGCViewer(baseDir, appName, medianG1App);
         */
 
-
+        /*
         String appName = "SVM-1.0";
         String medianParallelApp = "SVM-Parallel-1-6656m-1.0-n1_app-20171117141140-0000";
         String medianCMSApp = "SVM-CMS-1-6656m-1.0-n1_app-20171117175448-0015";
@@ -173,20 +173,20 @@ public class ExecutorGCLogParser {
 
         parseExecutorLogByGCViewer(baseDir, appName, medianParallelApp, medianCMSApp, medianG1App,
                 ParallelExectuorID, CMSExecutorID, G1ExecutorID);
+        */
 
 
-        /*
         String appName = "PageRank-0.5";
-        String medianParallelApp = "PageRank-Parallel-1-6656m-0.5-n5_app-20171124230749-0004";
+        String medianParallelApp = "PageRank-Parallel-1-6656m-0.5-n4_app-20171124224112-0003";
         String medianCMSApp = "PageRank-CMS-1-6656m-0.5-n2_app-20171125032818-0016";
-        String medianG1App = "PageRank-G1-1-6656m-0.5-n2_app-20171125091857-0031";
-        int ParallelExectuorID = 28;
+        String medianG1App = "PageRank-G1-1-6656m-0.5-n3_app-20171125095838-0032";
+        int ParallelExectuorID = 1; //28;
         int CMSExecutorID = 14;
-        int G1ExecutorID = 27; //12; // no spill 13
+        int G1ExecutorID = 28;//27; //12; // no spill 13
 
         parseExecutorLogByGCViewer(baseDir, appName, medianParallelApp, medianCMSApp, medianG1App,
                 ParallelExectuorID, CMSExecutorID, G1ExecutorID);
-        */
+
 
 
     }

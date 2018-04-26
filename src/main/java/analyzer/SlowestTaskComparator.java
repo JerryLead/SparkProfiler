@@ -796,7 +796,7 @@ public class SlowestTaskComparator {
 
     public static void main(String args[]) {
 
-        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/medianProfiles/";
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/";
 
         String[] metrics = {
                 "Mode",

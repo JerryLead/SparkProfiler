@@ -183,6 +183,7 @@ public class SlowestTaskInfoCollector {
           "Mode",
           "ID",
           "Duration",
+
           "CPU Time",
           "GC Time",
           "Shuffled Size/Records",

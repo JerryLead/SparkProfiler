@@ -242,7 +242,7 @@ def plotHeapUsage(mode, appName, title, gclogFile, outputFile):
 
     axes[0].legend((YoungAllocatedLine, YoungUsageLine),
                    ("Allocated", "Usage"),
-                   loc='upper center', ncol=2, frameon=False)
+                   loc='upper left', ncol=1, frameon=False)
 
     # draw GCPause time bar plot
 
@@ -263,7 +263,7 @@ def plotHeapUsage(mode, appName, title, gclogFile, outputFile):
 
     axes3.legend((OldAllocatedLine, OldUsageLine, YGCBar, FGCBar),
                  ("Allocated", "Usage", "YGC pause", "FGC pause"),
-                 loc='upper center', ncol=4, frameon=False)
+                 loc='upper left', ncol=1, frameon=False)
 
     fig = plt.gcf()
     #plt.show()
@@ -280,9 +280,9 @@ if __name__ == '__main__':
 
     appName = "GroupByRDD-0.5"
     inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
-    parallelExecutorID = 30
+    parallelExecutorID = 29 #30
     cmsExecutorID = 17
-    g1ExecutorID = 16
+    g1ExecutorID = 15 #18 #16
     plotHeapUsage(mode, appName, "(a) GroupBy-0.5-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
     plotHeapUsage(mode, appName, "(b) GroupBy-0.5-Slowest-CMS-task",inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
     plotHeapUsage(mode, appName, "(c) GroupBy-0.5-Slowest-G1-task",inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")

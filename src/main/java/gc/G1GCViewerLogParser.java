@@ -60,7 +60,8 @@ public class G1GCViewerLogParser {
             // System.out.println(" yBeforeMB = " + yBeforeMB + ", yAfterMB = " + yAfterMB + ", youngMB = " + youngMB);
 
             // 129024K->15319K(494592K)
-            int heapUsageIndex = line.indexOf("] ", EdenIndex) + 2;
+            int heapUsageIndex = line.lastIndexOf("] ") + 2;
+            // int heapUsageIndex = line.indexOf("] ", EdenIndex) + 2;
             String heapUsage = line.substring(heapUsageIndex, line.indexOf(',', heapUsageIndex));
             double heapBeforeMB = computeMB(heapUsage.substring(0, heapUsage.indexOf('K')));
             double heapAfterMB = computeMB(heapUsage.substring(heapUsage.indexOf('>') + 1, heapUsage.indexOf("K(")));

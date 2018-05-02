@@ -130,18 +130,23 @@ public class ExecutorGCLogParser {
 
         String baseDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/";
 
-        /*
+
         String appName = "GroupByRDD-0.5";
-        String medianParallelApp = "GroupByRDD-Parallel-1-6656m-0.5-n1_app-20171120185427-0000";
+        //String medianParallelApp = "GroupByRDD-Parallel-1-6656m-0.5-n1_app-20171120185427-0000";
+        //String medianCMSApp = "GroupByRDD-CMS-1-6656m-0.5-n5_app-20171120195033-0019";
+        //String medianG1App = "GroupByRDD-G1-1-6656m-0.5-n1_app-20171120201509-0030";
+
+        String medianParallelApp = "GroupByRDD-Parallel-1-6656m-0.5-n2_app-20171120185825-0001";
         String medianCMSApp = "GroupByRDD-CMS-1-6656m-0.5-n5_app-20171120195033-0019";
-        String medianG1App = "GroupByRDD-G1-1-6656m-0.5-n1_app-20171120201509-0030";
-        int ParallelExectuorID = 30;
+        String medianG1App = "GroupByRDD-G1-1-6656m-0.5-n5_app-20171120202831-0034";
+
+        int ParallelExectuorID = 29;
         int CMSExecutorID = 17;
-        int G1ExecutorID = 16;
+        int G1ExecutorID = 15; //15; // 18;
 
         parseExecutorLogByGCViewer(baseDir, appName, medianParallelApp, medianCMSApp, medianG1App,
                 ParallelExectuorID, CMSExecutorID, G1ExecutorID);
-        */
+
 
         /*
         String appName = "RDDJoin-1.0";
@@ -175,7 +180,7 @@ public class ExecutorGCLogParser {
                 ParallelExectuorID, CMSExecutorID, G1ExecutorID);
         */
 
-
+        /*
         String appName = "PageRank-0.5";
         String medianParallelApp = "PageRank-Parallel-1-6656m-0.5-n4_app-20171124224112-0003";
         String medianCMSApp = "PageRank-CMS-1-6656m-0.5-n2_app-20171125032818-0016";
@@ -187,7 +192,7 @@ public class ExecutorGCLogParser {
         parseExecutorLogByGCViewer(baseDir, appName, medianParallelApp, medianCMSApp, medianG1App,
                 ParallelExectuorID, CMSExecutorID, G1ExecutorID);
 
-
+        */
 
     }
 

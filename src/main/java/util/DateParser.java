@@ -16,7 +16,8 @@ public class DateParser {
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'GMT'", Locale.CHINA);
     // e.g., date = "2017-05-30T16:25:43.699GMT"
 
-
+    // "17/11/20 19:01:15"
+    private static SimpleDateFormat timeFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss", Locale.CHINA);
 
     public static long parseDate(String dateString) {
         Date date = null;
@@ -58,6 +59,17 @@ public class DateParser {
         return value;
     }
 
+    public static long getTimeStamp(String startTime) {
+        Date date = null;
+        try {
+            date = timeFormat.parse(startTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date.getTime() / 1000;
+    }
+
     public static void main(String[] args) {
         String startTime = "2017-11-20T11:51:06.245GMT";
         long duration = 4677;
@@ -75,5 +87,11 @@ public class DateParser {
         System.out.println("00:02:00 = " + getTimeValue("00:02:00"));
 
 
+        startTime = "17/11/20 19:01:15";
+        long timeStamp = getTimeStamp(startTime);
+        System.out.println(timeStamp);
+
     }
+
+
 }

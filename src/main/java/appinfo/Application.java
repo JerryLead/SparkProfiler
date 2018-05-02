@@ -232,4 +232,21 @@ public class Application {
         }
         return memoryUsage;
     }
+
+    public void countGCTimeInShuffle() {
+        double avgGCTimeInShuffle = 0;
+        int gcPause = 0;
+
+        for (Executor executor : executorMap.values()) {
+            for (Double gcTimeInShuffle : executor.getGcTimeInShuffleList()) {
+                gcPause += 1;
+                avgGCTimeInShuffle += gcTimeInShuffle;
+            }
+        }
+
+        if (gcPause > 0)
+            avgGCTimeInShuffle = avgGCTimeInShuffle / gcPause;
+
+        System.out.println("[" + appId + "][GCTimeInShuffle] gcPause = " + gcPause + ", avgGCTimeInShuffle = " + avgGCTimeInShuffle);
+    }
 }

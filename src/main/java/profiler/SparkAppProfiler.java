@@ -217,6 +217,10 @@ public class SparkAppProfiler {
         */
         // System.out.println("[Median] appName = " + medianApp.getName() + ", appId = " + medianApp.getAppId() + ", duration = " + medianApp.getDuration());
         // System.out.println("[Min] appName = " + apps.get(0).getName() + ", appId = " + apps.get(0).getAppId() + ", duration = " + apps.get(0).getDuration());
+        for (Application a : apps) {
+            a.countGCTimeInShuffle();
+        }
+
     }
 
     public static List<Application> profileMedianApps(String appJsonDir) {
@@ -235,28 +239,27 @@ public class SparkAppProfiler {
         // 2. If useAppList, all the applications in the appJsonDir will be profiled.
         // Users need to specify the appIds to be profiled
 
-        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/";
-        // String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/NewExperiments/profiles/";
+        // String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/";
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/";
 
-
-
+        /*
         String app = "GroupBy";
         int[] selectedStageIds = new int[]{1};
         String appJsonDir = appJsonRootDir + "GroupByRDD-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "GroupByRDD-1.0";
         profile(app, appJsonDir, selectedStageIds);
+        */
 
 
 
-        /*
         String app = "Join";
         int[] selectedStageIds = new int[]{2};
         String appJsonDir = appJsonRootDir + "RDDJoin-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "RDDJoin-1.0";
         profile(app, appJsonDir, selectedStageIds);
-        */
+
 
         /*
         String  app = "SVM";

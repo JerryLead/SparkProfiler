@@ -68,6 +68,11 @@ public class ExecutorsJsonParser {
                             + "stderr";
                     List<String> stderrLines = JsonFileReader.readFileLines(stderr);
                     app.getExecutor(executorId).addSpillMetrics(stderrLines);
+
+                    String gcEventFile = executorDir.getAbsolutePath() + File.separatorChar
+                            + "gcEvent-" + executorId + ".txt";
+                    List<String> gcEventLines = JsonFileReader.readFileLines(gcEventFile);
+                    app.getExecutor(executorId).countGCTimeInShuffleSpill(gcEventLines);
                 }
             }
         }

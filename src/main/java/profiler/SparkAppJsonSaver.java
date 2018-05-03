@@ -160,12 +160,15 @@ public class SparkAppJsonSaver {
                             String chartPNGFile = executorDir.getAbsolutePath() + File.separatorChar + "gcChart-" + executorId + ".png";
 
                             String gcEventFile = executorDir.getAbsolutePath() + File.separatorChar + "gcEvent-" + executorId + ".txt";
+                            String gcPlainEventFile = executorDir.getAbsolutePath() + File.separatorChar + "gcPlainEvent-" + executorId + ".txt";
 
                             String gcMetricsFile = executorDir.getAbsolutePath() + File.separatorChar + "gcMetrics-" + executorId + ".json";
                             if (FileChecker.isGCFile(gcLogFile)) {
                                 // ExecutorGCLogParser.parseExecutorGCLog(gcLogFile, exportCVSFile, chartPNGFile);
-                                ExecutorGCLogParser.parseExecutorGCLogToSummary(gcLogFile, gcEventFile, "CSV_TS");
-                                ExecutorGCLogParser.parseExecutorGCLogToSummary(gcLogFile, exportCVSFile, "SUMMARY");
+                                // ExecutorGCLogParser.parseExecutorGCLogToSummary(gcLogFile, gcEventFile, "CSV_TS");
+                                // ExecutorGCLogParser.parseExecutorGCLogToSummary(gcLogFile, exportCVSFile, "SUMMARY");
+                                ExecutorGCLogParser.parseExecutorGCLogToSummary(gcLogFile, gcPlainEventFile, "PLAIN");
+
                                 // ExecutorGCLogParserWithGCeasy.parseExecutorGCLog(gcLogFile, gcMetricsFile);
                             }
 
@@ -354,7 +357,9 @@ public class SparkAppJsonSaver {
         //       app-20170623112547-0008
         String appIdsFile = "/Users/xulijie/Documents/GCResearch/PaperExperiments/applists/appList.txt";
         // String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/RDDJoin-1.0";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/PageRank-0.5";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/PageRank-0.5";
+        // String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/GroupByRDD-0.5";
+
         String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/SVM-1.0-6.5G-G1";
 
         // The executor log files are stored on each slave node

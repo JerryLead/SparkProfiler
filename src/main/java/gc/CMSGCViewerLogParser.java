@@ -12,6 +12,10 @@ import java.util.List;
 public class CMSGCViewerLogParser {
     private HeapUsage usage = new HeapUsage();
 
+    private double STWPauseTime = 0;
+    private double youngGCTime = 0;
+    private double fullGCTime = 0;
+
     public void parse(String logFile) {
         List<String> lines = JsonFileReader.readFileLines(logFile);
 
@@ -23,6 +27,19 @@ public class CMSGCViewerLogParser {
         }
         display();
 
+    }
+
+    public GCStatistics parseStatistics(String logFile) {
+        List<String> lines = JsonFileReader.readFileLines(logFile);
+
+        for (String line : lines) {
+            line = line.trim();
+
+            if (line.startsWith("[2017-"))
+                parseGCRecord(line);
+        }
+
+        return new GCStatistics(STWPauseTime, youngGCTime, fullGCTime, 0);
     }
 
     public void parseGCRecord(String line) {
@@ -74,6 +91,8 @@ public class CMSGCViewerLogParser {
 
                 usage.addUsage("FGC", offsetTime, yBeforeMB, yAfterMB, youngMB, oldBeforeMB, oldAfterMB, oldMB, fgcSeconds, gcCause);
 
+                STWPauseTime += fgcSeconds;
+                fullGCTime += fgcSeconds;
             } else if (line.contains("[GC (CMS Final Remark)")) {
                 // 240367K->240367K(344064K)
                 int CMS_final_mark_index = line.indexOf("CMS-remark") + 12;
@@ -94,6 +113,9 @@ public class CMSGCViewerLogParser {
                 double youngMB = heapMB - oldMB;
 
                 usage.addUsage("FGC", offsetTime, yBeforeMB, yAfterMB, youngMB, oldBeforeMB, oldAfterMB, oldMB, fgcSeconds, gcCause);
+
+                STWPauseTime += fgcSeconds;
+                fullGCTime += fgcSeconds;
             }
         }
         // Young GC
@@ -128,6 +150,8 @@ public class CMSGCViewerLogParser {
 
             usage.addUsage("YGC", offsetTime, yBeforeMB, yAfterMB, youngMB, oldBeforeMB, oldAfterMB, oldMB, ygcSeconds, gcCause);
 
+            STWPauseTime += ygcSeconds;
+            youngGCTime += ygcSeconds;
         }
     }
 

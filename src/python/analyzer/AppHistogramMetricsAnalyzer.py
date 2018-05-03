@@ -58,10 +58,10 @@ class AppHistogramMetricsAnalyzer:
 
 if __name__ == '__main__':
 
-    appName = "GroupByRDD-0.5"
+    #appName = "GroupByRDD-0.5"
     #appName = "RDDJoin-1.0"
     #appName = "SVM-0.5"
-    #appName = "PageRank-0.5"
+    appName = "PageRank-0.5"
     #statisticsDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/" + appName + "/Statistics"
 
     statisticsDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/" + appName + "/Statistics"
@@ -98,16 +98,18 @@ if __name__ == '__main__':
         appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
 
 
-        title = "(c) GroupBy-0.5-tasks-gcTime"
+        title = "GroupBy-0.5-task-gcTime"
         metrics = [
-            ("executor.gc.gcPause", "Average time (s)", 1, "YGC time"),
-            ("executor.gc.fullGCPause", "Average time (s)", 1, "FGC time"),
+            #("executor.STWGCTime", "Average duration (s)", 1, "GC time"),
+            ("executor.youngGCTime", "Average duration (s)", 1, "YGC time"),
+            ("executor.fullGCTime", "Average duration (s)", 1, "FGC time")
         ]
-        ylim = 2
+        ylim = 1.8
         topLabel = 1.1
         legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "tasks-gcTime", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "gc-time", ylim, legend, topLabel)
+
 
 
         # title = "(d) GroupBy-0.5-tasks-gcCount"
@@ -149,6 +151,18 @@ if __name__ == '__main__':
         legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
         appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
+
+        title = "Join-1.0-task-gcTime"
+        metrics = [
+            #("executor.STWGCTime", "Average duration (s)", 1, "GC time"),
+            ("executor.youngGCTime", "Average duration (s)", 1, "YGC time"),
+            ("executor.fullGCTime", "Average duration (s)", 1, "FGC time")
+        ]
+        ylim = 1.8
+        topLabel = 1.2
+        legend = "upper right"
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "gc-time", ylim, legend, topLabel)
 
     if (appName.startswith("SVM-0.5")):
         title = "(a) SVM-0.5-task-duration"
@@ -230,20 +244,20 @@ if __name__ == '__main__':
         appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
 
 
-        title = "PageRank-0.5-iterative-tasks-GC time"
+        title = "PageRank-0.5-task-gcTime"
         metrics = [
-            ("executor.gc.accumPause", "Time (s)", 1, "Total pause"),
-            ("executor.gc.gcPause", "Time (s)", 1, "YGC pause"),
-            ("executor.gc.fullGCPause", "Time (s)", 1, "FGC Pause")
+            #("executor.STWGCTime", "Average duration (s)", 1, "GC time"),
+            ("executor.youngGCTime", "Average duration (s)", 1, "YGC time"),
+            ("executor.fullGCTime", "Average duration (s)", 1, "FGC time")
         ]
-        ylim = 2
+        ylim = 1.8
         topLabel = 1.1
-        legend = "upper left"
+        legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks-gcTime", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "gc-time", ylim, legend, topLabel)
 
 
-    #metrics = [#("app.duration", "Time (s)", 1000),
+        #metrics = [#("app.duration", "Time (s)", 1000),
 
         #("stage0.duration", "Time (s)", 1000, "stage0.duartion"),
                #("stage0.jvmGCTime", "Time (s)", 1000),

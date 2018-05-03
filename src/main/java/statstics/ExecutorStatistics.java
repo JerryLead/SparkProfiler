@@ -28,6 +28,10 @@ public class ExecutorStatistics {
     private Statistics totalShuffleWrite;
     private Statistics maxMemory;
 
+    private Statistics STWPauseTime;
+    private Statistics youngGCTime;
+    private Statistics fullGCTime;
+
     private Statistics footprint; // 15,850 M
     private Statistics avgfootprintAfterFullGC; // 3,702.314 M
     private Statistics freedMemoryByFullGC; // 1,014.641 M
@@ -127,6 +131,9 @@ public class ExecutorStatistics {
         totalShuffleWrite = new Statistics(executorObjs,"getTotalShuffleWrite");
         maxMemory = new Statistics(executorObjs,"getMaxMemory");
 
+        STWPauseTime = new Statistics(executorObjs, "getGCStatistics", "getSTWPauseTime");
+        youngGCTime = new Statistics(executorObjs, "getGCStatistics", "getYoungGCTime");
+        fullGCTime = new Statistics(executorObjs, "getGCStatistics", "getFullGCTime");
 
         // GC metrics parsed from gc logs
         footprint = new Statistics(executorObjs, "getGcMetrics", "getFootprint");
@@ -223,6 +230,10 @@ public class ExecutorStatistics {
         sb.append("[executor.totalShuffleRead] " + totalShuffleRead + "\n");
         sb.append("[executor.totalShuffleWrite] " + totalShuffleWrite + "\n");
         sb.append("[executor.maxMemory] " + maxMemory + "\n");
+
+        sb.append("[executor.STWGCTime] " + STWPauseTime + "\n");
+        sb.append("[executor.youngGCTime] " + youngGCTime + "\n");
+        sb.append("[executor.fullGCTime] " + fullGCTime + "\n");
 
         sb.append("\n");
         sb.append("[executor.gc.footprint] " + footprint + "\n");

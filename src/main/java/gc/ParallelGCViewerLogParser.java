@@ -13,6 +13,10 @@ public class ParallelGCViewerLogParser {
 
     private HeapUsage usage = new HeapUsage();
 
+    private double STWPauseTime = 0;
+    private double youngGCTime = 0;
+    private double fullGCTime = 0;
+
     public void parse(String logFile) {
         List<String> lines = JsonFileReader.readFileLines(logFile);
 
@@ -26,7 +30,22 @@ public class ParallelGCViewerLogParser {
         display();
     }
 
+    public GCStatistics parseStatistics(String logFile) {
+        List<String> lines = JsonFileReader.readFileLines(logFile);
+
+        for (String line : lines) {
+            line = line.trim();
+
+            if (line.startsWith("[2017-"))
+                parseGCRecord(line);
+        }
+
+        return new GCStatistics(STWPauseTime, youngGCTime, fullGCTime, 0);
+    }
+
     public void parseGCRecord(String gcRecord) {
+
+
         // [2017-11-20T18:54:36.579+0800][9.032]
         int endTime = gcRecord.indexOf(']', gcRecord.indexOf("][") + 2);
         // 9.032
@@ -74,6 +93,9 @@ public class ParallelGCViewerLogParser {
                 //usage.addOldUsage(offsetTime, oldBeforeMB, oldMB, "YGC");
                 //usage.addOldUsage(offsetTime, oldAfterMB, oldMB, "");
             // }
+
+            youngGCTime += ygcSeconds;
+            STWPauseTime += ygcSeconds;
         }
         // Full GC
         // gcRecord = [PSYoungGen: 21483K->0K(150528K)] [ParOldGen: 17561K->38895K(226304K)] 39044K->38895K(376832K), [Metaspace: 20872K->20872K(1067008K)], 0.0736694 secs] [Times: user=0.13 sys=0.01, real=0.08 secs]
@@ -117,6 +139,9 @@ public class ParallelGCViewerLogParser {
             usage.addMetaUsage(offsetTime, metaAfterMB, metaMB, "");
             */
             usage.addUsage("FGC", offsetTime, yBeforeMB, yAfterMB, youngMB, oldBeforeMB, oldAfterMB, oldMB, fgcSeconds, gcCause);
+
+            fullGCTime += fgcSeconds;
+            STWPauseTime += fgcSeconds;
         }
     }
 

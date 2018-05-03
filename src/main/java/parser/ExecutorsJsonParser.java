@@ -6,6 +6,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import gc.CMSGCViewerLogParser;
+import gc.G1GCViewerLogParser;
+import gc.GCStatistics;
+import gc.ParallelGCViewerLogParser;
 import util.JsonFileReader;
 
 import java.io.File;
@@ -73,6 +77,24 @@ public class ExecutorsJsonParser {
                             + "gcEvent-" + executorId + ".txt";
                     List<String> gcEventLines = JsonFileReader.readFileLines(gcEventFile);
                     app.getExecutor(executorId).countGCTimeInShuffleSpill(gcEventLines);
+
+                    String gcPlainEventFile = executorDir.getAbsolutePath() + File.separatorChar
+                            + "gcPlainEvent-" + executorId + ".txt";
+
+                    GCStatistics stat = null;
+
+                    if (app.getName().contains("Parallel")) {
+                        ParallelGCViewerLogParser parser = new ParallelGCViewerLogParser();
+                        stat = parser.parseStatistics(gcPlainEventFile);
+                    } else if (app.getName().contains("CMS")) {
+                        CMSGCViewerLogParser parser = new CMSGCViewerLogParser();
+                        stat = parser.parseStatistics(gcPlainEventFile);
+                    } else if (app.getName().contains("G1")) {
+                        G1GCViewerLogParser parser = new G1GCViewerLogParser();
+                        stat = parser.parseStatistics(gcPlainEventFile);
+                    }
+
+                    app.getExecutor(executorId).setGCStatistics(stat);
                 }
             }
         }

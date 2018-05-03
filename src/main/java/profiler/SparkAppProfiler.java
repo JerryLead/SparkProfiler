@@ -252,14 +252,14 @@ public class SparkAppProfiler {
         */
 
 
-
+        /*
         String app = "Join";
         int[] selectedStageIds = new int[]{2};
         String appJsonDir = appJsonRootDir + "RDDJoin-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "RDDJoin-1.0";
         profile(app, appJsonDir, selectedStageIds);
-
+        */
 
         /*
         String  app = "SVM";
@@ -270,14 +270,14 @@ public class SparkAppProfiler {
         profile(app, appJsonDir, selectedStageIds);
         */
 
-        /*
+
         String app = "PageRank";
         int[] selectedStageIds = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         String appJsonDir = appJsonRootDir + "PageRank-0.5";
         profile(app, appJsonDir, selectedStageIds);
         // appJsonDir = appJsonRootDir + "PageRank-1.0";
         // profile(app, appJsonDir, selectedStageIds);
-        */
+
 
 
     }

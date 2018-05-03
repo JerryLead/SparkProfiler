@@ -12,6 +12,10 @@ import java.util.List;
 public class G1GCViewerLogParser {
     private HeapUsage usage = new HeapUsage();
 
+    private double STWPauseTime = 0;
+    private double youngGCTime = 0;
+    private double fullGCTime = 0;
+
     public void parse(String logFile) {
         List<String> lines = JsonFileReader.readFileLines(logFile);
 
@@ -22,6 +26,19 @@ public class G1GCViewerLogParser {
                 parseGCRecord(line);
         }
         display();
+    }
+
+    public GCStatistics parseStatistics(String logFile) {
+        List<String> lines = JsonFileReader.readFileLines(logFile);
+
+        for (String line : lines) {
+            line = line.trim();
+
+            if (line.startsWith("[2017-"))
+                parseGCRecord(line);
+        }
+
+        return new GCStatistics(STWPauseTime, youngGCTime, fullGCTime, 0);
     }
 
     private void parseGCRecord(String line) {
@@ -75,6 +92,12 @@ public class G1GCViewerLogParser {
 
             usage.addUsage(gcType, offsetTime, yBeforeMB, yAfterMB, youngMB, oldBeforeMB, oldAfterMB, oldMB, gcSeconds, gcCause);
 
+            STWPauseTime += gcSeconds;
+
+            if (gcType.equals("FGC"))
+                fullGCTime += gcSeconds;
+            else
+                youngGCTime += gcSeconds;
         }
 
     }

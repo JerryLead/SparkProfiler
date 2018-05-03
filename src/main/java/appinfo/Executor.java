@@ -27,6 +27,7 @@ package appinfo;
  */
 
 import com.google.gson.JsonObject;
+import gc.GCStatistics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,8 @@ public class Executor {
 
     private double maxCPUusage = 0;
     private double maxMemoryUsage = 0; // GB
+
+    private GCStatistics gcStat = new GCStatistics(0, 0, 0, 0);
 
     private boolean hasFailedTasks = false;
 
@@ -239,6 +242,10 @@ public class Executor {
         sb.append("[executor.totalShuffleWrite] " + totalShuffleWrite + "\n");
         sb.append("[executor.maxMemory] " + maxMemory + "\n");
 
+        sb.append("[executor.STWGCTime]" + gcStat.getSTWPauseTime() + "\n");
+        sb.append("[executor.youngGCTime]" + gcStat.getYoungGCTime() + "\n");
+        sb.append("[executor.fullGCTime]" + gcStat.getFullGCTime() + "\n");
+
         sb.append("\n");
         sb.append("[executor.gc.footprint] " + gcMetrics.getFootprint() + "\n");
         sb.append("[executor.gc.avgfootprintAfterFullGC] " + gcMetrics.getAvgfootprintAfterFullGC() + "\n");
@@ -368,6 +375,14 @@ public class Executor {
 
     public List<Double> getGcTimeInShuffleList() {
         return gcTimeInShuffleList;
+    }
+
+    public GCStatistics getGCStatistics() {
+        return gcStat;
+    }
+
+    public void setGCStatistics(GCStatistics gcStat) {
+        this.gcStat = gcStat;
     }
 }
 

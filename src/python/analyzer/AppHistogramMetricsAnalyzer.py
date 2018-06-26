@@ -41,7 +41,7 @@ class AppHistogramMetricsAnalyzer:
                             self.metricsMap[metricName] = statistics
 
 
-    def plotMetrics(self, outputDir, metrics, title, filename, ylim, legend, topLabel):
+    def plotMetrics(self, outputDir, metrics, title, filename, ylim, legend, topLabel, meanOrQuantile):
 
         if not os.path.exists(outputDir):
             os.mkdir(outputDir)
@@ -53,20 +53,21 @@ class AppHistogramMetricsAnalyzer:
             statistics = self.metricsMap[metric[0]]
             statisticsList.append(statistics)
         ylabel = statisticsList[0].ylabel
-        hplt.HistogramPlotter.plotMultiStatisticsByGCAlgo(statisticsList, title, ylabel, file, ylim, legend, topLabel)
+        hplt.HistogramPlotter.plotMultiStatisticsByGCAlgo(statisticsList, title, ylabel, file, ylim, legend, topLabel, meanOrQuantile)
         print "[Done] The " + file + " has been generated!"
 
 if __name__ == '__main__':
 
-    #appName = "GroupByRDD-0.5"
+    appName = "GroupByRDD-0.5"
+    meanOrQuantile = "quantile95"
     #appName = "RDDJoin-1.0"
-    #appName = "SVM-0.5"
-    appName = "PageRank-0.5"
+    #appName = "SVM-1.0"
+    #appName = "PageRank-0.5"
     #statisticsDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/" + appName + "/Statistics"
 
     statisticsDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/" + appName + "/Statistics"
 
-    outputDir = statisticsDir + "/figures-histo"
+    outputDir = statisticsDir + "/figures-histo-95"
 
 
     appMetricsAnalyzer = AppHistogramMetricsAnalyzer(appName, statisticsDir)
@@ -74,41 +75,43 @@ if __name__ == '__main__':
     if (appName.startswith("GroupBy")):
         title = "(a) GroupBy-0.5-task-duration"
         metrics = [
-            ("stage0.task.duration", "Average duration (s)", 1000, "map task duration"),
-            ("stage1.task.duration", "Average duration (s)", 1000, "reduce task duration"),
+            #("stage0.task.duration", "Average duration (s)", 1000, "map task duration"),
+            #("stage1.task.duration", "Average duration (s)", 1000, "reduce task duration"),
+            ("stage0.task.duration", "95th percentile time (s)", 1000, "map task duration"),
+            ("stage1.task.duration", "95th percentile time (s)", 1000, "reduce task duration"),
 
         ]
         ylim = 1.5
         legend = "upper right"
         topLabel = 1.1
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel, meanOrQuantile)
 
 
         title = "(b) GroupBy-0.5-reduce-tasks"
         metrics = [
-            ("stage1.task.computationTime", "Average duration (s)", 1000, "Computation time"),
-            ("stage1.task.spillDuration", "Duration (s)", 1, "Spill time"),
-            ("stage1.task.jvmGcTime", "Duration (s)", 1000, "GC time")
+            ("stage1.task.computationTime", "95th percentile time (s)", 1000, "Data computation time"),
+            ("stage1.task.spillDuration", "95th percentile time (s)", 1, "Spill time"),
+            ("stage1.task.jvmGcTime", "95th percentile time (s)", 1000, "GC time")
         ]
         ylim = 2
         topLabel = 1.1
         legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel, meanOrQuantile)
 
 
         title = "GroupBy-0.5-task-gcTime"
         metrics = [
             #("executor.STWGCTime", "Average duration (s)", 1, "GC time"),
-            ("executor.youngGCTime", "Average duration (s)", 1, "YGC time"),
-            ("executor.fullGCTime", "Average duration (s)", 1, "FGC time")
+            ("executor.youngGCTime", "95th percentile time (s)", 1, "YGC time"),
+            ("executor.fullGCTime", "95th percentile time (s)", 1, "FGC time")
         ]
         ylim = 1.8
         topLabel = 1.1
         legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "gc-time", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "gc-time", ylim, legend, topLabel, meanOrQuantile)
 
 
 
@@ -137,7 +140,7 @@ if __name__ == '__main__':
         legend = "upper right"
         topLabel = 1.1
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel, meanOrQuantile)
 
 
         title = "(b) Join-1.0-reduce-tasks"
@@ -150,7 +153,7 @@ if __name__ == '__main__':
         topLabel = 1.1
         legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel, meanOrQuantile)
 
         title = "Join-1.0-task-gcTime"
         metrics = [
@@ -162,7 +165,7 @@ if __name__ == '__main__':
         topLabel = 1.2
         legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "gc-time", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "gc-time", ylim, legend, topLabel, meanOrQuantile)
 
     if (appName.startswith("SVM-0.5")):
         title = "(a) SVM-0.5-task-duration"
@@ -175,7 +178,7 @@ if __name__ == '__main__':
         legend = "upper right"
         topLabel = 1.02
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel, meanOrQuantile)
 
 
         title = "(b) SVM-0.5-iterative-tasks"
@@ -188,7 +191,7 @@ if __name__ == '__main__':
         topLabel = 1.02
         legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel, meanOrQuantile)
 
     if (appName.startswith("SVM-1.0")):
         title = "(a) SVM-1.0-task-duration"
@@ -201,7 +204,7 @@ if __name__ == '__main__':
         legend = "upper right"
         topLabel = 1.02
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel, meanOrQuantile)
 
 
         title = "(b) SVM-1.0-iterative-tasks"
@@ -214,10 +217,22 @@ if __name__ == '__main__':
         topLabel = 1.02
         legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel, meanOrQuantile)
+
+        title = "SVM-1.0-task-gcTime"
+        metrics = [
+            #("executor.STWGCTime", "Average duration (s)", 1, "GC time"),
+            ("executor.youngGCTime", "Average duration (s)", 1, "YGC time"),
+            ("executor.fullGCTime", "Average duration (s)", 1, "FGC time")
+        ]
+        ylim = 1.8
+        topLabel = 1.1
+        legend = "upper right"
+        appMetricsAnalyzer.analyzeMetrics(metrics)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "gc-time", ylim, legend, topLabel, meanOrQuantile)
 
 
-    if (appName.startswith("PageRank")):
+if (appName.startswith("PageRank")):
         title = "(a) PageRank-0.5-task-duration"
         metrics = [
             ("stage0.task.duration", "Average duration (s)", 1000, "map tasks"),
@@ -228,7 +243,7 @@ if __name__ == '__main__':
         legend = "upper left"
         topLabel = 1.1
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "task-duration", ylim, legend, topLabel, meanOrQuantile)
 
 
         title = "(b) PageRank-0.5-iterative-tasks"
@@ -241,20 +256,20 @@ if __name__ == '__main__':
         topLabel = 1.1
         legend = "upper left"
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "reduce-tasks", ylim, legend, topLabel, meanOrQuantile)
 
 
         title = "PageRank-0.5-task-gcTime"
         metrics = [
-            #("executor.STWGCTime", "Average duration (s)", 1, "GC time"),
+            ("executor.STWGCTime", "Average duration (s)", 1, "Total GC time"),
             ("executor.youngGCTime", "Average duration (s)", 1, "YGC time"),
             ("executor.fullGCTime", "Average duration (s)", 1, "FGC time")
         ]
-        ylim = 1.8
+        ylim = 2
         topLabel = 1.1
         legend = "upper right"
         appMetricsAnalyzer.analyzeMetrics(metrics)
-        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "gc-time", ylim, legend, topLabel)
+        appMetricsAnalyzer.plotMetrics(outputDir, metrics, title, appName + "-" + "gc-time", ylim, legend, topLabel, meanOrQuantile)
 
 
         #metrics = [#("app.duration", "Time (s)", 1000),

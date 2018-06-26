@@ -80,7 +80,7 @@ public class ExecutorsJsonParser {
 
                     String gcPlainEventFile = executorDir.getAbsolutePath() + File.separatorChar
                             + "gcPlainEvent-" + executorId + ".txt";
-
+                    /*
                     GCStatistics stat = null;
 
                     if (app.getName().contains("Parallel")) {
@@ -95,6 +95,7 @@ public class ExecutorsJsonParser {
                     }
 
                     app.getExecutor(executorId).setGCStatistics(stat);
+                    */
                 }
             }
         }

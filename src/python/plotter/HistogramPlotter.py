@@ -87,7 +87,7 @@ class HistogramPlotter:
 
     # https://matplotlib.org/gallery/api/barchart.html#sphx-glr-gallery-api-barchart-py
     @staticmethod
-    def plotMultiStatisticsByGCAlgo(statisticsList, title, ylabel, file, ylim, legend, topLabel, bar_width=0.5):
+    def plotMultiStatisticsByGCAlgo(statisticsList, title, ylabel, file, ylim, legend, topLabel, meanOrQuantile, bar_width=0.5):
         plt.rc('font', family='Helvetica')
 
         n_groups = 3
@@ -100,12 +100,18 @@ class HistogramPlotter:
         for i in range(0, len(statisticsList)):
             statistics = statisticsList[i]
             exec_1_7G_means = statistics.exec_1_7G_means
+            exec_1_7G_quantile95 = statistics.exec_1_7G_quantile95
             exec_1_7G_stderr = statistics.exec_1_7G_stderr
 
-            rects1 = plt.bar(index + bar_width/2*i, exec_1_7G_means, bar_width / 2, alpha=opacity,
+            if (meanOrQuantile == "mean"):
+                rects1 = plt.bar(index + bar_width/2*i, exec_1_7G_means, bar_width / 2, alpha=opacity,
                              label=statistics.legend, yerr=exec_1_7G_stderr, error_kw=error_config)
+            elif (meanOrQuantile == "quantile95"):
+                rects1 = plt.bar(index + bar_width/2*i, exec_1_7G_quantile95, bar_width / 2, alpha=opacity,
+                                 label=statistics.legend, error_kw=error_config)
             HistogramPlotter.autolabel(rects1, topLabel, 'center')
-            for value in exec_1_7G_means:
+            #for value in exec_1_7G_means:
+            for value in exec_1_7G_quantile95:
                 if value > max:
                     max = value
         # plt.xlabel('Category')
@@ -127,7 +133,7 @@ class HistogramPlotter:
         plt.legend(fontsize=12, loc=legend, frameon=False)
         plt.tight_layout()
 
-        #plt.show()
+        plt.show()
         plt.savefig(file)
 
     @staticmethod
@@ -146,6 +152,7 @@ class HistogramPlotter:
         for rect in rects:
             height = rect.get_height()
             plt.text(rect.get_x() + rect.get_width()*offset[xpos], topLabel*height,
+                    #'{}'.format(round(height, 1)), ha=ha[xpos], va='bottom',
                     '{}'.format(int(math.ceil(round(height, 1)))), ha=ha[xpos], va='bottom',
                      fontsize=12)
 

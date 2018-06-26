@@ -14,12 +14,21 @@ class HistogramStatistics:
         self.cms_stderr = [0, 0, 0]
         self.g1_stderr = [0, 0, 0]
 
+        self.parallel_quantile95 = [0, 0, 0]  # Executor(1-7G), Executor(2-14G), Executor(4-28G)
+        self.cms_quantile95 = [0, 0, 0]
+        self.g1_quantile95 = [0, 0, 0]
+
+
         self.exec_1_7G_means = [0, 0, 0]  # Parallel, CMS, G1
         self.exec_2_14G_means = [0, 0, 0]
         self.exec_4_28G_means = [0, 0, 0]
         self.exec_1_7G_stderr = [0, 0, 0]
         self.exec_2_14G_stderr = [0, 0, 0]
         self.exec_4_28G_stderr = [0, 0, 0]
+
+        self.exec_1_7G_quantile95 = [0, 0, 0]  # Parallel, CMS, G1
+        self.exec_2_14G_quantile95 = [0, 0, 0]
+        self.exec_4_28G_quantile95 = [0, 0, 0]
 
         self.max = 0
 
@@ -38,6 +47,14 @@ class HistogramStatistics:
                     self.cms_means[index] = metricValue
                 elif(gcAlgo == "G1"):
                     self.g1_means[index] = metricValue
+
+            if(metricName == "quantile95"):
+                if(gcAlgo == "Parallel"):
+                    self.parallel_quantile95[index] = metricValue
+                elif(gcAlgo == "CMS"):
+                    self.cms_quantile95[index] = metricValue
+                elif(gcAlgo == "G1"):
+                    self.g1_quantile95[index] = metricValue
 
             if(metricName == "stdVar"):
                 if(gcAlgo == "Parallel"):
@@ -85,6 +102,15 @@ class HistogramStatistics:
                     self.g1_means[executorIndex] = metricValue
                 self.addExectuorStatistics(executorIndex, gcAlgoIndex, "mean", metricValue)
 
+            if(metricName == "quantile95"):
+                if(gcAlgo == "Parallel"):
+                    self.parallel_quantile95[executorIndex] = metricValue
+                elif(gcAlgo == "CMS"):
+                    self.cms_quantile95[executorIndex] = metricValue
+                elif(gcAlgo == "G1"):
+                    self.g1_quantile95[executorIndex] = metricValue
+                self.addExectuorStatistics(executorIndex, gcAlgoIndex, "quantile95", metricValue)
+
             if(metricName == "stdVar"):
                 if(gcAlgo == "Parallel"):
                     self.parallel_stderr[executorIndex] = metricValue
@@ -104,13 +130,19 @@ class HistogramStatistics:
                 self.exec_1_7G_means[gcAlgoIndex] = metricValue
             elif(metricName == "stdVar"):
                 self.exec_1_7G_stderr[gcAlgoIndex] = metricValue
+            elif(metricName == "quantile95"):
+                self.exec_1_7G_quantile95[gcAlgoIndex] = metricValue
         elif(executorIndex == 1):
             if(metricName == "mean"):
                 self.exec_2_14G_means[gcAlgoIndex] = metricValue
             elif(metricName == "stdVar"):
                 self.exec_2_14G_stderr[gcAlgoIndex] = metricValue
+            elif(metricName == "quantile95"):
+                self.exec_2_14G_quantile95[gcAlgoIndex] = metricValue
         elif(executorIndex == 2):
             if(metricName == "mean"):
                 self.exec_4_28G_means[gcAlgoIndex] = metricValue
             elif(metricName == "stdVar"):
                 self.exec_4_28G_stderr[gcAlgoIndex] = metricValue
+            elif(metricName == "quantile95"):
+                self.exec_4_28G_quantile95[gcAlgoIndex] = metricValue

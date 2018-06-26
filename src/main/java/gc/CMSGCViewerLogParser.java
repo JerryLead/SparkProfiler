@@ -68,7 +68,8 @@ public class CMSGCViewerLogParser {
         */
 
         // Full GC
-        if (line.contains("[CMS-concurrent") || line.contains("[GC (CMS Initial Mark)") || line.contains("[GC (CMS Final Remark)")) {
+        if (line.contains("[CMS-concurrent") || line.contains("[GC (CMS Initial Mark)") || line.contains("[GC (CMS Final Remark)")
+                || line.contains("(concurrent mode failure)")) {
 
             if (line.contains("[GC (CMS Initial Mark)")) {
                 // 2319565K->2319565K(6134208K)
@@ -96,6 +97,31 @@ public class CMSGCViewerLogParser {
             } else if (line.contains("[GC (CMS Final Remark)")) {
                 // 240367K->240367K(344064K)
                 int CMS_final_mark_index = line.indexOf("CMS-remark") + 12;
+                String CMS_final_mark = line.substring(CMS_final_mark_index, line.indexOf(",", CMS_final_mark_index));
+                double oldBeforeMB = computeMB(CMS_final_mark.substring(0, CMS_final_mark.indexOf('K')));
+                double oldAfterMB = computeMB(CMS_final_mark.substring(CMS_final_mark.indexOf('>') + 1, CMS_final_mark.indexOf("K(")));
+                double oldMB = computeMB(CMS_final_mark.substring(CMS_final_mark.indexOf("(") + 1, CMS_final_mark.indexOf("K)")));
+
+                String heapUsage = line.substring(line.lastIndexOf("] ") + 2, line.lastIndexOf(']'));
+                double heapBeforeMB = computeMB(heapUsage.substring(0, heapUsage.indexOf('K')));
+                double heapAfterMB = computeMB(heapUsage.substring(heapUsage.indexOf('>') + 1, heapUsage.indexOf("K(")));
+                double heapMB = computeMB(heapUsage.substring(heapUsage.indexOf('(') + 1, heapUsage.indexOf("K)")));
+
+                double fgcSeconds = Double.parseDouble(line.substring(line.lastIndexOf(", ") + 2, line.lastIndexOf(" secs")));
+
+                double yBeforeMB = heapBeforeMB - oldBeforeMB;
+                double yAfterMB = heapAfterMB - oldAfterMB;
+                double youngMB = heapMB - oldMB;
+
+                usage.addUsage("FGC", offsetTime, yBeforeMB, yAfterMB, youngMB, oldBeforeMB, oldAfterMB, oldMB, fgcSeconds, gcCause);
+
+                STWPauseTime += fgcSeconds;
+                fullGCTime += fgcSeconds;
+            }
+
+            if (line.contains("concurrent mode failure")) {
+                // 240367K->240367K(344064K)
+                int CMS_final_mark_index = line.indexOf("concurrent mode failure") + 26;
                 String CMS_final_mark = line.substring(CMS_final_mark_index, line.indexOf(",", CMS_final_mark_index));
                 double oldBeforeMB = computeMB(CMS_final_mark.substring(0, CMS_final_mark.indexOf('K')));
                 double oldAfterMB = computeMB(CMS_final_mark.substring(CMS_final_mark.indexOf('>') + 1, CMS_final_mark.indexOf("K(")));

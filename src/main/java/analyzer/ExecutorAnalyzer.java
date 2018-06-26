@@ -75,6 +75,19 @@ public class ExecutorAnalyzer {
                 appJsonDir0, appJsonDir1, metrics, false, false);
         comparator.computeRelativeDifference();
 */
+
+
+        String appName = "RDDJoin-1.0";
+        // String applicationName = "rjoin-Parallel-1-6656m-1.0-n1";
+        // String slave = "aliSlave4";
+
+        // String applicationName = "rjoin-CMS-1-6656m-1.0-n4";
+        // String slave = "aliSlave6";
+
+        String applicationName = "rjoin-G1-1-6656m-1.0-n3";
+        String slave = "aliSlave1";
+
+
 /*
 
         String applicationName = "SVM";
@@ -86,15 +99,15 @@ public class ExecutorAnalyzer {
         comparator.computeRelativeDifference();
 */
 
-        String appName = "PageRank-0.5";
+        // String appName = "PageRank-0.5";
         // String applicationName = "PageRank-Parallel-1-6656m-0.5-n4";
         // String slave = "aliSlave7";
 
         // String applicationName = "PageRank-CMS-1-6656m-0.5-n2";
         // String slave = "aliSlave7";
 
-        String applicationName = "PageRank-G1-1-6656m-0.5-n3";
-        String slave = "aliSlave5";
+        // String applicationName = "PageRank-G1-1-6656m-0.5-n3";
+        // String slave = "aliSlave5";
 
         String slaveTopMetricsFile = appJsonRootDir + appName + "/topMetrics/" + slave + "/" + applicationName + ".txt";
 

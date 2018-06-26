@@ -257,13 +257,13 @@ def plotHeapUsage(mode, appName, title, gclogFile, outputFile):
     axes3.set_ylabel(r"GC pause time (sec)")
     axes[1].set_xlabel("Time (sec)")
     ymin, ymax = axes3.get_ylim()
-    axes3.set_ylim(ymin, ymax * 2)
+    axes3.set_ylim(ymin, ymax * 1.25)
 
     plt.suptitle(title, y=0.95)
 
     axes3.legend((OldAllocatedLine, OldUsageLine, YGCBar, FGCBar),
                  ("Allocated", "Usage", "YGC pause", "FGC pause"),
-                 loc='upper left', ncol=1, frameon=False)
+                 loc='upper left', ncol=4, frameon=False)
 
     fig = plt.gcf()
     #plt.show()
@@ -276,26 +276,27 @@ if __name__ == '__main__':
 
     mode = "-"
 
+    #gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/selectedProfiles/"
     gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/"
 
-    appName = "GroupByRDD-0.5"
-    inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
-    parallelExecutorID = 29 #30
-    cmsExecutorID = 17
-    g1ExecutorID = 15 #18 #16
-    plotHeapUsage(mode, appName, "(a) GroupBy-0.5-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
-    plotHeapUsage(mode, appName, "(b) GroupBy-0.5-Slowest-CMS-task",inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    plotHeapUsage(mode, appName, "(c) GroupBy-0.5-Slowest-G1-task",inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
-
-
-    # appName = "RDDJoin-1.0"
+    # appName = "GroupByRDD-0.5"
     # inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
-    # parallelExecutorID = 12 #14 #12
-    # cmsExecutorID = 25 #23 #25
-    # g1ExecutorID = 13 #28 #13
-    # plotHeapUsage(mode, appName, "(a) Join-1.0-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
-    # plotHeapUsage(mode, appName, "(b) Join-1.0-Slowest-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    # plotHeapUsage(mode, appName, "(c) Join-1.0-Slowest-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
+    # parallelExecutorID = 29 #30
+    # cmsExecutorID = 21
+    # g1ExecutorID = 15 #28 #18 #16
+    # #plotHeapUsage(mode, appName, "(a) GroupBy-0.5-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
+    # plotHeapUsage(mode, appName, "(b) GroupBy-0.5-Slowest-CMS-task",inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
+    # #plotHeapUsage(mode, appName, "(c) GroupBy-0.5-Slowest-G1-task",inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
+
+
+    appName = "RDDJoin-1.0"
+    inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
+    #parallelExecutorID = 12 #14 #12
+    #cmsExecutorID = 25 #23 #25
+    g1ExecutorID = 13 #28 #13
+    #plotHeapUsage(mode, appName, "(a) Join-1.0-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
+    #plotHeapUsage(mode, appName, "(b) Join-1.0-Slowest-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
+    plotHeapUsage(mode, appName, "(c) Join-1.0-Slowest-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
 
     # appName = "SVM-1.0"
     # inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"

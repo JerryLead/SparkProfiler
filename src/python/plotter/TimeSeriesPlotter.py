@@ -99,7 +99,7 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
 if __name__ == '__main__':
 
     dir = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/medianProfiles/"
-    taskDir = "/slowestTasks"
+    taskDir = "/SlowestTasks"
     #taskDir = "/failedTasks"
 
     # # for GroupByRDD

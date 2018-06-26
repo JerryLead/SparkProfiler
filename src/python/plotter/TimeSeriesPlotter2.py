@@ -84,10 +84,10 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
     axes[1].tick_params('y', colors='r')
     axes[0].set_ylim(0, 840)  # The ceil
     axes[1].set_ylim(0, 105)  # The ceil
-    axes[1].set_xlabel("Time (seconds)", color=u'#000000')
-    # plt.ylim(0, statistics.max)  # The ceil
+    axes[1].set_xlabel("Time (sec)", color=u'#000000')
+    #plt.xlim(0, executorTime.max)  # The ceil
     # plt.legend()
-    fig.autofmt_xdate()
+    #fig.autofmt_xdate()
 
     axes[0].plot(executorTime, executorCPU, '-r', label='CPU')
     axes[1].plot(slaveTime, slaveCPU, '-r', label='CPU')
@@ -103,7 +103,11 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
     ax22.tick_params('y', colors='b')
     ax22.set_ylim(0, 32)  # The ceil
 
-    plt.suptitle(appName)
+
+    ax12.set_xlim(xmin=0)
+    ax22.set_xlim(xmin=0)
+
+    plt.suptitle("(b) Join-1.0-G1-CPU-usage", y=0.95)
 
     outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")
     if not os.path.exists(outputDir):
@@ -130,8 +134,8 @@ if __name__ == '__main__':
     # # for RDDJoin
     # appName = "RDDJoin-0.5"
     # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
-    # appName = "RDDJoin-1.0"
-    # plotExecutorAndWorkerUsage(appName, "/Users/jaxon/github/slowestTasks/")
+    appName = "RDDJoin-1.0"
+    plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
     #
     # # for SVM
     # appName = "SVM-0.5"
@@ -140,8 +144,8 @@ if __name__ == '__main__':
     # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
     # #
     # # # for PageRank
-    appName = "PageRank-0.5"
-    plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
+    # appName = "PageRank-0.5"
+    # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
     # appName = "PageRank-1.0"
     # plotExecutorAndWorkerUsage(appName, dir + appName + taskDir)
 

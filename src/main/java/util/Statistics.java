@@ -16,6 +16,7 @@ public class Statistics {
     private double min;
     private double quantile25;
     private double quantile75;
+    private double quantile95;
     private double max;
 
     // [stage0.duration] mean = 34314.40, stdVar = 3316.57, median = 35150.00, min = 30011.00, quantile25 = 30915.50, quantile75 = 37295.50, max = 37922.00
@@ -40,6 +41,8 @@ public class Statistics {
                 this.quantile25 = value;
             else if (statName.equalsIgnoreCase("quantile75"))
                 this.quantile75 = value;
+            else if (statName.equalsIgnoreCase("quantile95"))
+                this.quantile95 = value;
             else if (statName.equalsIgnoreCase("max"))
                 this.max = value;
         }
@@ -92,6 +95,7 @@ public class Statistics {
         quantile25 = stats.getPercentile(25);
         median = stats.getPercentile(50);
         quantile75 = stats.getPercentile(75);
+        quantile95 = stats.getPercentile(95);
         max = stats.getMax();
     }
 
@@ -123,6 +127,7 @@ public class Statistics {
         quantile25 = stats.getPercentile(25);
         median = stats.getPercentile(50);
         quantile75 = stats.getPercentile(75);
+        quantile95 = stats.getPercentile(95);
         max = stats.getMax();
     }
 
@@ -150,6 +155,10 @@ public class Statistics {
         return quantile75;
     }
 
+    public double getQuantile95() {
+        return quantile95;
+    }
+
     public double getMax() {
         return max;
     }
@@ -166,6 +175,7 @@ public class Statistics {
                 + ", min = " + format(min)
                 + ", quantile25 = " + format(quantile25)
                 + ", quantile75 = " + format(quantile75)
+                + ", quantile95 = " + format(quantile95)
                 + ", max = " + format(max);
     }
 
@@ -187,6 +197,8 @@ public class Statistics {
             return quantile25;
         else if (statName.equalsIgnoreCase("quantile75"))
             return quantile75;
+        else if (statName.equalsIgnoreCase("quantile95"))
+            return quantile95;
         else if (statName.equalsIgnoreCase("max"))
             return max;
         return -1;

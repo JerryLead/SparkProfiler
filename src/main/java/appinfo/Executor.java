@@ -368,6 +368,9 @@ public class Executor {
                         break;
                 }
 
+                System.out.println("      [taskID][" + spillMetrics.getTaskId() + "] spillTime = "
+                        + (spillMetrics.getEndTime() - spillMetrics.getStartTime() - gcTime));
+
                 gcTimeInShuffleList.add(gcTime);
             }
         }

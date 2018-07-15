@@ -27,9 +27,9 @@ width = 0.23       # the width of the bars
 # plt.subplots_adjust(left=0.19, bottom=0.11, right=0.98, top=0.87,
 #                     wspace=0.03, hspace=0.04)
 
-xvals = [4716, 164, 4552]
-yvals = [386, 340, 46]
-zvals = [580, 550, 30]
+xvals = [164, 0, 4552]
+yvals = [340, 0, 46]
+zvals = [550, 0, 30]
 
 
 # If we were to simply plot pts, we'd lose most of the interesting
@@ -118,6 +118,7 @@ def autolabel(rects, ax):
 
 autolabel(rects1, ax)
 autolabel(rects2, ax2)
+autolabel(rects1, ax2)
 autolabel(rects3, ax2)
 
 yaxis_label = plt.ylabel('Time (s)', color='black')

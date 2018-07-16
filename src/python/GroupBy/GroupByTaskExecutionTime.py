@@ -27,7 +27,7 @@ plt.subplots_adjust(left=0.20, bottom=0.11, right=0.96, top=0.87,
 legend_properties = {'weight':'bold'}
 
 xvals = [62, 38, 70]
-yvals = [61, 40, 30]
+yvals = [60, 40, 31]
 zvals = [62, 43, 16]
 
 rects1 = ax.bar(ind, xvals, width, color='lightpink', edgecolor='black')#, hatch="///")
@@ -45,7 +45,7 @@ ax.set_ylim(0, 100)  # The ceil
 #plt.xlim(-0.3, 2.76)  # The ceil
 ax.set_xlim(-0.32, 2.78)  # The ceil
 
-plt.title("(a) GroupBy-task-execution-time", fontsize=12)
+plt.title("(a) GroupBy-0.5-task-execution-time", fontsize=12)
 
 
 

@@ -25,8 +25,8 @@ plt.subplots_adjust(left=0.20, bottom=0.11, right=0.96, top=0.87,
 
 #plt.tight_layout()
 
-xvals = [19, 60, 0]
-yvals = [22, 8, 27]
+xvals = [17, 53, 0]
+yvals = [22, 9, 34]
 zvals = [14, 2, 28]
 
 rects1 = ax.bar(ind, xvals, width, color='lightpink', edgecolor='black')#, hatch="///")
@@ -48,7 +48,7 @@ ax.set_ylim(0, 100)  # The ceil
 ax.set_xlim(-0.32, 2.78)  # The ceil
 
 #plt.title("(a) GroupBy-task-execution-time", fontsize=12)
-plt.title("(b) GroupBy-task-GC-time", fontsize=12)
+plt.title("(b) GroupBy-0.5-task-GC-time", fontsize=12)
 
 
 def autolabel(rects):

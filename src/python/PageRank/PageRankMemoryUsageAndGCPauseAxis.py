@@ -204,8 +204,10 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
     heapUsage = HeapUsage()
     heapUsage.initHeapUsage(gclogFile, timeOffset)
 
-    fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True, figsize=(4,3.5))
-    plt.subplots_adjust(wspace=0, hspace=0)
+    fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True, figsize=(4,3))
+
+    plt.subplots_adjust(left=0.13, bottom=0.11, right=0.98, top=0.88,
+                        wspace=0.00, hspace=0.00)
     #gs = gridspec.GridSpec(2, 1)
     #gs.update(wspace=0, hspace=0.05)
     #axes[0] = plt.subplot(gs[0, :])
@@ -218,7 +220,7 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
     axes[1].set_ylabel("GC time (s)")
 
     axes[0].set_ylim(0, 8)  # The ceil
-    axes[1].set_ylim(0, 14)  # The ceil
+    axes[1].set_ylim(0, 24)  # The ceil
 
 
     # YoungUsageLine = None
@@ -256,10 +258,11 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
     axes[0].get_xaxis().set_visible(False)
 
     axes[0].legend(#(OldAllocatedLine, OldUsageLine),
-                   #("Allocated", "Usage"),
-                   loc='upper left', ncol=3, frameon=False, fontsize=10,
-                    labelspacing=0.1, markerfirst=False,
-                    borderaxespad=0.2, columnspacing=1.1, handletextpad=0.3)
+        #("Allocated", "Usage"),
+        loc='upper center', ncol=3, frameon=False, fontsize=10, markerfirst=False,
+        #labelspacing=0.2,
+        borderaxespad=0.3,
+        columnspacing=1.2, handletextpad=0.5)
 
     # draw GCPause time bar plot
 
@@ -275,7 +278,7 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
     colors2 = [u'#DDA0DD', u'#6A5ACD', u'#A9A9A9', u'#ADD8E6', u"#cc3333"]
     #axes3 = axes[1].twinx()
 
-    YGCBar = axes[1].bar(ygcTime, ygcPause, 0.01, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
+    #YGCBar = axes[1].bar(ygcTime, ygcPause, 0.01, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
     FGCBar = axes[1].bar(fgcTime, fgcPause, 0.01, color=colors2[4], label="FGC Pause", edgecolor=colors2[4])
 
     #axes3.set_ylabel(r"GC pause time (sec)")
@@ -285,9 +288,9 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
 
     plt.suptitle(title, y=0.95)
 
-    axes[1].legend(loc='upper rigth', frameon=False, fontsize=10,
-    labelspacing=0.2, markerfirst=False,
-    ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
+    axes[1].legend(loc='upper right', frameon=False, fontsize=10,
+                   labelspacing=0.2, markerfirst=False,
+                   ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
 
     plt.show()
     #fig = plt.gcf()
@@ -301,17 +304,17 @@ if __name__ == '__main__':
 
     mode = "="
 
-    gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/finalProfiles/"
+    gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/"
 
-    appName = "GroupByRDD-0.5"
-    inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
-    parallelExecutorID = 29
-    cmsExecutorID = 21
-    g1ExecutorID = 15 #28 #18 #16
-    parallelTimeOffset = 46#33
-    CMSTimeOffset = 36
-    G1TimeOffset = 36
-    plotHeapUsage(parallelTimeOffset, mode, appName, "(a) GroupBy-0.5-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
+    # appName = "GroupByRDD-0.5"
+    # inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
+    # parallelExecutorID = 29
+    # cmsExecutorID = 21
+    # g1ExecutorID = 15 #28 #18 #16
+    # parallelTimeOffset = 46#33
+    # CMSTimeOffset = 36
+    # G1TimeOffset = 36
+    # plotHeapUsage(parallelTimeOffset, mode, appName, "(a) GroupBy-0.5-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
     #plotHeapUsage(CMSTimeOffset, mode, appName, "(b) GroupBy-0.5-Slowest-CMS-task",inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
     #plotHeapUsage(G1TimeOffset, mode, appName, "(c) GroupBy-0.5-Slowest-G1-task",inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
 
@@ -321,9 +324,12 @@ if __name__ == '__main__':
     # parallelExecutorID = 12
     # cmsExecutorID = 25
     # g1ExecutorID = 13
-    # plotHeapUsage(mode, appName, "(a) Join-1.0-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
-    #plotHeapUsage(mode, appName, "(b) Join-1.0-Slowest-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    #plotHeapUsage(mode, appName, "(c) Join-1.0-Slowest-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
+    # parallelTimeOffset = 89
+    # CMSTimeOffset = 88
+    # G1TimeOffset = 83
+    # plotHeapUsage(parallelTimeOffset, mode, appName, "(a) Join-1.0-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
+    # #plotHeapUsage(CMSTimeOffset, mode, appName, "(b) Join-1.0-Slowest-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
+    #plotHeapUsage(G1TimeOffset, mode, appName, "(c) Join-1.0-Slowest-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
 
     # appName = "SVM-1.0"
     # inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
@@ -334,12 +340,15 @@ if __name__ == '__main__':
     # plotHeapUsage(mode, appName, "(b) SVM-1.0-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
     # plotHeapUsage(mode, appName, "(c) SVM-1.0-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
 
-    # appName = "PageRank-0.5"
-    # inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
-    # parallelExecutorID = 1
-    # cmsExecutorID = 14
-    # g1ExecutorID = 28
-    # plotHeapUsage(mode, appName, "(a) PageRank-0.5-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
-    # plotHeapUsage(mode, appName, "(a) PageRank-0.5-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    # plotHeapUsage(mode, appName, "(a) PageRank-0.5-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
+    appName = "PageRank-0.5"
+    inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
+    parallelExecutorID = 4
+    cmsExecutorID = 14
+    g1ExecutorID = 28
+    parallelTimeOffset = 53
+    CMSTimeOffset = 54
+    G1TimeOffset = 57
+    plotHeapUsage(parallelTimeOffset, mode, appName, "(a) PageRank-0.5-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
+    # plotHeapUsage(CMSTimeOffset, mode, appName, "(a) PageRank-0.5-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
+    # plotHeapUsage(G1TimeOffset, mode, appName, "(a) PageRank-0.5-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
 

@@ -90,8 +90,8 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
     if not os.path.exists(outputDir):
         os.mkdir(outputDir)
     file = os.path.join(outputDir, appName + ".pdf")
-    # plt.show()
-    plt.savefig(file, dpi=150, bbox_inches='tight')
+    plt.show()
+    #plt.savefig(file, dpi=150, bbox_inches='tight')
 
 
 

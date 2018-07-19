@@ -27,7 +27,7 @@ plt.subplots_adjust(left=0.21, bottom=0.11, right=0.96, top=0.87,
 legend_properties = {'weight':'bold'}
 
 xvals = [8.2, 62, 0]
-yvals = [32, 34, 106]
+yvals = [32, 36, 109]
 #zvals = [0, 0, 0]
 
 rects1 = ax.bar(ind, xvals, width, color='lightpink', edgecolor='black')#, hatch="///")

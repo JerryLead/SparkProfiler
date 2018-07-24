@@ -5,11 +5,15 @@ import os
 import json
 import io
 
+mpl.rcParams['axes.linewidth'] = 1.5 #set the value globally
 plt.rc('font', family='Helvetica', size=12)
 fig = plt.figure(figsize=(5.1, 2.4))
 ax = fig.add_subplot(111)
-plt.subplots_adjust(left=0.20, bottom=0.11, right=0.96, top=0.87,
+plt.subplots_adjust(left=0.11, bottom=0.11, right=0.98, top=0.87,
                     wspace=0.03, hspace=0.04)
+
+
+
 file_Dir="D:/plot/executors_0/"
 jump=4
 

@@ -6,11 +6,11 @@ from datetime import datetime
 #from reader import FileReader
 
 def plotExecutorAndWorkerUsage(appName, slowestTasksDir):
-
-    dir ="CMS-G1-CPU"
-    if (dir.startswith(".DS") == False):
-        for topMetricsFile in os.listdir(os.path.join(slowestTasksDir, dir)):
-            plotResourceUsage(os.path.join(slowestTasksDir, dir, topMetricsFile), slowestTasksDir, topMetricsFile.split(".")[0])
+    for dir in os.listdir(slowestTasksDir):
+        if (dir.startswith(".DS") == False):
+            for topMetricsFile in os.listdir(os.path.join(slowestTasksDir, dir)):
+                if (topMetricsFile.startswith("topMetrics")):
+                    plotResourceUsage(os.path.join(slowestTasksDir, dir, topMetricsFile), slowestTasksDir, dir)
 
 
 def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
@@ -78,7 +78,7 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
 
     fig = plt.figure(figsize=(3.4, 2.4))
     axes = fig.add_subplot(111)
-    plt.subplots_adjust(left=0.18, bottom=0.20, right=0.92, top=0.84,
+    plt.subplots_adjust(left=0.18, bottom=0.18, right=0.96, top=0.88,
                         wspace=0.2, hspace=0.2)
     mark="a"
     #plt.subplots(nrows=1, ncols=1, sharey=False, sharex= True)
@@ -97,7 +97,7 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
     axes.set_ylim(0, 400)  # The ceil
     axes.set_xlim(0, 400)
     #axes[1].set_ylim(0, 105)  # The ceil
-    axes.set_xlabel("Time (sec)", color=u'#000000')
+    axes.set_xlabel("Time (s)", color=u'#000000')
     #plt.xlim(0, executorTime.max)  # The ceil
 
     #fig.autofmt_xdate()
@@ -143,7 +143,9 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
 
 if __name__ == '__main__':
 
-    dir = "D:/plot"
+    #dir = "D:/plot"
+    dir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/RDDJoin-1.0"
+
     taskDir = "/SlowestTask/"
     #taskDir = "/failedTasks"
 

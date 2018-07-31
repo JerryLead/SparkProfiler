@@ -204,7 +204,7 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
     heapUsage = HeapUsage()
     heapUsage.initHeapUsage(gclogFile, timeOffset)
 
-    fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True, figsize=(4,3.5))
+    fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True, figsize=(4,3.2))
     plt.subplots_adjust(wspace=0, hspace=0)
     #gs = gridspec.GridSpec(2, 1)
     #gs.update(wspace=0, hspace=0.05)

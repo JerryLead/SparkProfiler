@@ -10,7 +10,7 @@ mpl.rcParams['axes.linewidth'] = 1.5 #set the value globally
 #         'color'  : 'black',
 #         'size'   : '12'}
 
-
+plt.rc('pdf', fonttype=42)
 plt.rc('font', family='Helvetica', size=12)
 
 N = 3

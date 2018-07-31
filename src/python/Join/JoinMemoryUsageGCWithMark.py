@@ -15,7 +15,7 @@ mpl.rcParams['axes.linewidth'] = 1.2 #set the value globally
 #         'color'  : 'black',
 #         'size'   : '12'}
 
-
+plt.rc('pdf', fonttype=42)
 plt.rc('font', family='Helvetica', size=10)
 
 
@@ -253,10 +253,10 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
     elif (mode == "-"):
         usage = heapUsage.getUsageAndTime("Old")
         print(usage[0], usage[1])
-        OldUsageLine, = axes[0].plot(usage[0], usage[1], '-', linewidth=0.95, label='usage', markersize=0.9)
+        OldUsageLine, = axes[0].plot(usage[0], usage[1], '-', linewidth=1, label='usage', markersize=0.9)
 
     allocated = heapUsage.getGenAllocated("Old")
-    OldAllocatedLine, = axes[0].plot(allocated[0], allocated[1], '-', label='Allocated')
+    OldAllocatedLine, = axes[0].plot(allocated[0], allocated[1], '-', linewidth=2, label='Allocated')
 
     if title.find("CMS")>0:
         axes[1].set_xlim(0,400)
@@ -304,9 +304,9 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
     #axes3 = axes[1].twinx()
 
     #YGCBar = axes[1].bar(ygcTime, ygcPause, 0.01, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
-    FGCBar = axes[1].bar(fgcTime, fgcPause, 0.01, color=colors2[4], label="FGC Pause", edgecolor=colors2[4])
+    FGCBar = axes[1].bar(fgcTime, fgcPause, 0.1, color=colors2[4], label="FGC Pause", edgecolor=colors2[4])
     if title.find("CMS")>0 or title.find("G1")>0:
-        axes[1].plot(-1000,-1000, 'bo',markersize=4,label='Concurrent mark')
+        axes[1].plot(-1000,-1000, 'bo',markersize=4,label='Concurrent mark phase')
     #axes3.set_ylabel(r"GC pause time (sec)")
     #axes[1].set_xlabel("Time (s)")
     # ymin, ymax = axes[1].get_ylim()
@@ -354,9 +354,9 @@ if __name__ == '__main__':
     parallelTimeOffset = 89
     CMSTimeOffset = 88
     G1TimeOffset = 83
-    #plotHeapUsage(parallelTimeOffset, mode, appName, "(a) Join-1.0-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
-    plotHeapUsage(CMSTimeOffset, mode, appName, "(b) Join-1.0-Slowest-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    plotHeapUsage(G1TimeOffset, mode, appName, "(c) Join-1.0-Slowest-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
+    plotHeapUsage(parallelTimeOffset, mode, appName, "(a) Join-1.0-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
+    #plotHeapUsage(CMSTimeOffset, mode, appName, "(b) Join-1.0-Slowest-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
+    #plotHeapUsage(G1TimeOffset, mode, appName, "(c) Join-1.0-Slowest-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
 
     # appName = "SVM-1.0"
     # inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"

@@ -76,6 +76,8 @@ def plotResourceUsage(topMetricsFile, slowestTasksDir, appName):
             slaveCPU.append(float(cpu))
             slaveMemory.append(float(memory))
 
+    plt.rc('pdf', fonttype=42)
+    plt.rc('font', family='Helvetica', size=10)
     fig = plt.figure(figsize=(3.4, 2.4))
     axes = fig.add_subplot(111)
     plt.subplots_adjust(left=0.18, bottom=0.18, right=0.96, top=0.88,

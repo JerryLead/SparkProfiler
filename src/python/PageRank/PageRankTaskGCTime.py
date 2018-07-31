@@ -18,6 +18,7 @@ ind = np.arange(N)  # the x locations for the groups
 
 width = 0.23       # the width of the bars
 
+plt.rc('pdf', fonttype=42)
 fig = plt.figure(figsize=(3.4, 2.4))
 ax = fig.add_subplot(111)
 plt.subplots_adjust(left=0.21, bottom=0.11, right=0.96, top=0.87,

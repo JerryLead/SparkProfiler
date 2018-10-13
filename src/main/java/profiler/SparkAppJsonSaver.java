@@ -358,14 +358,15 @@ public class SparkAppJsonSaver {
         // e.g., app-20170623113634-0010
         //       app-20170623113111-0009
         //       app-20170623112547-0008
-        //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/AggregateByKey-0.5/applists/aggregateByKeyAppList-100G.txt";
-        String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/Join-1.0/applists/JoinAppList-200G.txt";
+        String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/AggregateByKey-0.5-2/aggregateByKeyAppList-100G.txt";
+        //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/Join-1.0-240G/JoinAppList-240G.txt";
         // String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/RDDJoin-1.0";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/Join-1.0-240G/";
+        //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/Join-1.0-240G/";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/AggregateByKey-0.5-2/";
         // String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/PageRank-0.5";
 
 
-        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/Join-1.0-6.5G-200G/";
+        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/AggregateByKey-0.5-6.5G-100G-2";
 
         // The executor log files are stored on each slave node
         String executorLogFile = "/dataDisk/spark-2.3.0/worker/";

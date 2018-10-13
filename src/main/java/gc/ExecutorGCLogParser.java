@@ -126,9 +126,80 @@ public class ExecutorGCLogParser {
         }
     }
 
-    public static void main(String[] args) {
+    public  static void parseExecutorLogByGCViewer(String slowestExecutorsDir) {
 
-        String baseDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/medianProfiles/";
+        for (File executorsDir : new File(slowestExecutorsDir).listFiles()) {
+            String executorDirName = executorsDir.getName();
+
+            if (executorDirName.startsWith("Parallel")) {
+                for (File selectedExecutor : executorsDir.listFiles()) {
+                    if (selectedExecutor.getName().startsWith("E")) {
+                        String ParallelGCLog = selectedExecutor.getAbsolutePath() + File.separatorChar + "stdout";
+                        String ParallelParsedLog = selectedExecutor.getAbsolutePath() + File.separatorChar
+                                + selectedExecutor.getName() + ".csv";
+                        parseExecutorGCLogToSummary(ParallelGCLog, ParallelParsedLog, "PLAIN");
+
+                        ParallelGCViewerLogParser parser = new ParallelGCViewerLogParser();
+                        parser.parse(ParallelParsedLog);
+                        String outputFile = selectedExecutor.getAbsolutePath() + File.separatorChar
+                                + selectedExecutor.getName() + "-parsed.txt";
+                        parser.outputUsage(outputFile);
+                    }
+                }
+            }
+
+            else if (executorDirName.startsWith("CMS")) {
+                for (File selectedExecutor : executorsDir.listFiles()) {
+                    if (selectedExecutor.getName().startsWith("E")) {
+                        String CMSGCLog = selectedExecutor.getAbsolutePath() + File.separatorChar + "stdout";
+                        String CMSParsedLog = selectedExecutor.getAbsolutePath() + File.separatorChar
+                                + selectedExecutor.getName() + ".csv";
+                        parseExecutorGCLogToSummary(CMSGCLog, CMSParsedLog, "PLAIN");
+
+                        CMSGCViewerLogParser parser = new CMSGCViewerLogParser();
+                        parser.parse(CMSParsedLog);
+                        String outputFile = selectedExecutor.getAbsolutePath() + File.separatorChar
+                                + selectedExecutor.getName() + "-parsed.txt";
+                        parser.outputUsage(outputFile);
+                    }
+                }
+            }
+
+            else if (executorDirName.startsWith("G1")) {
+                for (File selectedExecutor : executorsDir.listFiles()) {
+                    if (selectedExecutor.getName().startsWith("E")) {
+                        String G1GCLog = selectedExecutor.getAbsolutePath() + File.separatorChar + "stdout";
+                        String G1ParsedLog = selectedExecutor.getAbsolutePath() + File.separatorChar
+                                + selectedExecutor.getName() + ".csv";
+                        parseExecutorGCLogToSummary(G1GCLog, G1ParsedLog, "PLAIN");
+
+                        G1GCViewerLogParser parser = new G1GCViewerLogParser();
+                        parser.parse(G1ParsedLog);
+                        String outputFile = selectedExecutor.getAbsolutePath() + File.separatorChar
+                                + selectedExecutor.getName() + "-parsed.txt";
+                        parser.outputUsage(outputFile);
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    public static void main(String[] args) {
+        String baseDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/";
+
+        String appName = "AggregateByKey-1.0";
+        String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SlowestExecutors";
+
+        parseExecutorLogByGCViewer(slowestExecutorsDir);
+    }
+
+
+
+    public static void main2(String[] args) {
+
+        String baseDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/";
 
         String appName = "AggregateByKey-1.0";
         //String appName = "GroupByRDD-0.5";

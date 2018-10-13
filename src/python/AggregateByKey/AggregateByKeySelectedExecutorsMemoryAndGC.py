@@ -217,9 +217,6 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
     axes[0].set_ylabel("Old Gen (GB)", color='black')
     axes[1].set_ylabel("GC time (s)")
 
-    axes[0].set_ylim(0, 8)  # The ceil
-    axes[1].set_ylim(0, 6)#9)#4.8)  # The ceil
-
 
     # YoungUsageLine = None
     # if (mode == "="):
@@ -293,10 +290,15 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
                    labelspacing=0.2, markerfirst=False,
                    ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
 
-    plt.show()
-    #fig = plt.gcf()
+    axes[0].set_ylim(0, 8)  # The ceil
+    #axes[1].set_ylim(0, 6)#9)#4.8)  # The ceil
+    maxPause = max(fgcPause)
+    axes[1].set_ylim(0, maxPause * 1.25)
+
     #plt.show()
-    #fig.savefig(outputFile, dpi=300, bbox_inches='tight')
+    fig = plt.gcf()
+    #plt.show()
+    fig.savefig(outputFile, dpi=300, bbox_inches='tight')
 
 
 
@@ -306,46 +308,16 @@ if __name__ == '__main__':
     mode = "="
 
     #gcViewerParsedLogDir = "D:/plot/"
-    gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/medianProfiles/"
+    gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/"
 
     appName = "AggregateByKey-1.0"
-    inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
-    parallelExecutorID = 26
-    cmsExecutorID = 21
-    g1ExecutorID = 10 #28 #18 #16
+    inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
 
-    parallelTimeOffset = 1150#33
-    CMSTimeOffset = 1003
-    G1TimeOffset = 1212
-    plotHeapUsage(parallelTimeOffset, mode, appName, "(a) GroupBy-1.0-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
-    plotHeapUsage(CMSTimeOffset, mode, appName, "(b) GroupBy-1.0-Slowest-CMS-task",inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    plotHeapUsage(G1TimeOffset, mode, appName, "(c) GroupBy-1.0-Slowest-G1-task",inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
+    for file in os.listdir(inputFile):
+        if file.startswith("Parallel") or file.startswith("CMS") or file.startswith("G1"):
+            for executor in os.listdir(os.path.join(inputFile, file)):
+                if executor.startswith("E"):
+                    plotHeapUsage(0, mode, appName, executor, os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
+                                  os.path.join(inputFile, file, executor, executor + ".pdf"))
 
-
-    # appName = "RDDJoin-1.0"
-    # inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
-    # parallelExecutorID = 12
-    # cmsExecutorID = 25
-    # g1ExecutorID = 13
-    # plotHeapUsage(mode, appName, "(a) Join-1.0-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
-    #plotHeapUsage(mode, appName, "(b) Join-1.0-Slowest-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    #plotHeapUsage(mode, appName, "(c) Join-1.0-Slowest-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
-
-    # appName = "SVM-1.0"
-    # inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
-    # parallelExecutorID = 31
-    # cmsExecutorID = 3
-    # g1ExecutorID = 18
-    # plotHeapUsage(mode, appName, "(a) SVM-1.0-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
-    # plotHeapUsage(mode, appName, "(b) SVM-1.0-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    # plotHeapUsage(mode, appName, "(c) SVM-1.0-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
-
-    # appName = "PageRank-0.5"
-    # inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
-    # parallelExecutorID = 1
-    # cmsExecutorID = 14
-    # g1ExecutorID = 28
-    # plotHeapUsage(mode, appName, "(a) PageRank-0.5-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
-    # plotHeapUsage(mode, appName, "(a) PageRank-0.5-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    # plotHeapUsage(mode, appName, "(a) PageRank-0.5-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
 

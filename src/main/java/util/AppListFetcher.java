@@ -46,7 +46,7 @@ public class AppListFetcher {
 
     public static void main(String[] args) {
         String url = "http://aliMaster:8080/";
-        url = "/Users/xulijie/Documents/GCResearch/Experiments-11-17/MasterUI/SVM-1.0-6.5G-G1/ISCAS Spark Master at spark___master_7077.htm";
+        url = "/Users/xulijie/Documents/GCResearch/Experiments-2018/MasterUI/AggregateByKey-0.5/ISCAS Spark Master at spark___master_7077.htm";
         // fetch(url);
         fetchLocalFile(url, 0, 0);
     }

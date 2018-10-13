@@ -128,25 +128,25 @@ public class ExecutorGCLogParser {
 
     public static void main(String[] args) {
 
-        String baseDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/finalProfiles/";
+        String baseDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/medianProfiles/";
 
-
-        String appName = "GroupByRDD-0.5";
+        String appName = "AggregateByKey-1.0";
+        //String appName = "GroupByRDD-0.5";
         //String medianParallelApp = "GroupByRDD-Parallel-1-6656m-0.5-n1_app-20171120185427-0000";
         //String medianCMSApp = "GroupByRDD-CMS-1-6656m-0.5-n5_app-20171120195033-0019";
         //String medianG1App = "GroupByRDD-G1-1-6656m-0.5-n1_app-20171120201509-0030";
 
-        String medianParallelApp = "GroupByRDD-Parallel-1-6656m-0.5-n5_app-20171120191045-0004";
-        String medianCMSApp = "GroupByRDD-CMS-1-6656m-0.5-n2_app-20171120194050-0016";
+        String medianParallelApp = "AggregateByKey-Parallel-1-6656m-1.0-n2_app-20181010012212-0001";
+        String medianCMSApp = "AggregateByKey-CMS-1-6656m-1.0-n4_app-20181010085707-0010";
         // String medianG1App = "GroupByRDD-G1-1-6656m-0.5-n4_app-20171120202507-0033";
         // String medianG1App = "GroupByRDD-G1-1-6656m-0.5-n1_app-20171120201509-0030";
         // String medianG1App = "GroupByRDD-G1-1-6656m-0.5-n2_app-20171120201823-0031";
         // String medianG1App = "GroupByRDD-G1-1-6656m-0.5-n3_app-20171120202154-0032";
-        String medianG1App = "GroupByRDD-G1-1-6656m-0.5-n5_app-20171120202831-0034";
+        String medianG1App = "AggregateByKey-G1-1-6656m-1.0-n4_app-20181010093223-0011";
 
-        int ParallelExectuorID = 27;
+        int ParallelExectuorID = 26;
         int CMSExecutorID = 21;
-        int G1ExecutorID = 15; //28; //18; //16;
+        int G1ExecutorID = 10; //28; //18; //16;
 
         parseExecutorLogByGCViewer(baseDir, appName, medianParallelApp, medianCMSApp, medianG1App,
                 ParallelExectuorID, CMSExecutorID, G1ExecutorID);

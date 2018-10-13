@@ -21,8 +21,9 @@ public class CommandRunner {
                 System.out.println(lineStr);
 
             if (p.waitFor() != 0) {
-                if (p.exitValue() == 1)
-                    System.err.println("Error in executing " + cmd);
+                System.err.println("[" + p.exitValue() + "]Error in executing " + cmd);
+                //if (p.exitValue() == 1)
+                //    System.err.println("Error in executing " + cmd);
             }
             inBr.close();
             in.close();
@@ -31,6 +32,8 @@ public class CommandRunner {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

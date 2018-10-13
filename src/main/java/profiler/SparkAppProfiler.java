@@ -240,16 +240,23 @@ public class SparkAppProfiler {
         // Users need to specify the appIds to be profiled
 
         // String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/";
-        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/";
+        String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/medianProfiles/";
 
+        String app = "AggregateByKey";
+        int[] selectedStageIds = new int[]{1};
+        //String appJsonDir = appJsonRootDir + "AggregateByKey-0.5";
+        //profile(app, appJsonDir, selectedStageIds);
+        String appJsonDir = appJsonRootDir + "AggregateByKey-1.0";
+        profile(app, appJsonDir, selectedStageIds);
 
+/*
         String app = "GroupBy";
         int[] selectedStageIds = new int[]{1};
         String appJsonDir = appJsonRootDir + "GroupByRDD-0.5";
         profile(app, appJsonDir, selectedStageIds);
         appJsonDir = appJsonRootDir + "GroupByRDD-1.0";
         profile(app, appJsonDir, selectedStageIds);
-
+*/
 
         /*
         String app = "Join";

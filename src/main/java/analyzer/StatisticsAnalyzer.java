@@ -115,7 +115,7 @@ public class StatisticsAnalyzer {
 
     }
 
-    private void computeRelativeDifference(List<ComputedAppStatistics> appList, String metricName, String statName) {
+    private void computeRelativeDifference(List<ComputedAppStatistics> appList, final String metricName, final String statName) {
         appList.sort(new Comparator<ComputedAppStatistics>() {
             @Override
             public int compare(ComputedAppStatistics o1, ComputedAppStatistics o2) {

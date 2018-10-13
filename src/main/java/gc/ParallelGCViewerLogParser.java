@@ -23,7 +23,7 @@ public class ParallelGCViewerLogParser {
         for (String line : lines) {
             line = line.trim();
 
-            if (line.startsWith("[2017-"))
+            if (line.startsWith("[201"))
                 parseGCRecord(line);
         }
 
@@ -36,7 +36,7 @@ public class ParallelGCViewerLogParser {
         for (String line : lines) {
             line = line.trim();
 
-            if (line.startsWith("[2017-"))
+            if (line.startsWith("[201"))
                 parseGCRecord(line);
         }
 

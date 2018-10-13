@@ -19,7 +19,7 @@ class Usage:
         self.gcCause = gcCause
 
     def getGCType(self):
-        return self.gcType;
+        return self.gcType
 
     def getTime(self):
         return self.time

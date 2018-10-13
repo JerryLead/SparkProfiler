@@ -22,7 +22,7 @@ public class G1GCViewerLogParser {
         for (String line : lines) {
             line = line.trim();
 
-            if (line.startsWith("[2017-"))
+            if (line.startsWith("[201"))
                 parseGCRecord(line);
         }
         display();
@@ -34,7 +34,7 @@ public class G1GCViewerLogParser {
         for (String line : lines) {
             line = line.trim();
 
-            if (line.startsWith("[2017-"))
+            if (line.startsWith("[201"))
                 parseGCRecord(line);
         }
 

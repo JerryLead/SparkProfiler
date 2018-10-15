@@ -378,31 +378,31 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
         #axes.hlines(200, 0, 400, colors = "black", linestyles = ":", linewidth=1)
         axes[2].vlines(max_x, 0, 800, colors = "grey", linestyles = "--", linewidth=1)
 
-        axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage')
-        axes[2].legend(markerfirst=False,frameon=False)
-        axes[2].grid(True,axis='y')
-    # axes.spines['bottom'].set_linewidth(1.5)
-    # axes.spines['left'].set_linewidth(1.5)
-    # axes.spines['top'].set_linewidth(1.5)
-    # axes.spines['right'].set_linewidth(1.5)
-    #axes[1].plot(slaveTime, slaveCPU, '-r', label='CPU')
-    #ax12 = axes.twinx()
-    #ax12.plot(executorTime, executorMemory, '-b', label='Memory')
-    #ax12.set_ylabel('Executor Memory (GB)', color='b')
-    #ax12.tick_params('y', colors='b')
-    #ax12.set_ylim(0, 32)  # The ceil
-    # ax12.tick_params('y', colors='r')
-    #ax22 = axes[1].twinx()
-    #ax22.plot(slaveTime, slaveMemory, '-b', label='Memory')
-    #ax22.set_ylabel('Worker Memory (GB)', color='b')
-    #ax22.tick_params('y', colors='b')
-    #ax22.set_ylim(0, 32)  # The ceil
+        axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage', linewidth=1)
+        axes[2].legend(markerfirst=False, frameon=False)
+        axes[2].grid(True, axis='y')
+        # axes.spines['bottom'].set_linewidth(1.5)
+        # axes.spines['left'].set_linewidth(1.5)
+        # axes.spines['top'].set_linewidth(1.5)
+        # axes.spines['right'].set_linewidth(1.5)
+        #axes[1].plot(slaveTime, slaveCPU, '-r', label='CPU')
+        #ax12 = axes.twinx()
+        #ax12.plot(executorTime, executorMemory, '-b', label='Memory')
+        #ax12.set_ylabel('Executor Memory (GB)', color='b')
+        #ax12.tick_params('y', colors='b')
+        #ax12.set_ylim(0, 32)  # The ceil
+        # ax12.tick_params('y', colors='r')
+        #ax22 = axes[1].twinx()
+        #ax22.plot(slaveTime, slaveMemory, '-b', label='Memory')
+        #ax22.set_ylabel('Worker Memory (GB)', color='b')
+        #ax22.tick_params('y', colors='b')
+        #ax22.set_ylim(0, 32)  # The ceil
 
 
-    #ax12.set_xlim(xmin=0)
-    #ax22.set_xlim(xmin=0)
+        #ax12.set_xlim(xmin=0)
+        #ax22.set_xlim(xmin=0)
 
-    #plt.title("("+mark+") Join-1.0-"+appName+"-CPU-usage", y=1)
+        #plt.title("("+mark+") Join-1.0-"+appName+"-CPU-usage", y=1)
 
         #outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")
 
@@ -425,14 +425,14 @@ if __name__ == '__main__':
     #gcViewerParsedLogDir = "D:/plot/"
     gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/"
 
-    appName = "AggregateByKey-1.0"
+    appName = "Join-1.0-200G"
     inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
 
     for file in os.listdir(inputFile):
         if file.startswith("Parallel") or file.startswith("CMS") or file.startswith("G1"):
             for executor in os.listdir(os.path.join(inputFile, file)):
                 if executor.startswith("E"):
-                    plotHeapUsage(1000, mode, appName, executor, os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
+                    plotHeapUsage(1200, mode, appName, executor, os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
                                   os.path.join(inputFile, file, executor, "topMetrics.txt"),
                                   os.path.join(inputFile, file, executor, executor + ".pdf"))
 

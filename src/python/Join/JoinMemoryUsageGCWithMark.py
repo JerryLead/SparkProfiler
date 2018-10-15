@@ -354,9 +354,9 @@ if __name__ == '__main__':
     parallelTimeOffset = 89
     CMSTimeOffset = 88
     G1TimeOffset = 83
-    plotHeapUsage(parallelTimeOffset, mode, appName, "(a) Join-1.0-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
+    #plotHeapUsage(parallelTimeOffset, mode, appName, "(a) Join-1.0-Slowest-Parallel-task", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt", inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
     #plotHeapUsage(CMSTimeOffset, mode, appName, "(b) Join-1.0-Slowest-CMS-task", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    #plotHeapUsage(G1TimeOffset, mode, appName, "(c) Join-1.0-Slowest-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
+    plotHeapUsage(G1TimeOffset, mode, appName, "(c) Join-1.0-Slowest-G1-task", inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
 
     # appName = "SVM-1.0"
     # inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"

@@ -3,7 +3,12 @@ package gc;
 import util.GCViewerNoneGUI;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ExecutorGCLogParser {
@@ -126,14 +131,19 @@ public class ExecutorGCLogParser {
         }
     }
 
-    public  static void parseExecutorLogByGCViewer(String slowestExecutorsDir) {
+    public  static void parseExecutorLogByGCViewer(String profilesDir, String slowestExecutorsDir) {
 
         for (File executorsDir : new File(slowestExecutorsDir).listFiles()) {
             String executorDirName = executorsDir.getName();
 
-            if (executorDirName.startsWith("Parallel")) {
-                for (File selectedExecutor : executorsDir.listFiles()) {
+            if (executorDirName.startsWith("Parallel")) { // Parallel-n3-D53m-R32m
+                for (File selectedExecutor : executorsDir.listFiles()) { // E8-T22-D18m-G41s-S3.8G
                     if (selectedExecutor.getName().startsWith("E")) {
+                        // copyFiles (Parallel-n1, E16, E8-T22-D18m-G41s-S3.8G)
+                        if (!profilesDir.isEmpty())
+                            copyFiles(profilesDir, executorDirName.substring(0, executorDirName.indexOf("-n") + 3),
+                                selectedExecutor.getName().substring(1, selectedExecutor.getName().indexOf("-")),
+                                selectedExecutor);
                         String ParallelGCLog = selectedExecutor.getAbsolutePath() + File.separatorChar + "stdout";
                         String ParallelParsedLog = selectedExecutor.getAbsolutePath() + File.separatorChar
                                 + selectedExecutor.getName() + ".csv";
@@ -151,6 +161,11 @@ public class ExecutorGCLogParser {
             else if (executorDirName.startsWith("CMS")) {
                 for (File selectedExecutor : executorsDir.listFiles()) {
                     if (selectedExecutor.getName().startsWith("E")) {
+                        if (!profilesDir.isEmpty())
+                            copyFiles(profilesDir, executorDirName.substring(0, executorDirName.indexOf("-n") + 3),
+                                    selectedExecutor.getName().substring(1, selectedExecutor.getName().indexOf("-")),
+                                    selectedExecutor);
+
                         String CMSGCLog = selectedExecutor.getAbsolutePath() + File.separatorChar + "stdout";
                         String CMSParsedLog = selectedExecutor.getAbsolutePath() + File.separatorChar
                                 + selectedExecutor.getName() + ".csv";
@@ -168,6 +183,11 @@ public class ExecutorGCLogParser {
             else if (executorDirName.startsWith("G1")) {
                 for (File selectedExecutor : executorsDir.listFiles()) {
                     if (selectedExecutor.getName().startsWith("E")) {
+                        if (!profilesDir.isEmpty())
+                            copyFiles(profilesDir, executorDirName.substring(0, executorDirName.indexOf("-n") + 3),
+                                    selectedExecutor.getName().substring(1, selectedExecutor.getName().indexOf("-")),
+                                    selectedExecutor);
+
                         String G1GCLog = selectedExecutor.getAbsolutePath() + File.separatorChar + "stdout";
                         String G1ParsedLog = selectedExecutor.getAbsolutePath() + File.separatorChar
                                 + selectedExecutor.getName() + ".csv";
@@ -186,13 +206,49 @@ public class ExecutorGCLogParser {
 
     }
 
+    private static void copyFiles(String profilesDir, String collector, String executorId, File selectedExecutor) {
+        List<File> files = new ArrayList();
+
+        for (File appDir : new File(profilesDir).listFiles()) {
+            String appName = appDir.getName().toLowerCase();
+            String collectorName = collector.substring(0, collector.indexOf("-")).toLowerCase();
+            String collectorId = collector.substring(collector.indexOf("-") + 1).toLowerCase();
+
+            if (appName.contains(collectorName) && appName.contains(collectorId)) {
+                String executorDir = appDir.getAbsolutePath() + File.separatorChar + "executors"
+                        + File.separatorChar + executorId;
+                for (File f : new File(executorDir).listFiles())
+                    files.add(f);
+            }
+        }
+
+        for(File file : files) {
+
+            try {
+                Files.copy(file.toPath(),
+                        new File(selectedExecutor, file.getName()).toPath(),
+                        StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
     public static void main(String[] args) {
         String baseDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/";
 
-        String appName = "AggregateByKey-1.0";
+        //String appName = "AggregateByKey-1.0";
+        String appName = "Join-1.0-200G";
         String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SlowestExecutors";
 
-        parseExecutorLogByGCViewer(slowestExecutorsDir);
+        boolean copyOriginalExecutorsGClogs = true;
+
+        if (copyOriginalExecutorsGClogs == false)
+            parseExecutorLogByGCViewer("", slowestExecutorsDir);
+        else
+            parseExecutorLogByGCViewer(baseDir + appName, slowestExecutorsDir);
     }
 
 
@@ -201,7 +257,8 @@ public class ExecutorGCLogParser {
 
         String baseDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/";
 
-        String appName = "AggregateByKey-1.0";
+        //String appName = "AggregateByKey-1.0";
+        String appName = "Join-1.0-200G";
         //String appName = "GroupByRDD-0.5";
         //String medianParallelApp = "GroupByRDD-Parallel-1-6656m-0.5-n1_app-20171120185427-0000";
         //String medianCMSApp = "GroupByRDD-CMS-1-6656m-0.5-n5_app-20171120195033-0019";

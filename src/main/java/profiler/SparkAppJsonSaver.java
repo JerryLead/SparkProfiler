@@ -302,7 +302,8 @@ public class SparkAppJsonSaver {
         String name = topFile.getName();
         // CMS-1-6656m-0.5-n1
         name = name.substring(name.indexOf("-") + 1, name.lastIndexOf("."));
-        slaveName = slaveName.toLowerCase().substring(3);
+        if(slaveName.startsWith("ali"))
+            slaveName = slaveName.toLowerCase().substring(3);
 
         for (String line : topMetricsLines) {
             if (line.startsWith("top")) {
@@ -362,7 +363,9 @@ public class SparkAppJsonSaver {
         //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/Join-1.0-240G/JoinAppList-240G.txt";
         // String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/RDDJoin-1.0";
         //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/Join-1.0-240G/";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/AggregateByKey-0.5-2/";
+        //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/AggregateByKey-0.5-2/";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/AggregateByKey-1.0/";
+
         // String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/PageRank-0.5";
 
 
@@ -376,16 +379,16 @@ public class SparkAppJsonSaver {
         SparkAppJsonSaver saver = new SparkAppJsonSaver(masterIP);
 
         // Obtain the appIds from the file (a list of appIds)app-20171117095258-0045
-        saver.parseAppIdList(appIdsFile);
+        // saver.parseAppIdList(appIdsFile);
 
         // Save the app's jsons info into the outputDir
-        saver.saveAppJsonInfo(outputDir);
+        // saver.saveAppJsonInfo(outputDir);
 
-        saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
+        // saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
 
-        saver.saveTopMetrics(userName, slavesIP, sparkTopLogDir, outputDir);
+        // saver.saveTopMetrics(userName, slavesIP, sparkTopLogDir, outputDir);
 
-        saver.parseExecutorGCInfo(outputDir, false);
+        // saver.parseExecutorGCInfo(outputDir, false);
 
         saver.parseTopMetrics(outputDir);
     }

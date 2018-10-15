@@ -199,23 +199,21 @@ class HeapUsage:
         return (ygcTime, ygcPause, fgcTime, fgcPause)
 
 
-def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
+def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, outputFile):
 
     heapUsage = HeapUsage()
     heapUsage.initHeapUsage(gclogFile, timeOffset)
 
-    fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True, figsize=(4,3))
+    if (topMetricsFile == ""):
+        fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True, figsize=(4,3))
+    else:
+        fig, axes = plt.subplots(nrows=3, ncols=1, sharey=False, sharex= True, figsize=(4,4.5))
     plt.subplots_adjust(wspace=0, hspace=0)
-    #gs = gridspec.GridSpec(2, 1)
-    #gs.update(wspace=0, hspace=0.05)
-    #axes[0] = plt.subplot(gs[0, :])
-    # identical to ax1 = plt.subplot(gs.new_subplotspec((0,0), colspan=3))
-    #axes[1] = plt.subplot(gs[1, :])
-
 
 
     axes[0].set_ylabel("Old Gen (GB)", color='black')
-    axes[1].set_ylabel("GC time (s)")
+    axes[1].set_ylabel("GC time (s)", color='black')
+
 
 
     # YoungUsageLine = None
@@ -274,9 +272,10 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
 
 
     FGCBar = axes[1].bar(fgcTime, fgcPause, 0.3, color=colors2[4],  edgecolor=colors2[4])
-    FGCPoint =axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4],markersize=5)
+
     axes[1].plot(-10000, -10000, '-k^',markersize=5, color=colors2[4],label="FGC Pause")
     YGCBar = axes[1].bar(ygcTime, ygcPause, 0.1, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
+    FGCPoint =axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4],markersize=5)
     #axes3.set_ylabel(r"GC pause time (sec)")
     #axes[1].set_xlabel("Time (s)")
     # ymin, ymax = axes[1].get_ylim()
@@ -292,8 +291,124 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, outputFile):
 
     axes[0].set_ylim(0, 8)  # The ceil
     #axes[1].set_ylim(0, 6)#9)#4.8)  # The ceil
-    maxPause = max(fgcPause)
+    maxPause = max(max(fgcPause), max(ygcPause))
     axes[1].set_ylim(0, maxPause * 1.25)
+
+    #### plot the CPU usage
+    if (topMetricsFile != ""):
+        fileLines = open(topMetricsFile, "r").readlines()
+        isExecutorMetric = True
+        isSlaveMetric = False
+
+        executorTime = []
+        executorCPU = []
+        executorMemory = []
+
+        slaveTime = []
+        slaveCPU = []
+        slaveMemory = []
+
+        first_time = -1
+
+        max_y=0
+        max_x=0
+
+        for line in fileLines:
+            if(isExecutorMetric == True and line.strip() != ""):
+                timeStr = line[line.find('[') + 1: line.find(']')]
+                cpu = line[line.find('=') + 2: line.find(',')]
+                memory = line[line.find('Memory') + 9:]
+
+                if first_time == -1:
+                    first_time = datetime.strptime(timeStr, '%H:%M:%S')
+                    time = first_time - first_time
+                else:
+                    cur_time = datetime.strptime(timeStr, '%H:%M:%S')
+                    time = cur_time - first_time
+                    if (time.seconds < 0):
+                        print("Time span" + time.seconds)
+
+                # executorTime.append(datetime.strptime(time, '%H:%M:%S'))
+                executorTime.append(time.seconds)
+                executorCPU.append(float(cpu))
+                executorMemory.append(float(memory))
+                if float(cpu)>max_y:
+                    max_x=time.seconds
+                    max_y=float(cpu)
+
+            elif(isSlaveMetric == True and line.strip() != ""):
+                time = line[line.find('[') + 1: line.find(']')]
+                cpu = line[line.find('=') + 2: line.find(',')]
+                memory = line[line.find('Memory') + 9:]
+
+                if first_time == -1:
+                    first_time = datetime.strptime(time, '%H:%M:%S')
+                    time = first_time - first_time
+                    print first_time
+                else:
+                    cur_time = datetime.strptime(time, '%H:%M:%S')
+                    time = cur_time - first_time
+                slaveTime.append(time.seconds)
+                slaveCPU.append(float(cpu))
+                slaveMemory.append(float(memory))
+
+
+        mark="a"
+        #plt.subplots(nrows=1, ncols=1, sharey=False, sharex= True)
+        if appName=="G1":
+            max_x=109
+            mark="b"
+        # locator = mpl.dates.MinuteLocator()
+        # xfmt = mdates.DateFormatter('%H:%M:%S')
+        #ax.xaxis.set_major_locator(locator)
+        # axes[0].xaxis.set_major_formatter(xfmt)
+        # axes[1].xaxis.set_major_formatter(xfmt)
+        axes[2].set_ylabel("Executor CPU (%)", color='k')
+        axes[2].tick_params('y', colors='k')
+        #axes[1].set_ylabel("Worker CPU (%)", color='r')
+        #axes[1].tick_params('y', colors='r')
+        axes[2].set_ylim(0, 400)  # The ceil
+        #axes[2].set_xlim(0, 400)
+        #axes[1].set_ylim(0, 105)  # The ceil
+        #axes[2].set_xlabel("Time (s)", color=u'#000000')
+        #plt.xlim(0, executorTime.max)  # The ceil
+
+        #fig.autofmt_xdate()
+        #axes.hlines(100, 0, 400, colors = "black", linestyles = "dashed", linewidth=1)
+        #axes.hlines(200, 0, 400, colors = "black", linestyles = ":", linewidth=1)
+        axes[2].vlines(max_x, 0, 400, colors = "grey", linestyles = "--", linewidth=1)
+
+        axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage')
+        axes[2].legend(markerfirst=False,frameon=False)
+        axes[2].grid(True,axis='y')
+    # axes.spines['bottom'].set_linewidth(1.5)
+    # axes.spines['left'].set_linewidth(1.5)
+    # axes.spines['top'].set_linewidth(1.5)
+    # axes.spines['right'].set_linewidth(1.5)
+    #axes[1].plot(slaveTime, slaveCPU, '-r', label='CPU')
+    #ax12 = axes.twinx()
+    #ax12.plot(executorTime, executorMemory, '-b', label='Memory')
+    #ax12.set_ylabel('Executor Memory (GB)', color='b')
+    #ax12.tick_params('y', colors='b')
+    #ax12.set_ylim(0, 32)  # The ceil
+    # ax12.tick_params('y', colors='r')
+    #ax22 = axes[1].twinx()
+    #ax22.plot(slaveTime, slaveMemory, '-b', label='Memory')
+    #ax22.set_ylabel('Worker Memory (GB)', color='b')
+    #ax22.tick_params('y', colors='b')
+    #ax22.set_ylim(0, 32)  # The ceil
+
+
+    #ax12.set_xlim(xmin=0)
+    #ax22.set_xlim(xmin=0)
+
+    #plt.title("("+mark+") Join-1.0-"+appName+"-CPU-usage", y=1)
+
+        #outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")
+
+
+
+
 
     #plt.show()
     fig = plt.gcf()
@@ -317,7 +432,7 @@ if __name__ == '__main__':
         if file.startswith("Parallel") or file.startswith("CMS") or file.startswith("G1"):
             for executor in os.listdir(os.path.join(inputFile, file)):
                 if executor.startswith("E"):
-                    plotHeapUsage(0, mode, appName, executor, os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
+                    plotHeapUsage(1000, mode, appName, executor, os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
+                                  os.path.join(inputFile, file, executor, "topMetrics.txt"),
                                   os.path.join(inputFile, file, executor, executor + ".pdf"))
-
 

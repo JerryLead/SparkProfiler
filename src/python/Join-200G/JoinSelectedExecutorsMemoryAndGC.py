@@ -3,6 +3,7 @@ from matplotlib import gridspec
 import matplotlib.dates as mdates
 import matplotlib as mpl
 import os, sys
+import numpy as np
 
 from datetime import datetime
 from reader import FileReader
@@ -199,7 +200,29 @@ class HeapUsage:
         return (ygcTime, ygcPause, fgcTime, fgcPause)
 
 
-def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, outputFile):
+def getConcurrentMarkPhase(originalLogFile):
+    print(originalLogFile)
+    fileLines = open(originalLogFile, "r").readlines()
+    time_list = []
+    value_list = []
+
+    for line in fileLines:
+        if line.find("concurrent-mark-start") != -1:
+            startTime = float(line[0: line.find(':')])
+        elif line.find("CMS-concurrent-mark ") != -1:
+            endTime = float(line[0: line.find(':')])
+            time_list.append(startTime)
+            value_list.append(endTime - startTime)
+        elif line.find("concurrent-mark-end") != -1:
+            endTime = float(line[0: line.find(':')])
+            time_list.append(startTime)
+            value_list.append(endTime - startTime)
+
+    print time_list
+    return (time_list, value_list)
+
+
+def plotHeapUsage(collectorFile, timeOffset, mode, appName, title, originalLogFile, gclogFile, topMetricsFile, outputFile):
 
     heapUsage = HeapUsage()
     heapUsage.initHeapUsage(gclogFile, timeOffset)
@@ -274,8 +297,8 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
     FGCBar = axes[1].bar(fgcTime, fgcPause, 0.3, color=colors2[4],  edgecolor=colors2[4])
 
     axes[1].plot(-10000, -10000, '-k^',markersize=5, color=colors2[4],label="FGC Pause")
-    YGCBar = axes[1].bar(ygcTime, ygcPause, 0.1, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
-    FGCPoint =axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4],markersize=5)
+    #YGCBar = axes[1].bar(ygcTime, ygcPause, 0.1, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
+    FGCPoint =axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4], markersize=5)
     #axes3.set_ylabel(r"GC pause time (sec)")
     #axes[1].set_xlabel("Time (s)")
     # ymin, ymax = axes[1].get_ylim()
@@ -285,17 +308,17 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
 
 
     handles,labels=axes[1].get_legend_handles_labels()
-    axes[1].legend(handles[::-1],labels[::-1],loc='upper right', frameon=False, fontsize=10,
+    axes[1].legend(handles[::-1], labels[::-1], loc='upper right', frameon=False, fontsize=10,
                    labelspacing=0.2, markerfirst=False,
                    ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
 
     axes[0].set_ylim(0, 8)  # The ceil
     #axes[1].set_ylim(0, 6)#9)#4.8)  # The ceil
-    maxPause = max(max(fgcPause), max(ygcPause))
+    maxPause = max(fgcPause)
     axes[1].set_ylim(0, maxPause * 1.25)
 
     #### plot the CPU usage
-    if (topMetricsFile != ""):
+    if topMetricsFile != "":
         fileLines = open(topMetricsFile, "r").readlines()
         isExecutorMetric = True
         isSlaveMetric = False
@@ -398,19 +421,35 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
         #ax22.tick_params('y', colors='b')
         #ax22.set_ylim(0, 32)  # The ceil
 
+    if collectorFile.startswith("CMS") or collectorFile.startswith("G1"):
+        (time_list, value_list) = getConcurrentMarkPhase(originalLogFile)
 
+        #CMS_time_list=map(lambda x:x-CMSTimeOffset,CMS_time_list)
+        #G1_time_list=map(lambda x:x-G1TimeOffset,G1_time_list)
+
+        axes3 = axes[1].twinx()
+        axes3.set_ylabel("Concurrent GC time (s)", color='blue')
+        #axes3.set_ylim(max(value_list) * 1.25)
+
+        for i in np.arange(len(time_list)):
+            axes3.plot(time_list[i] + value_list[i]/2, value_list[i], 'bo', markersize=value_list[i]/2)
+        # elif title.find("G1")>0:
+        #     axes[1].set_xlim(0,600)
+        #     axes3.set_xlim(0,600)
+        #     axes3.set_ylim(0, 30)
+        #     axes[1].set_ylim(0, 0.85)
+        #     for i in np.arange(len(G1_time_list)):
+        #         axes3.plot(G1_time_list[i]-(G1_value_list[i])/2,G1_value_list[i], 'bo',markersize=G1_value_list[i]/tes)
         #ax12.set_xlim(xmin=0)
         #ax22.set_xlim(xmin=0)
 
         #plt.title("("+mark+") Join-1.0-"+appName+"-CPU-usage", y=1)
 
         #outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")
+        #plt.show()
 
 
 
-
-
-    #plt.show()
     fig = plt.gcf()
     #plt.show()
     fig.savefig(outputFile, dpi=300, bbox_inches='tight')
@@ -432,7 +471,9 @@ if __name__ == '__main__':
         if file.startswith("Parallel") or file.startswith("CMS") or file.startswith("G1"):
             for executor in os.listdir(os.path.join(inputFile, file)):
                 if executor.startswith("E"):
-                    plotHeapUsage(1200, mode, appName, executor, os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
+                    plotHeapUsage(file, 0, mode, appName, executor,
+                                  os.path.join(inputFile, file, executor, executor + ".csv"),
+                                  os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
                                   os.path.join(inputFile, file, executor, "topMetrics.txt"),
                                   os.path.join(inputFile, file, executor, executor + ".pdf"))
 

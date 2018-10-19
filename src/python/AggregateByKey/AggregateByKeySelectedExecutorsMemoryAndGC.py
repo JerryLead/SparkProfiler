@@ -273,9 +273,10 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
 
     FGCBar = axes[1].bar(fgcTime, fgcPause, 0.3, color=colors2[4],  edgecolor=colors2[4])
 
-    axes[1].plot(-10000, -10000, '-k^',markersize=5, color=colors2[4],label="FGC Pause")
+    axes[1].plot(-10000, -10000, '-k^',markersize=5, color=colors2[4], label="FGC Pause")
     YGCBar = axes[1].bar(ygcTime, ygcPause, 0.1, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
-    FGCPoint =axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4],markersize=5)
+    FGCPoint = axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4], markersize=5)
+    print(fgcTime)
     #axes3.set_ylabel(r"GC pause time (sec)")
     #axes[1].set_xlabel("Time (s)")
     # ymin, ymax = axes[1].get_ylim()
@@ -329,7 +330,7 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
                         print("Time span" + time.seconds)
 
                 # executorTime.append(datetime.strptime(time, '%H:%M:%S'))
-                executorTime.append(time.seconds)
+                executorTime.append(time.seconds - timeOffset)
                 executorCPU.append(float(cpu))
                 executorMemory.append(float(memory))
                 if float(cpu)>max_y:
@@ -348,7 +349,7 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
                 else:
                     cur_time = datetime.strptime(time, '%H:%M:%S')
                     time = cur_time - first_time
-                slaveTime.append(time.seconds)
+                slaveTime.append(time.seconds - timeOffset)
                 slaveCPU.append(float(cpu))
                 slaveMemory.append(float(memory))
 
@@ -376,9 +377,10 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
         #fig.autofmt_xdate()
         #axes.hlines(100, 0, 400, colors = "black", linestyles = "dashed", linewidth=1)
         #axes.hlines(200, 0, 400, colors = "black", linestyles = ":", linewidth=1)
-        axes[2].vlines(max_x, 0, 800, colors = "grey", linestyles = "--", linewidth=1)
+        #axes[2].vlines(max_x, 0, 800, colors = "grey", linestyles = "--", linewidth=1)
 
         axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage')
+        print(executorTime)
         axes[2].legend(markerfirst=False,frameon=False)
         axes[2].grid(True,axis='y')
     # axes.spines['bottom'].set_linewidth(1.5)

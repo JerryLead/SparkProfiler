@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import gridspec
 import matplotlib.dates as mdates
 import matplotlib as mpl
@@ -207,7 +208,7 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
     if (topMetricsFile == ""):
         fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True, figsize=(4,3))
     else:
-        fig, axes = plt.subplots(nrows=3, ncols=1, sharey=False, sharex= True, figsize=(4,4.5))
+        fig, axes = plt.subplots(nrows=3, ncols=1, sharey=False, sharex= True, figsize=(4,4.4))
     plt.subplots_adjust(wspace=0, hspace=0)
 
 
@@ -379,10 +380,26 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
         #axes.hlines(200, 0, 400, colors = "black", linestyles = ":", linewidth=1)
         #axes[2].vlines(max_x, 0, 800, colors = "grey", linestyles = "--", linewidth=1)
 
-        axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage', linewidth=0.9)
+
         print(executorTime)
+
+        axes[2].grid(True, axis='y', color='lightgray')
+
+        ax12 = axes[2].twinx()
+        ax12.plot(executorTime, executorMemory, '--b')
+        ax12.set_ylabel('Executor Memory (GB)', color='b')
+        axes[2].plot(np.nan, '--b', label='Memory Usage')  # Make an agent in ax
+        axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage', linewidth=0.9)
         axes[2].legend(markerfirst=False,frameon=False)
-        axes[2].grid(True,axis='y')
+        ax12.tick_params('y', colors='b')
+        ax12.set_ylim(0, 8)  # The ceil
+    # ax12.tick_params('y', colors='r')
+    #ax22 = axes[1].twinx()
+    #ax22.plot(slaveTime, slaveMemory, '-b', label='Memory')
+    #ax22.set_ylabel('Worker Memory (GB)', color='b')
+    #ax22.tick_params('y', colors='b')
+    #ax22.set_ylim(0, 32)  # The ceil
+
     # axes.spines['bottom'].set_linewidth(1.5)
     # axes.spines['left'].set_linewidth(1.5)
     # axes.spines['top'].set_linewidth(1.5)
@@ -406,7 +423,7 @@ def plotHeapUsage(timeOffset, mode, appName, title, gclogFile, topMetricsFile, o
 
     #plt.title("("+mark+") Join-1.0-"+appName+"-CPU-usage", y=1)
 
-        #outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")
+    #outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")
 
 
 
@@ -428,7 +445,8 @@ if __name__ == '__main__':
     gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/"
 
     appName = "AggregateByKey-1.0"
-    inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
+    #inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
+    inputFile = gcViewerParsedLogDir + appName + "/SelectedExecutors/"
 
     for file in os.listdir(inputFile):
         if file.startswith("Parallel") or file.startswith("CMS") or file.startswith("G1"):

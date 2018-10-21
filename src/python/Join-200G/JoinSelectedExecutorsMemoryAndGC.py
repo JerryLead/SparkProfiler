@@ -404,7 +404,7 @@ def plotHeapUsage(collectorFile, timeOffset, mode, appName, title, originalLogFi
         #axes.hlines(200, 0, 400, colors = "black", linestyles = ":", linewidth=1)
         axes[2].vlines(max_x, 0, 800, colors = "grey", linestyles = "--", linewidth=1)
 
-        axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage', linewidth=1)
+        axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage', linewidth=0.5)
         print(executorTime)
         axes[2].legend(markerfirst=False, frameon=False)
         axes[2].grid(True, axis='y')

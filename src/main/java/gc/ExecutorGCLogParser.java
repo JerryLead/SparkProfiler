@@ -239,11 +239,12 @@ public class ExecutorGCLogParser {
     public static void main(String[] args) {
         String baseDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/";
 
-        //String appName = "AggregateByKey-1.0";
-        String appName = "Join-1.0-200G";
-        String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SlowestExecutors";
+        String appName = "AggregateByKey-1.0";
+        //String appName = "Join-1.0-200G";
+        //String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SlowestExecutors";
+        String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SelectedExecutors";
 
-        boolean copyOriginalExecutorsGClogs = true;
+        boolean copyOriginalExecutorsGClogs = false;
 
         if (copyOriginalExecutorsGClogs == false)
             parseExecutorLogByGCViewer("", slowestExecutorsDir);
@@ -257,8 +258,8 @@ public class ExecutorGCLogParser {
 
         String baseDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/";
 
-        //String appName = "AggregateByKey-1.0";
-        String appName = "Join-1.0-200G";
+        String appName = "AggregateByKey-1.0";
+        //String appName = "Join-1.0-200G";
         //String appName = "GroupByRDD-0.5";
         //String medianParallelApp = "GroupByRDD-Parallel-1-6656m-0.5-n1_app-20171120185427-0000";
         //String medianCMSApp = "GroupByRDD-CMS-1-6656m-0.5-n5_app-20171120195033-0019";

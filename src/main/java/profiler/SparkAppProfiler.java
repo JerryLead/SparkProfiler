@@ -258,15 +258,14 @@ public class SparkAppProfiler {
         profile(app, appJsonDir, selectedStageIds);
 */
 
-        /*
+/*
         String app = "Join";
         int[] selectedStageIds = new int[]{2};
-        String appJsonDir = appJsonRootDir + "RDDJoin-0.5";
+        //String appJsonDir = appJsonRootDir + "RDDJoin-0.5";
+        //profile(app, appJsonDir, selectedStageIds);
+        String appJsonDir = appJsonRootDir + "Join-1.0";
         profile(app, appJsonDir, selectedStageIds);
-        appJsonDir = appJsonRootDir + "RDDJoin-1.0";
-        profile(app, appJsonDir, selectedStageIds);
-        */
-
+*/
         /*
         String  app = "SVM";
         int[] selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};

@@ -27,9 +27,9 @@ width = 0.23       # the width of the bars
 # plt.subplots_adjust(left=0.19, bottom=0.11, right=0.98, top=0.87,
 #                     wspace=0.03, hspace=0.04)
 
-xvals = [369, 63, 1004] # D: 1436, GC 1004s (FGC: 980s, YGC: 28s, FGC: 84 times)
-yvals = [467, 91, 31] # 590, GC 32 (
-zvals = [956, 176, 58] # Duration: 1190s, GC:58s (FGC:12s, YGC: 46s, ConGC: 262s, 57 times)
+xvals = [1147, 126, 2464] #Duration: 3737s, taskId: 2000, spillTime=126s, GC=2464s, YGC=27s, FGC=2436s (136 times)
+yvals = [1907, 54, 30] #Duration: 1991s, taskId: 2009, spillTime=54s, GC=30s, YGC=29s, FGC=1s (10 times), ConGC=57s
+zvals = [1892, 57, 130] #Duration:2079s, taskId: 2013, spillTime=57s, GC=123s, YGC=86s, FGC=37s, ConGC=625s
 
 
 # If we were to simply plot pts, we'd lose most of the interesting
@@ -73,8 +73,8 @@ ax2.set_xticklabels( ('CompTime', 'SpillTime', 'GCTime'), color='black')#, borde
 ax2.set_xlim(-0.32, 2.78)  # The ceil
 
 # zoom-in / limit the view to different portions of the data
-ax.set_ylim(800, 1500)  # outliers only
-ax2.set_ylim(0, 600)  # most of the data
+ax.set_ylim(4050, 6000)  # outliers only
+ax2.set_ylim(0, 1550)  # most of the data
 
 # hide the spines between ax and ax2
 ax.spines['bottom'].set_visible(False)
@@ -106,7 +106,7 @@ ax2.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)  # bottom-right diagonal
 # the diagonal lines will move accordingly, and stay right at the tips
 # of the spines they are 'breaking'
 
-ax.set_title("(a) GroupBy-task-execution-time", fontsize=12)
+ax.set_title("(a) Join-task-execution-time", fontsize=12)
 
 
 

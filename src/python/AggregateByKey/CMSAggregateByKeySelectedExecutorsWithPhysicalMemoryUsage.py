@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import gridspec
 import matplotlib.dates as mdates
 import matplotlib as mpl
 import os, sys
-import numpy as np
 
 from datetime import datetime
 from reader import FileReader
@@ -200,36 +200,15 @@ class HeapUsage:
         return (ygcTime, ygcPause, fgcTime, fgcPause)
 
 
-def getConcurrentMarkPhase(originalLogFile):
-    #print(originalLogFile)
-    fileLines = open(originalLogFile, "r").readlines()
-    time_list = []
-    value_list = []
-
-    for line in fileLines:
-        if line.find("concurrent-mark-start") != -1:
-            startTime = float(line[0: line.find(':')])
-        elif line.find("CMS-concurrent-mark ") != -1:
-            endTime = float(line[0: line.find(':')])
-            time_list.append(startTime)
-            value_list.append(endTime - startTime)
-        elif line.find("concurrent-mark-end") != -1:
-            endTime = float(line[0: line.find(':')])
-            time_list.append(startTime)
-            value_list.append(endTime - startTime)
-
-    return (time_list, value_list)
-
-
-def plotHeapUsage(collectorFile, timeOffset, mode, appName, title, originalLogFile, gclogFile, topMetricsFile, outputFile):
+def plotHeapUsage(heapTimeOffset, cpuTimeOffset, mode, appName, title, gclogFile, topMetricsFile, outputFile):
 
     heapUsage = HeapUsage()
-    heapUsage.initHeapUsage(gclogFile, timeOffset)
+    heapUsage.initHeapUsage(gclogFile, heapTimeOffset)
 
     if (topMetricsFile == ""):
         fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True, figsize=(4,3))
     else:
-        fig, axes = plt.subplots(nrows=3, ncols=1, sharey=False, sharex= True, figsize=(4,4.5))
+        fig, axes = plt.subplots(nrows=3, ncols=1, sharey=False, sharex= True, figsize=(4,4.4))
     plt.subplots_adjust(wspace=0, hspace=0)
 
 
@@ -252,15 +231,20 @@ def plotHeapUsage(collectorFile, timeOffset, mode, appName, title, originalLogFi
 
     OldUsageLine = None
     if (mode == "="):
-        axes[0].plot(heapUsage.getGenTime("Old"), heapUsage.getGenBeforeGC("Old"), '--o', linewidth=1, label='BeforeGC', markersize=1)
-        axes[0].plot(heapUsage.getGenTime("Old"), heapUsage.getGenAfterGC("Old"), '-*', linewidth=1, label='AfterGC', markersize=1)
+        oldTimeList = heapUsage.getGenTime("Old")
+        #oldTimeList = [i * 1.5 for i in oldTimeList]
+        axes[0].plot(oldTimeList, heapUsage.getGenBeforeGC("Old"), '--o', linewidth=1, label='BeforeGC', markersize=1)
+        axes[0].plot(oldTimeList, heapUsage.getGenAfterGC("Old"), '-*', linewidth=1, label='AfterGC', markersize=1)
     elif (mode == "-"):
         usage = heapUsage.getUsageAndTime("Old")
         print(usage[0], usage[1])
         OldUsageLine, = axes[0].plot(usage[0], usage[1], '-', linewidth=0.95, label='usage', markersize=0.9)
 
     allocated = heapUsage.getGenAllocated("Old")
-    OldAllocatedLine, = axes[0].plot(allocated[0], allocated[1], '-', label='Allocated')
+
+    allocatedTimeList = allocated[0]
+    #allocatedTimeList = [i * 1.5 for i in allocated[0]]
+    OldAllocatedLine, = axes[0].plot(allocatedTimeList, allocated[1], '-', label='Allocated')
 
 
 
@@ -292,36 +276,37 @@ def plotHeapUsage(collectorFile, timeOffset, mode, appName, title, originalLogFi
     colors2 = [u'#DDA0DD', u'#6A5ACD', u'#A9A9A9', u'#ADD8E6', u"#cc3333"]
     #axes3 = axes[1].twinx()
 
+    #ygcTime = [i * 1.5 for i in ygcTime]
+    #fgcTime = [i * 1.5 for i in fgcTime]
 
     FGCBar = axes[1].bar(fgcTime, fgcPause, 0.3, color=colors2[4],  edgecolor=colors2[4])
 
-    #axes[1].plot(-10000, -10000, '-k^',markersize=5, color=colors2[4],label="FGC Pause")
 
-    #YGCBar = axes[1].bar(ygcTime, ygcPause, 0.1, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
-    #FGCPoint =axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4], markersize=1)
 
-    FGCPoint =axes[1].bar(fgcTime, fgcPause, 0.1, color="r", label="FGC Pause")
-
+    axes[1].plot(-10000, -10000, '-k^',markersize=5, color=colors2[4], label="FGC Pause")
+    YGCBar = axes[1].bar(ygcTime, ygcPause, 0.1, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
+    FGCPoint = axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4], markersize=5)
+    print(fgcTime)
     #axes3.set_ylabel(r"GC pause time (sec)")
     #axes[1].set_xlabel("Time (s)")
     # ymin, ymax = axes[1].get_ylim()
     # axes[1].set_ylim(ymin, ymax * 1.25)
 
-    plt.suptitle(title, y=0.95)
+    plt.suptitle(title, y=0.93)
 
 
     handles,labels=axes[1].get_legend_handles_labels()
-    axes[1].legend(handles[::-1], labels[::-1], loc='upper right', frameon=False, fontsize=10,
+    axes[1].legend(handles[::-1],labels[::-1],loc='upper right', frameon=False, fontsize=10,
                    labelspacing=0.2, markerfirst=False,
                    ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
 
     axes[0].set_ylim(0, 8)  # The ceil
     #axes[1].set_ylim(0, 6)#9)#4.8)  # The ceil
-    maxPause = max(fgcPause)
+    maxPause = max(max(fgcPause), max(ygcPause))
     axes[1].set_ylim(0, maxPause * 1.25)
 
     #### plot the CPU usage
-    if topMetricsFile != "":
+    if (topMetricsFile != ""):
         fileLines = open(topMetricsFile, "r").readlines()
         isExecutorMetric = True
         isSlaveMetric = False
@@ -355,7 +340,7 @@ def plotHeapUsage(collectorFile, timeOffset, mode, appName, title, originalLogFi
                         print("Time span" + time.seconds)
 
                 # executorTime.append(datetime.strptime(time, '%H:%M:%S'))
-                executorTime.append(time.seconds - timeOffset)
+                executorTime.append(time.seconds - cpuTimeOffset)
                 executorCPU.append(float(cpu))
                 executorMemory.append(float(memory))
                 if float(cpu)>max_y:
@@ -370,11 +355,11 @@ def plotHeapUsage(collectorFile, timeOffset, mode, appName, title, originalLogFi
                 if first_time == -1:
                     first_time = datetime.strptime(time, '%H:%M:%S')
                     time = first_time - first_time
-                    #print first_time
+                    print first_time
                 else:
                     cur_time = datetime.strptime(time, '%H:%M:%S')
                     time = cur_time - first_time
-                slaveTime.append(time.seconds - timeOffset)
+                slaveTime.append(time.seconds - cpuTimeOffset)
                 slaveCPU.append(float(cpu))
                 slaveMemory.append(float(memory))
 
@@ -389,7 +374,7 @@ def plotHeapUsage(collectorFile, timeOffset, mode, appName, title, originalLogFi
         #ax.xaxis.set_major_locator(locator)
         # axes[0].xaxis.set_major_formatter(xfmt)
         # axes[1].xaxis.set_major_formatter(xfmt)
-        axes[2].set_ylabel("Executor CPU (%)", color='k')
+        axes[2].set_ylabel("CPU utilization (%)", color='k')
         axes[2].tick_params('y', colors='k')
         #axes[1].set_ylabel("Worker CPU (%)", color='r')
         #axes[1].tick_params('y', colors='r')
@@ -402,71 +387,62 @@ def plotHeapUsage(collectorFile, timeOffset, mode, appName, title, originalLogFi
         #fig.autofmt_xdate()
         #axes.hlines(100, 0, 400, colors = "black", linestyles = "dashed", linewidth=1)
         #axes.hlines(200, 0, 400, colors = "black", linestyles = ":", linewidth=1)
-        axes[2].vlines(max_x, 0, 800, colors = "grey", linestyles = "--", linewidth=1)
+        #axes[2].vlines(max_x, 0, 800, colors = "grey", linestyles = "--", linewidth=1)
 
-        #axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage', linewidth=0.5)
+
         print(executorTime)
-        axes[2].legend(markerfirst=False, frameon=False)
-
-
+        #executorTime = [i * 1.5 for i in executorTime]
 
         axes[2].grid(True, axis='y', color='lightgray')
 
         ax12 = axes[2].twinx()
         ax12.plot(executorTime, executorMemory, '--b')
-        ax12.set_ylabel('Memory (GB)', color='b')
-        axes[2].plot(np.nan, '--b', label='Memory Usage')  # Make an agent in ax
+        ax12.set_ylabel('Memory usage (GB)', color='b')
+
+
         axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage', linewidth=0.9)
-        axes[2].legend(markerfirst=False,frameon=False)
+        axes[2].plot(np.nan, '--b', label='Memory Usage')  # Make an agent in ax
+        axes[2].legend(markerfirst=False,frameon=False, labelspacing=0.2,
+                       ncol=1, borderaxespad=1.4, columnspacing=1.2, handletextpad=0.5, loc="best")
         ax12.tick_params('y', colors='b')
         ax12.set_ylim(0, 8)  # The ceil
-        # axes.spines['bottom'].set_linewidth(1.5)
-        # axes.spines['left'].set_linewidth(1.5)
-        # axes.spines['top'].set_linewidth(1.5)
-        # axes.spines['right'].set_linewidth(1.5)
-        #axes[1].plot(slaveTime, slaveCPU, '-r', label='CPU')
-        #ax12 = axes.twinx()
-        #ax12.plot(executorTime, executorMemory, '-b', label='Memory')
-        #ax12.set_ylabel('Executor Memory (GB)', color='b')
-        #ax12.tick_params('y', colors='b')
-        #ax12.set_ylim(0, 32)  # The ceil
-        # ax12.tick_params('y', colors='r')
-        #ax22 = axes[1].twinx()
-        #ax22.plot(slaveTime, slaveMemory, '-b', label='Memory')
-        #ax22.set_ylabel('Worker Memory (GB)', color='b')
-        #ax22.tick_params('y', colors='b')
-        #ax22.set_ylim(0, 32)  # The ceil
+    # ax12.tick_params('y', colors='r')
+    #ax22 = axes[1].twinx()
+    #ax22.plot(slaveTime, slaveMemory, '-b', label='Memory')
+    #ax22.set_ylabel('Worker Memory (GB)', color='b')
+    #ax22.tick_params('y', colors='b')
+    #ax22.set_ylim(0, 32)  # The ceil
 
-    if collectorFile.startswith("CMS") or collectorFile.startswith("G1"):
-        (time_list, value_list) = getConcurrentMarkPhase(originalLogFile)
+    # axes.spines['bottom'].set_linewidth(1.5)
+    # axes.spines['left'].set_linewidth(1.5)
+    # axes.spines['top'].set_linewidth(1.5)
+    # axes.spines['right'].set_linewidth(1.5)
+    #axes[1].plot(slaveTime, slaveCPU, '-r', label='CPU')
+    #ax12 = axes.twinx()
+    #ax12.plot(executorTime, executorMemory, '-b', label='Memory')
+    #ax12.set_ylabel('Executor Memory (GB)', color='b')
+    #ax12.tick_params('y', colors='b')
+    #ax12.set_ylim(0, 32)  # The ceil
+    # ax12.tick_params('y', colors='r')
+    #ax22 = axes[1].twinx()
+    #ax22.plot(slaveTime, slaveMemory, '-b', label='Memory')
+    #ax22.set_ylabel('Worker Memory (GB)', color='b')
+    #ax22.tick_params('y', colors='b')
+    #ax22.set_ylim(0, 32)  # The ceil
 
-        #CMS_time_list=map(lambda x:x-CMSTimeOffset,CMS_time_list)
-        #G1_time_list=map(lambda x:x-G1TimeOffset,G1_time_list)
 
-        axes3 = axes[1].twinx()
-        axes3.set_ylabel("Concurrent GC time (s)", color='blue')
-        #axes3.set_ylim(max(value_list) * 1.25)
+    #ax12.set_xlim(xmin=0)
+    #ax22.set_xlim(xmin=0)
 
-        for i in np.arange(len(time_list)):
-            axes3.plot(time_list[i] - timeOffset + value_list[i]/2, value_list[i], 'bo', markersize=value_list[i]/3,
-                       label = "Concurrent mark pahse")
-        # elif title.find("G1")>0:
-        #     axes[1].set_xlim(0,600)
-        #     axes3.set_xlim(0,600)
-        #     axes3.set_ylim(0, 30)
-        #     axes[1].set_ylim(0, 0.85)
-        #     for i in np.arange(len(G1_time_list)):
-        #         axes3.plot(G1_time_list[i]-(G1_value_list[i])/2,G1_value_list[i], 'bo',markersize=G1_value_list[i]/tes)
-        #ax12.set_xlim(xmin=0)
-        #ax22.set_xlim(xmin=0)
+    #plt.title("("+mark+") Join-1.0-"+appName+"-CPU-usage", y=1)
 
-        #plt.title("("+mark+") Join-1.0-"+appName+"-CPU-usage", y=1)
-
-        #outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")
-        #plt.show()
+    #outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")
 
 
 
+
+
+    #plt.show()
     fig = plt.gcf()
     #plt.show()
     fig.savefig(outputFile, dpi=300, bbox_inches='tight')
@@ -481,16 +457,15 @@ if __name__ == '__main__':
     #gcViewerParsedLogDir = "D:/plot/"
     gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/"
 
-    appName = "Join-1.0-200G"
-    inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
-    #inputFile = gcViewerParsedLogDir + appName + "/SelectedExecutors/"
+    appName = "AggregateByKey-1.0"
+    #inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
+    inputFile = gcViewerParsedLogDir + appName + "/SelectedExecutors/"
 
     for file in os.listdir(inputFile):
-        if file.startswith("Parallel") or file.startswith("CMS") or file.startswith("G1"):
+        if file.startswith("CMS"):
             for executor in os.listdir(os.path.join(inputFile, file)):
                 if executor.startswith("E"):
-                    plotHeapUsage(file, 1200, mode, appName, executor,
-                                  os.path.join(inputFile, file, executor, executor + ".csv"),
+                    plotHeapUsage(1253, 1248, mode, appName, "(b) GroupBy-1.0-Slowest-CMS-Task",
                                   os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
                                   os.path.join(inputFile, file, executor, "topMetrics.txt"),
                                   os.path.join(inputFile, file, executor, executor + ".pdf"))

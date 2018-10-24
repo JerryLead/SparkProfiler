@@ -239,12 +239,12 @@ public class ExecutorGCLogParser {
     public static void main(String[] args) {
         String baseDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/";
 
-        String appName = "AggregateByKey-1.0";
-        //String appName = "Join-1.0-200G";
-        //String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SlowestExecutors";
-        String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SelectedExecutors";
+        //String appName = "AggregateByKey-1.0";
+        String appName = "Join-1.0-200G-2";
+        String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SlowestExecutors";
+        //String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SelectedExecutors";
 
-        boolean copyOriginalExecutorsGClogs = false;
+        boolean copyOriginalExecutorsGClogs = true;
 
         if (copyOriginalExecutorsGClogs == false)
             parseExecutorLogByGCViewer("", slowestExecutorsDir);

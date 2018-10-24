@@ -241,7 +241,7 @@ public class SparkAppProfiler {
 
         // String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/medianProfiles/";
         String appJsonRootDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/medianProfiles/";
-
+/*
         String app = "AggregateByKey";
         int[] selectedStageIds = new int[]{1};
         //String appJsonDir = appJsonRootDir + "AggregateByKey-0.5";
@@ -249,7 +249,7 @@ public class SparkAppProfiler {
         String appJsonDir = appJsonRootDir + "AggregateByKey-1.0";
         profile(app, appJsonDir, selectedStageIds);
 
-/*
+
         String app = "GroupBy";
         int[] selectedStageIds = new int[]{1};
         String appJsonDir = appJsonRootDir + "GroupByRDD-0.5";
@@ -258,14 +258,14 @@ public class SparkAppProfiler {
         profile(app, appJsonDir, selectedStageIds);
 */
 
-/*
+
         String app = "Join";
         int[] selectedStageIds = new int[]{2};
         //String appJsonDir = appJsonRootDir + "RDDJoin-0.5";
         //profile(app, appJsonDir, selectedStageIds);
-        String appJsonDir = appJsonRootDir + "Join-1.0";
+        String appJsonDir = appJsonRootDir + "Join-1.0-2";
         profile(app, appJsonDir, selectedStageIds);
-*/
+
         /*
         String  app = "SVM";
         int[] selectedStageIds = new int[]{4, 6, 8, 10, 12, 14, 16, 18, 20, 22};

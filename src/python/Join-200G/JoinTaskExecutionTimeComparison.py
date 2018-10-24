@@ -28,8 +28,10 @@ width = 0.23       # the width of the bars
 #                     wspace=0.03, hspace=0.04)
 
 xvals = [1147, 126, 2464] #Duration: 3737s, taskId: 2000, spillTime=126s, GC=2464s, YGC=27s, FGC=2436s (136 times)
-yvals = [1907, 54, 30] #Duration: 1991s, taskId: 2009, spillTime=54s, GC=30s, YGC=29s, FGC=1s (10 times), ConGC=57s
-zvals = [1892, 57, 130] #Duration:2079s, taskId: 2013, spillTime=57s, GC=123s, YGC=86s, FGC=37s, ConGC=625s
+yvals = [1811, 60, 31] #Duration: 1902s, taskId: 2012, spillTime=60s, GC=31s, YGC=30s, FGC=1s (11 times), ConGC=64s
+zvals = [1838, 128, 120] #Duration:2086s, taskId: 2014, spillTime=167s, GC=120s, YGC=80s, FGC=40s, ConGC=631s
+
+#zvals = [1892, 57, 130] #Duration:2079s, taskId: 2013, spillTime=57s, GC=123s, YGC=86s, FGC=37s, ConGC=625s
 
 
 # If we were to simply plot pts, we'd lose most of the interesting

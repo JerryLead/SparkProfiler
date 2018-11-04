@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import gridspec
 import matplotlib.dates as mdates
 import matplotlib as mpl
 import os, sys
-import numpy as np
 
 from datetime import datetime
 from reader import FileReader
@@ -200,26 +200,21 @@ class HeapUsage:
         return (ygcTime, ygcPause, fgcTime, fgcPause)
 
 
-def plotHeapUsage(timeOffset, cpuTimeOffset, mode, appName, title, gclogFile, topMetricsFile, outputFile):
+def plotHeapUsage(heapTimeOffset, cpuTimeOffset, mode, appName, title, gclogFile, topMetricsFile, outputFile):
 
     heapUsage = HeapUsage()
-    heapUsage.initHeapUsage(gclogFile, timeOffset)
+    heapUsage.initHeapUsage(gclogFile, heapTimeOffset)
 
-    fig, axes = plt.subplots(nrows=3, ncols=1, sharey=False, sharex= True, figsize=(4,4.5))
+    if (topMetricsFile == ""):
+        fig, axes = plt.subplots(nrows=2, ncols=1, sharey=False, sharex= True, figsize=(4,3))
+    else:
+        fig, axes = plt.subplots(nrows=3, ncols=1, sharey=False, sharex= True, figsize=(4,4.4))
     plt.subplots_adjust(wspace=0, hspace=0)
-    #gs = gridspec.GridSpec(2, 1)
-    #gs.update(wspace=0, hspace=0.05)
-    #axes[0] = plt.subplot(gs[0, :])
-    # identical to ax1 = plt.subplot(gs.new_subplotspec((0,0), colspan=3))
-    #axes[1] = plt.subplot(gs[1, :])
-
 
 
     axes[0].set_ylabel("Old Gen (GB)", color='black')
-    axes[1].set_ylabel("GC time (s)")
+    axes[1].set_ylabel("GC time (s)", color='black')
 
-    axes[0].set_ylim(0, 8)  # The ceil
-    axes[1].set_ylim(0, 14)#9)#4.8)  # The ceil
 
 
     # YoungUsageLine = None
@@ -236,14 +231,16 @@ def plotHeapUsage(timeOffset, cpuTimeOffset, mode, appName, title, gclogFile, to
 
     OldUsageLine = None
     if (mode == "="):
-        axes[0].plot(heapUsage.getGenTime("Old"), heapUsage.getGenBeforeGC("Old"), '--o', linewidth=1, label='BeforeGC', markersize=1)
-        axes[0].plot(heapUsage.getGenTime("Old"), heapUsage.getGenAfterGC("Old"), '-*', linewidth=1, label='AfterGC', markersize=1)
+        oldTimeList = heapUsage.getGenTime("Old")
+        axes[0].plot(oldTimeList, heapUsage.getGenBeforeGC("Old"), '--o', linewidth=1, label='BeforeGC', markersize=1)
+        axes[0].plot(oldTimeList, heapUsage.getGenAfterGC("Old"), '-*', linewidth=1, label='AfterGC', markersize=1)
     elif (mode == "-"):
         usage = heapUsage.getUsageAndTime("Old")
         print(usage[0], usage[1])
         OldUsageLine, = axes[0].plot(usage[0], usage[1], '-', linewidth=0.95, label='usage', markersize=0.9)
 
     allocated = heapUsage.getGenAllocated("Old")
+
     OldAllocatedLine, = axes[0].plot(allocated[0], allocated[1], '-', label='Allocated')
 
 
@@ -278,23 +275,30 @@ def plotHeapUsage(timeOffset, cpuTimeOffset, mode, appName, title, gclogFile, to
 
 
     FGCBar = axes[1].bar(fgcTime, fgcPause, 0.3, color=colors2[4],  edgecolor=colors2[4])
-    FGCPoint =axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4],markersize=5)
-    axes[1].plot(-10000, -10000, '-k^',markersize=5, color=colors2[4],label="FGC Pause")
+
+
+
+    axes[1].plot(-10000, -10000, '-k^',markersize=5, color=colors2[4], label="FGC Pause")
     YGCBar = axes[1].bar(ygcTime, ygcPause, 0.1, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
+    FGCPoint = axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4], markersize=5)
+    print(fgcTime)
     #axes3.set_ylabel(r"GC pause time (sec)")
     #axes[1].set_xlabel("Time (s)")
     # ymin, ymax = axes[1].get_ylim()
     # axes[1].set_ylim(ymin, ymax * 1.25)
 
-    plt.suptitle(title, y=0.95)
+    plt.suptitle(title, y=0.93)
 
 
     handles,labels=axes[1].get_legend_handles_labels()
     axes[1].legend(handles[::-1],labels[::-1],loc='upper right', frameon=False, fontsize=10,
                    labelspacing=0.2, markerfirst=False,
                    ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
-    print(ygcTime)
-    print(fgcTime)
+
+    axes[0].set_ylim(0, 8)  # The ceil
+    #axes[1].set_ylim(0, 6)#9)#4.8)  # The ceil
+    maxPause = max(max(fgcPause), max(ygcPause))
+    axes[1].set_ylim(0, 0.26) #maxPause * 1.6)
 
     #### plot the CPU usage
     if (topMetricsFile != ""):
@@ -369,7 +373,7 @@ def plotHeapUsage(timeOffset, cpuTimeOffset, mode, appName, title, gclogFile, to
         axes[2].tick_params('y', colors='k')
         #axes[1].set_ylabel("Worker CPU (%)", color='r')
         #axes[1].tick_params('y', colors='r')
-        axes[2].set_ylim(0, 800)  # The ceil
+        axes[2].set_ylim(0, 380)  # The ceil
         #axes[2].set_xlim(0, 400)
         #axes[1].set_ylim(0, 105)  # The ceil
         #axes[2].set_xlabel("Time (s)", color=u'#000000')
@@ -397,10 +401,10 @@ def plotHeapUsage(timeOffset, cpuTimeOffset, mode, appName, title, gclogFile, to
         ax12.tick_params('y', colors='b')
         ax12.set_ylim(0, 8)  # The ceil
 
-    plt.show()
-    #fig = plt.gcf()
     #plt.show()
-    #fig.savefig(outputFile, dpi=300, bbox_inches='tight')
+    fig = plt.gcf()
+    #plt.show()
+    fig.savefig(outputFile, dpi=300, bbox_inches='tight')
 
 
 
@@ -410,19 +414,18 @@ if __name__ == '__main__':
     mode = "="
 
     #gcViewerParsedLogDir = "D:/plot/"
-    gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/finalProfiles/"
+    gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/"
 
-    appName = "GroupByRDD-0.5"
-    inputFile = gcViewerParsedLogDir + appName + "/SlowestTask/"
-    parallelExecutorID = 29
-    parallelTimeOffset = 46#33
-    cpuTimeOffset=45
-    plotHeapUsage(parallelTimeOffset, cpuTimeOffset,
-                  mode, appName, "(a) GroupBy-0.5-Slowest-Parallel-task",
-                  inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + "-parsed.txt",
-                  inputFile + "Parallel/topMetrics.txt",
-                  inputFile + "Parallel/parallel-E" + str(parallelExecutorID) + ".pdf")
-    #plotHeapUsage(CMSTimeOffset, mode, appName, "(b) GroupBy-0.5-Slowest-CMS-task",inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt", inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")
-    #plotHeapUsage(G1TimeOffset, mode, appName, "(c) GroupBy-0.5-Slowest-G1-task",inputFile + "G1/G1-E" + str(g1ExecutorID) + "-parsed.txt", inputFile + "G1/G1-E" + str(g1ExecutorID) + ".pdf")
+    appName = "SQLJoin-1.0-200G"
+    inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
+    #inputFile = gcViewerParsedLogDir + appName + "/SelectedExecutors/"
 
+    for file in os.listdir(inputFile):
+        if file.startswith("CMS"):
+            for executor in os.listdir(os.path.join(inputFile, file)):
+                if executor.startswith("E"):
+                    plotHeapUsage(1365, 1369, mode, appName, "(b) SQLJoin-1.0-Slowest-CMS-Task",
+                                  os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
+                                  os.path.join(inputFile, file, executor, "topMetrics.txt"),
+                                  os.path.join(inputFile, file, executor, executor + ".pdf"))
 

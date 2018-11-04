@@ -205,7 +205,7 @@ def plotHeapUsage(timeOffset, cpuTimeOffset, mode, appName, title, gclogFile, to
     heapUsage = HeapUsage()
     heapUsage.initHeapUsage(gclogFile, timeOffset)
 
-    fig, axes = plt.subplots(nrows=3, ncols=1, sharey=False, sharex= True, figsize=(4,4))
+    fig, axes = plt.subplots(nrows=3, ncols=1, sharey=False, sharex= True, figsize=(4,4.5))
     plt.subplots_adjust(wspace=0, hspace=0)
     #gs = gridspec.GridSpec(2, 1)
     #gs.update(wspace=0, hspace=0.05)
@@ -219,7 +219,7 @@ def plotHeapUsage(timeOffset, cpuTimeOffset, mode, appName, title, gclogFile, to
     axes[1].set_ylabel("GC time (s)")
 
     axes[0].set_ylim(0, 8)  # The ceil
-    axes[1].set_ylim(0, 14)#9)#4.8)  # The ceil
+    axes[1].set_ylim(0, 12)#4.8)  # The ceil
 
 
     # YoungUsageLine = None
@@ -290,7 +290,7 @@ def plotHeapUsage(timeOffset, cpuTimeOffset, mode, appName, title, gclogFile, to
 
 
     handles,labels=axes[1].get_legend_handles_labels()
-    axes[1].legend(handles[::-1],labels[::-1],loc='upper right', frameon=False, fontsize=10,
+    axes[1].legend(handles[::-1],labels[::-1],loc='upper left', frameon=False, fontsize=10,
                    labelspacing=0.2, markerfirst=False,
                    ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
     print(ygcTime)
@@ -393,7 +393,7 @@ def plotHeapUsage(timeOffset, cpuTimeOffset, mode, appName, title, gclogFile, to
         axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage', linewidth=0.9)
         axes[2].plot(np.nan, '--b', label='Memory Usage')  # Make an agent in ax
         axes[2].legend(markerfirst=False,frameon=False, labelspacing=0.2,
-                       ncol=1, borderaxespad=1.4, columnspacing=1.2, handletextpad=0.5, loc="best")
+                       ncol=1, borderaxespad=0.4, columnspacing=1.2, handletextpad=0.5, loc="upper left")
         ax12.tick_params('y', colors='b')
         ax12.set_ylim(0, 8)  # The ceil
 
@@ -420,7 +420,7 @@ if __name__ == '__main__':
     cpuTimeOffset = 36
 
     plotHeapUsage(CMSTimeOffset, cpuTimeOffset,
-                  mode, appName, "(a) GroupBy-0.5-Slowest-CMS-task",
+                  mode, appName, "(b) GroupBy-0.5-Slowest-CMS-task",
                   inputFile + "CMS/CMS-E" + str(cmsExecutorID) + "-parsed.txt",
                   inputFile + "CMS/topMetrics.txt",
                   inputFile + "CMS/CMS-E" + str(cmsExecutorID) + ".pdf")

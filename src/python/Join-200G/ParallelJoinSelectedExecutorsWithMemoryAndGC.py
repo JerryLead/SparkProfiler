@@ -450,7 +450,7 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
 
         for i in np.arange(len(time_list)):
             axes3.plot(time_list[i] - heapTimeOffset + value_list[i]/2, value_list[i], 'bo', markersize=value_list[i]/3,
-                       label = "Concurrent mark pahse")
+                       label = "Concurrent mark phase")
         # elif title.find("G1")>0:
         #     axes[1].set_xlim(0,600)
         #     axes3.set_xlim(0,600)

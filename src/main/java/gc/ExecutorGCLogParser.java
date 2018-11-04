@@ -241,7 +241,8 @@ public class ExecutorGCLogParser {
 
         //String appName = "AggregateByKey-1.0";
         //String appName = "Join-1.0-200G-2";
-        String appName = "SQLGroupBy-1.0-200G";
+        //String appName = "SQLGroupBy-1.0-200G";
+        String appName = "SQLJoin-1.0-200G";
         String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SlowestExecutors";
         //String slowestExecutorsDir = baseDir + appName + File.separatorChar + "SelectedExecutors";
 

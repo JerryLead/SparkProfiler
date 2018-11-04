@@ -61,7 +61,7 @@ def autolabel(rects, loc, angle):
     for rect in rects:
         h = rect.get_height()
         ax.text(rect.get_x()+rect.get_width()/2.+loc, 1.03*h, '%d'%int(h),
-                ha='center', va='bottom', fontsize=11, rotation=angle)
+                ha='center', va='bottom', fontsize=11, rotation=angle, weight='bold')
 
 autolabel(rects1, -0.08, -45)
 autolabel(rects2, -0.02, -45)

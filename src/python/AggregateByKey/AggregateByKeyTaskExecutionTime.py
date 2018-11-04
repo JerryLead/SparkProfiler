@@ -27,10 +27,10 @@ plt.subplots_adjust(left=0.20, bottom=0.11, right=0.96, top=0.87,
 #plt.tight_layout()
 legend_properties = {'weight':'bold'}
 
-xvals = [365, 63, 1008] # D: 1436, GC 1008s (FGC: 980s, YGC: 28s, FGC: 84 times), Parallel-n1-E9-T13-id-1693
-yvals = [878, 89, 47] # D: 1014, taskId:1702, spillTime=89s, GC 47s (FGC: 17s, YGC: 30s, ConGC: 129s, 27 times)
+xvals = [365, 63, 1008] # D: 1436, GC 1008s (FGC: 980s, YGC: 28s, FGC: 84 times), Parallel-n1-E9-T13-id-1693, 90 times YGC
+yvals = [878, 89, 47] # D: 1014, taskId:1702, spillTime=89s, GC 47s (FGC: 17s, YGC: 30s, ConGC: 129s, 27 times), 521 times YGC
+zvals = [898, 224, 55] #Duration: 1177 , E9-T19-1699 spillTime=224s, GC:55s (FGC: 10s, YGC: 45s, ConGC: 264s, 52 times), 257 times YGC
 #zvals = [856, 276, 58] # Duration: 1190s, GC:58s (FGC:12s, YGC: 46s, ConGC: 262s, 57 times)
-zvals = [898, 224, 55] #Duration: 1177 , E9-T19-1699 spillTime=224s, GC:55s (FGC: 10s, YGC: 45s, ConGC: 264s, 52 times)
 
 rects1 = ax.bar(ind, xvals, width, color='lightpink', edgecolor='black')#, hatch="///")
 rects2 = ax.bar(ind+width, yvals, width, color='lightgreen', edgecolor='black', hatch='xxx')

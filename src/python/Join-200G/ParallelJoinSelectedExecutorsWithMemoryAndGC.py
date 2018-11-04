@@ -318,7 +318,7 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
     axes[0].set_ylim(0, 8)  # The ceil
     #axes[1].set_ylim(0, 6)#9)#4.8)  # The ceil
     maxPause = max(fgcPause)
-    axes[1].set_ylim(0, maxPause * 1.25)
+    axes[1].set_ylim(0, maxPause * 1.35)
 
     #### plot the CPU usage
     if topMetricsFile != "":

@@ -308,8 +308,13 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
 
     #YGCBar = axes[1].bar(ygcTime, ygcPause, 0.1, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
     #FGCPoint =axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4], markersize=1)
-
     FGCPoint =axes[1].bar(fgcTime, fgcPause, 0.1, color="r", label="FGC Pause")
+    axes[1].plot(np.nan, np.nan, 'bo',markersize=4,label='Concurrent mark phase')
+    #axes[1].legend(markerfirst=False, frameon=False, borderaxespad=0.3)
+    handles,labels=axes[1].get_legend_handles_labels()
+    axes[1].legend(handles[::-1],labels[::-1],loc='upper right', frameon=False, fontsize=10,
+                   labelspacing=0.2, markerfirst=False,
+                   ncol=1, borderaxespad=0.8, columnspacing=1.2, handletextpad=0.5)
 
     #axes3.set_ylabel(r"GC pause time (sec)")
     #axes[1].set_xlabel("Time (s)")
@@ -319,15 +324,15 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
     plt.suptitle(title, y=0.93)
 
 
-    handles,labels=axes[1].get_legend_handles_labels()
-    axes[1].legend(handles[::-1], labels[::-1], loc='upper right', frameon=False, fontsize=10,
-                   labelspacing=0.2, markerfirst=False,
-                   ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
+    #handles,labels=axes[1].get_legend_handles_labels()
+    # axes[1].legend(handles[::-1], labels[::-1], loc='upper right', frameon=False, fontsize=10,
+    #                labelspacing=0.2, markerfirst=False,
+    #                ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
 
     axes[0].set_ylim(0, 8)  # The ceil
     #axes[1].set_ylim(0, 6)#9)#4.8)  # The ceil
     maxPause = max(fgcPause)
-    axes[1].set_ylim(0, maxPause * 1.25)
+    axes[1].set_ylim(0, maxPause * 2)
 
     #### plot the CPU usage
     if topMetricsFile != "":
@@ -457,13 +462,12 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
         axes3 = axes[1].twinx()
         axes3.set_ylabel("Concurrent GC (s)", color='blue')
         #axes3.set_ylim(max(value_list) * 1.25)
-        axes3.set_ylim(0, max(value_list) * 1.4)
+        axes3.set_ylim(0, max(value_list) * 2)
 
-        if title.find("CMS")>0 or title.find("G1")>0:
-            axes[1].plot(-1000,-1000, 'bo',markersize=4,label='Concurrent mark phase')
+
         for i in np.arange(len(time_list)):
-            axes3.plot(time_list[i] - heapTimeOffset + value_list[i]/2, value_list[i], 'bo', markersize=value_list[i]/2)
-        axes[1].legend(markerfirst=False, frameon=False, borderaxespad=0.3)
+            axes3.plot(time_list[i] - heapTimeOffset + value_list[i]/2, value_list[i], 'bo', markersize=value_list[i]/1.5)
+
         # elif title.find("G1")>0:
         #     axes[1].set_xlim(0,600)
         #     axes3.set_xlim(0,600)

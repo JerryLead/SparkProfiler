@@ -359,22 +359,30 @@ public class SparkAppJsonSaver {
         // e.g., app-20170623113634-0010
         //       app-20170623113111-0009
         //       app-20170623112547-0008
-        // String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/AggregateByKey-0.5-2/aggregateByKeyAppList-100G.txt";
+        //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/SQLGroupBy-1.0-200G-2/SQLGroupByAppList-200G.txt";
+        //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/AggregateByKey-0.5-5/aggregateByKeyAppList-100G.txt";
+        String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/SQLJoin-1.0-200G/SQLJoinAppList-200G.txt";
+
+
+
         // String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/AggregateByKey-1.0/aggregateByKeyAppList-200G.txt";
 
-        String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/Join-1.0-200G-2/JoinAppList-200G.txt";
+        //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/Join-0.5-100G/JoinAppList-100G.txt";
         // String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/RDDJoin-1.0";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/Join-1.0-200G-2/";
-        //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/AggregateByKey-0.5-2/";
+        //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/Join-0.5-100G/";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/SQLGroupBy-1.0-200G/";
         //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/AggregateByKey-1.0/";
+        //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/SQLJoin-1.0-200G/";
 
         // String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/PageRank-0.5";
 
 
-        //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/AggregateByKey-0.5-6.5G-100G-2";
-        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/Join-1.0-6.5G-200G";
+        //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/SQLJoin-1.0-6.5G-200G";
+        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/SQLGroupBy-1.0-6.5G-200G";
+        //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/AggregateByKey-0.5-6.5G-100G-5";
+        //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/Join-1.0-6.5G-200G";
         //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/AggregateByKey-1.0-6.5G-200G";
-
+        //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/Join-1.0-6.5G-100G";
         // The executor log files are stored on each slave node
         String executorLogFile = "/dataDisk/spark-2.3.0/worker/";
         String[] slavesIP = new String[]{"slave1", "slave2", "slave3", "slave4", "slave5", "slave6", "slave7", "slave8"};
@@ -383,14 +391,14 @@ public class SparkAppJsonSaver {
         SparkAppJsonSaver saver = new SparkAppJsonSaver(masterIP);
 
         // Obtain the appIds from the file (a list of appIds)app-20171117095258-0045
-        // saver.parseAppIdList(appIdsFile);
+        //saver.parseAppIdList(appIdsFile);
 
         // Save the app's jsons info into the outputDir
-        // saver.saveAppJsonInfo(outputDir);
+        //saver.saveAppJsonInfo(outputDir);
 
-        // saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
+        //saver.saveExecutorGCInfo(userName, slavesIP, executorLogFile, outputDir);
 
-        // saver.saveTopMetrics(userName, slavesIP, sparkTopLogDir, outputDir);
+        //saver.saveTopMetrics(userName, slavesIP, sparkTopLogDir, outputDir);
 
         // saver.parseExecutorGCInfo(outputDir, false);
 

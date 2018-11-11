@@ -391,6 +391,7 @@ def plotHeapUsage(timeOffset, cpuTimeOffset, mode, appName, title, gclogFile, to
 
 
         axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage', linewidth=0.9)
+        print("avgCPU = " + str(sum(executorCPU) / float(len(executorCPU))))
         axes[2].plot(np.nan, '--b', label='Memory Usage')  # Make an agent in ax
         axes[2].legend(markerfirst=False,frameon=False, labelspacing=0.2,
                        ncol=1, borderaxespad=0.4, columnspacing=1.2, handletextpad=0.5, loc="upper left")

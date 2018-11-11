@@ -308,13 +308,8 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
 
     #YGCBar = axes[1].bar(ygcTime, ygcPause, 0.1, color=colors2[2], label="YGC Pause", edgecolor=colors2[2])
     #FGCPoint =axes[1].plot(fgcTime, fgcPause,'k^', color=colors2[4], markersize=1)
+
     FGCPoint =axes[1].bar(fgcTime, fgcPause, 0.1, color="r", label="FGC Pause")
-    axes[1].plot(np.nan, np.nan, 'bo',markersize=4,label='Concurrent mark phase')
-    #axes[1].legend(markerfirst=False, frameon=False, borderaxespad=0.3)
-    handles,labels=axes[1].get_legend_handles_labels()
-    axes[1].legend(handles[::-1],labels[::-1],loc='upper right', frameon=False, fontsize=10,
-                   labelspacing=0.2, markerfirst=False,
-                   ncol=1, borderaxespad=0.8, columnspacing=1.2, handletextpad=0.5)
 
     #axes3.set_ylabel(r"GC pause time (sec)")
     #axes[1].set_xlabel("Time (s)")
@@ -324,15 +319,11 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
     plt.suptitle(title, y=0.93)
 
 
-    #handles,labels=axes[1].get_legend_handles_labels()
-    # axes[1].legend(handles[::-1], labels[::-1], loc='upper right', frameon=False, fontsize=10,
-    #                labelspacing=0.2, markerfirst=False,
-    #                ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
 
     axes[0].set_ylim(0, 8)  # The ceil
     #axes[1].set_ylim(0, 6)#9)#4.8)  # The ceil
     maxPause = max(fgcPause)
-    axes[1].set_ylim(0, maxPause * 2)
+    axes[1].set_ylim(0, maxPause * 1.6)
 
     #### plot the CPU usage
     if topMetricsFile != "":
@@ -408,7 +399,6 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
         #axes[1].set_ylabel("Worker CPU (%)", color='r')
         #axes[1].tick_params('y', colors='r')
         axes[2].set_ylim(0, 395)  # The ceil
-
         #axes[2].set_xlim(0, 400)
         #axes[1].set_ylim(0, 105)  # The ceil
         #axes[2].set_xlabel("Time (s)", color=u'#000000')
@@ -433,7 +423,7 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
         axes[2].plot(executorTime, executorCPU, '-r', label='CPU Usage', linewidth=0.9)
         axes[2].plot(np.nan, '--b', label='Memory Usage')  # Make an agent in ax
 
-        axes[2].legend(markerfirst=False,frameon=False, borderaxespad=0.7)#, labelspacing=0.1, loc ='lower right')
+        axes[2].legend(markerfirst=False,frameon=False, borderaxespad=0.1)#, labelspacing=0.1, loc ='lower right')
         ax12.tick_params('y', colors='b')
         ax12.set_ylim(0, 9)  # The ceil
         # axes.spines['bottom'].set_linewidth(1.5)
@@ -461,14 +451,21 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
 
         axes3 = axes[1].twinx()
         axes3.set_ylabel("Concurrent GC (s)", color='blue')
-        #axes3.set_ylim(max(value_list) * 1.25)
-        axes3.set_ylim(0, max(value_list) * 2)
+        #axes3.set_ylim(max(vlabelspacing=0.1,alue_list) * 1.25)
+        axes3.set_ylim(0, max(value_list) * 1.6)
 
-
+        if title.find("CMS")>0 or title.find("G1")>0:
+            axes[1].plot(-1000,-1000, 'bo',markersize=4,label='Concurrent mark phase')
         for i in np.arange(len(time_list)):
-            axes3.plot(time_list[i] - heapTimeOffset + value_list[i]/2, value_list[i], 'bo', markersize=value_list[i]/1.5)
+            axes3.plot(time_list[i] - heapTimeOffset + value_list[i]/2, value_list[i], 'bo', markersize=value_list[i]/4)
 
-        # elif title.find("G1")>0:
+
+        handles,labels=axes[1].get_legend_handles_labels()
+        axes[1].legend(handles[::-1], labels[::-1], loc='upper right', frameon=False, fontsize=10,
+                   labelspacing=0.2, markerfirst=False,
+                   ncol=1, borderaxespad=0.3, columnspacing=1.2, handletextpad=0.5)
+
+    # elif title.find("G1")>0:
         #     axes[1].set_xlim(0,600)
         #     axes3.set_xlim(0,600)
         #     axes3.set_ylim(0, 30)
@@ -483,9 +480,9 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
         #outputDir = os.path.join(slowestTasksDir, "topMetricsFigures")
         #plt.show()
 
+
     print("avgCPU = " + str(sum(executorCPU) / float(len(executorCPU))))
     print("maxMemory = " + str(max(executorMemory)))
-
     fig = plt.gcf()
     #plt.show()
     fig.savefig(outputFile, dpi=300, bbox_inches='tight')
@@ -500,15 +497,15 @@ if __name__ == '__main__':
     #gcViewerParsedLogDir = "D:/plot/"
     gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/"
 
-    appName = "Join-1.0-200G-2"
-    #inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
-    inputFile = gcViewerParsedLogDir + appName + "/SelectedExecutors/"
+    appName = "Join-1.0-CPU"
+    inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
+    #inputFile = gcViewerParsedLogDir + appName + "/SelectedExecutors/"
 
     for file in os.listdir(inputFile):
-        if file.startswith("CMS"):
+        if file.startswith("G1"):
             for executor in os.listdir(os.path.join(inputFile, file)):
                 if executor.startswith("E"):
-                    plotHeapUsage(file, 1290, 1294, mode, appName, "(b) Join-1.0-Slowest-CMS-Task",
+                    plotHeapUsage(file, 1505, 1505, mode, appName, "(c) Join-200G-CPU-2-Slowest-G1-Task",
                                   os.path.join(inputFile, file, executor, executor + ".csv"),
                                   os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
                                   os.path.join(inputFile, file, executor, "topMetrics.txt"),

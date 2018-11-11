@@ -361,7 +361,11 @@ public class SparkAppJsonSaver {
         //       app-20170623112547-0008
         //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/SQLGroupBy-1.0-200G-2/SQLGroupByAppList-200G.txt";
         //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/AggregateByKey-0.5-5/aggregateByKeyAppList-100G.txt";
-        String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/SQLJoin-1.0-200G/SQLJoinAppList-200G.txt";
+        //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/SQLJoin-1.0-200G/SQLJoinAppList-200G.txt";
+        //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/Join-1.0-Memory/JoinAppList-200G-Memory.txt";
+        //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/Join-1.0-CPU/JoinAppList-200G-CPU.txt";
+        String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/Join-1.0-memory-5.5G/JoinAppList-200G-Memory.txt";
+
 
 
 
@@ -370,7 +374,11 @@ public class SparkAppJsonSaver {
         //String appIdsFile = "/Users/xulijie/Documents/GCResearch/Experiments-2018/applists/Join-0.5-100G/JoinAppList-100G.txt";
         // String outputDir = "/Users/xulijie/Documents/GCResearch/PaperExperiments/profiles/RDDJoin-1.0";
         //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/Join-0.5-100G/";
-        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/SQLGroupBy-1.0-200G/";
+        // outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/AggregateByKey-1.0-CPU/";
+        //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/Join-1.0-Memory/";
+        //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/Join-1.0-CPU/";
+        String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/Join-1.0-memory-5.5G/";
+
         //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/AggregateByKey-1.0/";
         //String outputDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/SQLJoin-1.0-200G/";
 
@@ -378,7 +386,12 @@ public class SparkAppJsonSaver {
 
 
         //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/SQLJoin-1.0-6.5G-200G";
-        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/SQLGroupBy-1.0-6.5G-200G";
+        //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/AggregateByKey-1.0-6.5G-200G-CPU2";
+        //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/Join-1.0-6.5G-200G-CPU2";
+        //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/Join-1.0-6.5G-200G-memory5G";
+        String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/Join-1.0-6.5G-200G-memory";
+
+
         //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/AggregateByKey-0.5-6.5G-100G-5";
         //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/Join-1.0-6.5G-200G";
         //String sparkTopLogDir = "/dataDisk/GCTest/SparkTopLogs/AggregateByKey-1.0-6.5G-200G";

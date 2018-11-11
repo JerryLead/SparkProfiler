@@ -406,6 +406,8 @@ def plotHeapUsage(heapTimeOffset, cpuTimeOffset, mode, appName, title, gclogFile
                        ncol=1, borderaxespad=1.4, columnspacing=1.2, handletextpad=0.5, loc="best")
         ax12.tick_params('y', colors='b')
         ax12.set_ylim(0, 8)  # The ceil
+        print("avgCPU = " + str(sum(executorCPU) / float(len(executorCPU))))
+        print("maxMemory = " + str(max(executorMemory)))
     # ax12.tick_params('y', colors='r')
     #ax22 = axes[1].twinx()
     #ax22.plot(slaveTime, slaveMemory, '-b', label='Memory')

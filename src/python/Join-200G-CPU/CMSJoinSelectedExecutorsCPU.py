@@ -500,15 +500,15 @@ if __name__ == '__main__':
     #gcViewerParsedLogDir = "D:/plot/"
     gcViewerParsedLogDir = "/Users/xulijie/Documents/GCResearch/Experiments-2018/profiles/"
 
-    appName = "Join-1.0-200G-2"
-    #inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
-    inputFile = gcViewerParsedLogDir + appName + "/SelectedExecutors/"
+    appName = "Join-1.0-CPU"
+    inputFile = gcViewerParsedLogDir + appName + "/SlowestExecutors/"
+    #inputFile = gcViewerParsedLogDir + appName + "/SelectedExecutors/"
 
     for file in os.listdir(inputFile):
         if file.startswith("CMS"):
             for executor in os.listdir(os.path.join(inputFile, file)):
                 if executor.startswith("E"):
-                    plotHeapUsage(file, 1290, 1294, mode, appName, "(b) Join-1.0-Slowest-CMS-Task",
+                    plotHeapUsage(file, 1242, 1242, mode, appName, "(b) Join-200G-CPU-2-Slowest-CMS-Task",
                                   os.path.join(inputFile, file, executor, executor + ".csv"),
                                   os.path.join(inputFile, file, executor, executor + "-parsed.txt"),
                                   os.path.join(inputFile, file, executor, "topMetrics.txt"),

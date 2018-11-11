@@ -481,7 +481,8 @@ def plotHeapUsage(collectorFile, heapTimeOffset, cpuTimeOffset, mode, appName, t
         #plt.show()
 
 
-
+    print("avgCPU = " + str(sum(executorCPU) / float(len(executorCPU))))
+    print("maxMemory = " + str(max(executorMemory)))
     fig = plt.gcf()
     #plt.show()
     fig.savefig(outputFile, dpi=300, bbox_inches='tight')
